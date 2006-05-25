@@ -5,12 +5,19 @@
          point="org.eclipse.eclipsemonkey.dom">
       <dom
             class="net.sf.groovyMonkey.dom.launch.LaunchManagerDOMFactory"
+            id="Launch Manager"
             resource="net.sf.groovyMonkey.dom.launch.LaunchManagerDOM"
             variableName="launchManager"/>
       <dom
             class="net.sf.groovyMonkey.dom.console.ConsoleDOMFactory"
+            id="Console"
             resource="net.sf.groovyMonkey.dom.console.ConsoleDOM"
             variableName="out"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.window.WindowDOMFactory"
+            id="Window"
+            resource="org.eclipse.ui.IWorkbenchWindow"
+            variableName="window"/>
    </extension>
 
 </plugin>
