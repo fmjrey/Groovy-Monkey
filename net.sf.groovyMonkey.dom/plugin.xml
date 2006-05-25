@@ -7,6 +7,10 @@
             class="net.sf.groovyMonkey.dom.launch.LaunchManagerDOMFactory"
             resource="net.sf.groovyMonkey.dom.launch.LaunchManagerDOM"
             variableName="launchManager"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.console.ConsoleDOMFactory"
+            resource="net.sf.groovyMonkey.dom.console.ConsoleDOM"
+            variableName="out"/>
    </extension>
 
 </plugin>
