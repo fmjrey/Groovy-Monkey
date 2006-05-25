@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Launch Plug-in
-Bundle-SymbolicName: net.sf.groovyMonkey.launch;singleton:=true
+Bundle-Name: DOM Plugins for Eclipse Monkey.
+Bundle-SymbolicName: net.sf.groovyMonkey.dom;singleton:=true
 Bundle-Version: 0.0.1
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.eclipsemonkey,
