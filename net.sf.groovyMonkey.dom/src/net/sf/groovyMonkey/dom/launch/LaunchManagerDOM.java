@@ -2,6 +2,7 @@ package net.sf.groovyMonkey.dom.launch;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -14,6 +15,10 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.UIJob;
 
 public class LaunchManagerDOM
 {
@@ -21,24 +26,62 @@ public class LaunchManagerDOM
     {
         return DebugPlugin.getDefault().getLaunchManager();
     }
+    public IWorkbenchWindow window()
+    {
+        return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+    }
+    public Shell shell()
+    {
+        return window().getShell();
+    }
+    public void error( final String title, 
+                       final String message )
+    {
+        new UIJob( "Warning: " + title )
+        {
+            @Override
+            public IStatus runInUIThread( final IProgressMonitor monitor )
+            {
+                MessageDialog.openError( shell(), title, message );
+                return Status.OK_STATUS;
+            }
+
+        }.schedule();
+    }
+    public void warning( final String title, 
+                         final String message )
+    {
+        new UIJob( "Warning: " + title )
+        {
+            @Override
+            public IStatus runInUIThread( final IProgressMonitor monitor )
+            {
+                MessageDialog.openWarning( shell(), title, message);
+                return Status.OK_STATUS;
+            }
+        
+        }.schedule();
+    }
     public LaunchManagerDOM launch( final String name,
                                     final List< String > configurationNames ) 
     {
         if( configurationNames == null || configurationNames.isEmpty() )
             return this;
         final List< ILaunchConfiguration > configurations = getLaunchConfigurations( configurationNames );
-        new Job( "" + name )
+        final Job job = new Job( "" + name )
         {
             @Override
             protected IStatus run( final IProgressMonitor progressMonitor )
             {
                 final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
-                monitor.beginTask( "" + name, configurations.size() );
+                final List< String > finished = new ArrayList< String >();
+                monitor.beginTask( name + " " + complete( finished, configurations ), configurations.size() );
                 for( final ILaunchConfiguration configuration : configurations )
                 {
+                    final String inProgress = "in progress: " + configuration.getName() + ", finished " + complete( finished, configurations );
                     try
                     {
-                        monitor.subTask( configuration.getName() );
+                        monitor.subTask( configuration.getName() + " " + complete( finished, configurations ) );
                         final ILaunch launch = DebugUITools.buildAndLaunch( configuration, ILaunchManager.RUN_MODE, monitor );
                         while( true )
                         {
@@ -46,25 +89,36 @@ public class LaunchManagerDOM
                             {
                                 Thread.sleep( 500 );
                             }
-                            catch( InterruptedException e ) {}
-                            if( monitor.isCanceled() )
-                                return Status.CANCEL_STATUS;
+                            catch( final InterruptedException e ) {}
                             if( launch.getProcesses().length == 0 || launch.isTerminated() )
                                 break;
+                            if( monitor.isCanceled() )
+                            {
+                                warning( "Cancelled launching: " + configuration.getName(), inProgress );
+                                return new Status( IStatus.CANCEL, "net.sourceforge.groovyMonkey.launch", -1, "Cancelled launching: " + configuration.getName()  + ", " + inProgress, null );
+                            }
                         }
                     }
-                    catch( CoreException e )
+                    catch( final CoreException e )
                     {
-                        MessageDialog.openError( null, "Error launching: " + configuration.getName(), e.getMessage() );
-                        return new Status( IStatus.ERROR, "net.sourceforge.groovyMonkey.launch", -1, "Error launching: " + configuration.getName() + ": " + e.getMessage(), e );
+                        error( "Error launching: " + configuration.getName(), 
+                                inProgress + ". " + e.getMessage() );                        
+                        return new Status( IStatus.ERROR, "net.sourceforge.groovyMonkey.launch", -1, "Error launching: " + configuration.getName()  + inProgress + ". " + e.getMessage(), e );
                     }
+                    finished.add( configuration.getName() );
                     monitor.worked( 1 );
                 }
                 monitor.done();
                 return Status.OK_STATUS;
             }
-            
-        }.schedule();
+            private String complete( final List< String > finished, 
+                                     final List< ILaunchConfiguration > total )
+            {
+                return "( " + finished.size() + " / " + total.size() + " )";
+            }
+        };
+        job.setUser( true );
+        job.schedule();
         return this;
     }
     private List< ILaunchConfiguration > getLaunchConfigurations( final List< String > configurationNames )
