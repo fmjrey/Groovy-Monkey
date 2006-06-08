@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry path="src" kind="src"/>
+	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
+	<classpathentry sourcepath="commons-httpclient-3.0.1-src.zip" path="commons-httpclient-3.0.1.jar" kind="lib"/>
+	<classpathentry path="commons-logging-1.0.3.jar" kind="lib"/>
+	<classpathentry path="commons-codec-1.3.jar" kind="lib"/>
+	<classpathentry sourcepath="commons-lang-2.1-src.zip" path="commons-lang-2.1.jar" kind="lib"/>
+	<classpathentry path="groovy-all-1.0-jsr-05.jar" kind="lib"/>
+	<classpathentry path="/groovy.swt" combineaccessrules="false" kind="src"/>
+	<classpathentry path="bin" kind="output"/>
+</classpath>
