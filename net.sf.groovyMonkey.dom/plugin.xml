@@ -3,6 +3,7 @@
 <plugin>
    <extension
          point="org.eclipse.eclipsemonkey.dom">
+      <updateSite url="http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom"/>
       <dom
             class="net.sf.groovyMonkey.dom.launch.LaunchManagerDOMFactory"
             id="Launch Manager"
