@@ -39,7 +39,19 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string );
     }
+    public void testDefaultRuntime()
+    throws Exception
+    {
+        runMonkeyScript( script );
+        assertEquals( getName(), TestDOM.string );
+    }
     public void testGroovyRuntime()
+    throws Exception
+    {
+        runMonkeyScript( script );
+        assertEquals( getName(), TestDOM.string );
+    }
+    public void testJavascriptRuntime()
     throws Exception
     {
         runMonkeyScript( script );

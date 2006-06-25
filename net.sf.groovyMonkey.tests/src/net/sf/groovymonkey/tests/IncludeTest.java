@@ -60,7 +60,19 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string );
     }
+    public void testIncludeInDefault()
+    throws Exception
+    {
+        runMonkeyScript( script );
+        assertEquals( getName(), TestDOM.string );
+    }
     public void testIncludeInGroovy()
+    throws Exception
+    {
+        runMonkeyScript( script );
+        assertEquals( getName(), TestDOM.string );
+    }
+    public void testIncludeInJavascript()
     throws Exception
     {
         runMonkeyScript( script );
