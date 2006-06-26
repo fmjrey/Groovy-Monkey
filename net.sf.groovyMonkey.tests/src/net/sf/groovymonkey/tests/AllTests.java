@@ -10,6 +10,7 @@ public class AllTests
         //$JUnit-BEGIN$
         suite.addTestSuite( IncludeTest.class );
         suite.addTestSuite( LanguageTest.class );
+        suite.addTestSuite( MonkeyRunnerTest.class );
         //$JUnit-END$
         return suite;
     }
