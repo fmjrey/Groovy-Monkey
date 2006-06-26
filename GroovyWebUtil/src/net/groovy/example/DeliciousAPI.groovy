@@ -124,12 +124,12 @@ implements CredentialsProvider, Runnable
             if( authscheme instanceof NTLMScheme ) 
             {
                 println( host + ":" + port + " requires Windows authentication" )
-                return authMap[ key ] = new NTCredentials( 'user-corporate', 'password-corporate', host, 'domain-corporate' )
+                return authMap[ key ] = new NTCredentials( 'password-user', 'proxy-password', host, 'proxy-domain' )
             }
             if( authscheme instanceof RFC2617Scheme )
             {
                 println( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm() + "'" )
-                return authMap[ key ] = new UsernamePasswordCredentials( 'ervinja', 'atr3u5134804' )
+                return authMap[ key ] = new UsernamePasswordCredentials( 'user-proxy', 'proxy-password' )
             }
             throw new CredentialsNotAvailableException( 'Unsupported authentication scheme: ' + authscheme.schemeName )
         } 
