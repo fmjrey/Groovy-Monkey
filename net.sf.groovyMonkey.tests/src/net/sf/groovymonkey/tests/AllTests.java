@@ -9,8 +9,9 @@ public class AllTests
         final TestSuite suite = new TestSuite( "Test for " + AllTests.class.getPackage().getName() );
         //$JUnit-BEGIN$
         suite.addTestSuite( IncludeTest.class );
-        suite.addTestSuite( LanguageTest.class );
         suite.addTestSuite( MonkeyRunnerTest.class );
+        suite.addTestSuite( LanguageTest.class );
+        suite.addTestSuite( IncludeBundleTest.class );
         //$JUnit-END$
         return suite;
     }

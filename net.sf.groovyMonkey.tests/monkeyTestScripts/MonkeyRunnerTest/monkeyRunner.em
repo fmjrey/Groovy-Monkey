@@ -6,4 +6,4 @@
  * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
 testDom.callDOM( message )
-returnedValue[ returned ] = true
+returnedValue.returned = true

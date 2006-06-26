@@ -7,4 +7,5 @@
  * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
 import net.sf.groovymonkey.tests.TestInclude;
-new TestInclude().callDOM( "testIncludeInBeanshell" );
+
+new net.sf.groovymonkey.tests.TestInclude().callDOM( "testIncludeInBeanshell" );

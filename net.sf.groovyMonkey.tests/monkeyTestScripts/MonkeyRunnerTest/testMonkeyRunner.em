@@ -3,7 +3,6 @@
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * LANG: Groovy
- * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
 def map = [ message : 'testMonkeyRunner', returnedValue : [ : ] ]
 monkeyRunner.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.em', map )
