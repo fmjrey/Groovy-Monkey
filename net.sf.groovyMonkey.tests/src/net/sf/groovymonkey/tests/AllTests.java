@@ -11,7 +11,7 @@ public class AllTests
         suite.addTestSuite( IncludeTest.class );
         suite.addTestSuite( MonkeyRunnerTest.class );
         suite.addTestSuite( LanguageTest.class );
-        //suite.addTestSuite( IncludeBundleTest.class );
+        suite.addTestSuite( IncludeBundleTest.class );
         //$JUnit-END$
         return suite;
     }

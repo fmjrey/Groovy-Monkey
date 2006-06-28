@@ -8,7 +8,6 @@
 import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import org.apache.tools.ant.BuildLogger;
 
-Class.forName( "net.sf.groovymonkey.tests.fixtures.dom.TestDOM" );
-clase = Class.forName( "org.apache.tools.ant.BuildLogger" );
-System.out.println( "testIncludeInBeanshell: clase: " + clase );
+Class.forName( "net.sf.groovymonkey.tests.fixtures.dom.TestDOM", true, Thread.currentThread().getContextClassLoader() );
+clase = Class.forName( "org.apache.tools.ant.BuildLogger", true, Thread.currentThread().getContextClassLoader() );
 new TestDOM().callDOM( "testIncludeInBundleBeanshell" );
