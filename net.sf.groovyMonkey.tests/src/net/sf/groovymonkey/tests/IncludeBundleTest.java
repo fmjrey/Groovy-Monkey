@@ -7,6 +7,9 @@ import java.io.InputStream;
 import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import org.eclipse.core.resources.IFile;
 
+/**
+ * These unit tests don't pass yet.... haven't figured out how to get BundleClassLoaderAdapter to work.
+ */
 public class IncludeBundleTest 
 extends TestCaseAbstract
 {
