@@ -18,9 +18,9 @@ extends TestProject
     }
     public static void runMonkeyScript( final IFile script )
     {
-        new RunMonkeyScript( script, workbenchWindow(), true ).run();
+        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, workbenchWindow(), true );
+        monkeyScript.runScript( null );
     }
-    
     public TestMonkeyProject( final String name ) 
     throws CoreException
     {
