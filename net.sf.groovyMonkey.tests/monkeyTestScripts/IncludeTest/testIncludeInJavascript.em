@@ -4,7 +4,6 @@
  * License: EPL 1.0
  * LANG: Javascript
  * Include: TestJavaProject/bin
- * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
 function main()
 {
