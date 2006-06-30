@@ -27,7 +27,7 @@ extends TestCaseAbstract
         super.setUp();
         scriptFileInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeBundleTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), scriptFileInput );
-        TestDOM.string = "";
+        new TestDOM().callDOM( "" );
     }
     @Override
     protected void tearDown() 
@@ -40,36 +40,36 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleDefault()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleGroovy()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleJavascript()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleRuby()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleTcl()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
 }

@@ -32,7 +32,7 @@ extends TestCaseAbstract
         setUpJavaProject();
         scriptFileInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), scriptFileInput );
-        TestDOM.string = "";
+        new TestDOM().callDOM( "" );
     }
     private void setUpJavaProject() 
     throws Exception
@@ -58,36 +58,36 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInDefault()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInGroovy()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInJavascript()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInRuby()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInTcl()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
 }

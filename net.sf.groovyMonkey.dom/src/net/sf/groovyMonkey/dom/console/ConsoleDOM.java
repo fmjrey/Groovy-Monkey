@@ -45,5 +45,9 @@ public class ConsoleDOM
         out.println( msg );
         return this;
     }
-
+    public ConsoleDOM clear()
+    {
+        console.clearConsole();
+        return this;
+    }
 }

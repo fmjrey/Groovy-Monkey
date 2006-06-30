@@ -22,7 +22,7 @@ extends TestCaseAbstract
     throws Exception
     {
         super.setUp();
-        TestDOM.string = "";
+        new TestDOM().callDOM( "" );
         input = bundle().getResource( MONKEY_TEST_SCRIPTS + LanguageTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), input );
     }
@@ -37,42 +37,42 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testDefaultRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testGroovyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testJavascriptRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testPythonRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testRubyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
     public void testTclRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
     }
 }

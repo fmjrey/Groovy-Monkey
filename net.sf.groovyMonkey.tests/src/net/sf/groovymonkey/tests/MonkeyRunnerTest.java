@@ -23,7 +23,7 @@ extends TestCaseAbstract
     throws Exception
     {
         super.setUp();
-        TestDOM.string = "";
+        new TestDOM().callDOM( "" );
         input = bundle().getResource( MONKEY_TEST_SCRIPTS + MonkeyRunnerTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         included = bundle().getResource( MONKEY_TEST_SCRIPTS + MonkeyRunnerTest.class.getSimpleName() + "/monkeyRunner" + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), input );
@@ -47,6 +47,12 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string );
+        assertEquals( getName(), TestDOM.string() );
+    }
+    public void testMonkeyRunnerJob()
+    throws Exception
+    {
+        runMonkeyScript( script );
+        assertEquals( getName(), TestDOM.string() );
     }
 }
