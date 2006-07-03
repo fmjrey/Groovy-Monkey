@@ -2,6 +2,7 @@
  * Menu: Find System Prints
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham
  * License: EPL 1.0
+ * LANG: Javascript
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
   

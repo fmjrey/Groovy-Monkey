@@ -2,6 +2,7 @@
  * Menu: Hello > Bjorn
  * Kudos: Ward Cunningham & Bjorn Freeman-Benson
  * License: EPL 1.0
+ * LANG: Javascript
  */
  
 function main() {

@@ -4,9 +4,5 @@
  * License: EPL 1.0
  * Include: TestJavaProject/bin
  */
-function main()
-{
-	importPackage( net.sf.groovymonkey.tests );
-	testInclude = new TestInclude();
-	testInclude.callDOM( "testIncludeInDefault" );
-}
+import net.sf.groovymonkey.tests.TestInclude
+new TestInclude().callDOM( 'testIncludeInDefault' )
