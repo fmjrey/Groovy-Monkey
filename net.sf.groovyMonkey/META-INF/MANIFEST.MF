@@ -31,3 +31,4 @@ Bundle-ClassPath: monkey.jar,
  lib/commons-io-1.2.jar
 Bundle-Vendor: James E. Ervin
 Eclipse-BuddyPolicy: dependent
+DynamicImport-Package: *
