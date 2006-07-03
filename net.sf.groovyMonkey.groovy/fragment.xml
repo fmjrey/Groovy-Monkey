@@ -8,4 +8,12 @@
             name="Groovy"/>
    </extension>
 
+	<extension
+         point="net.sf.groovyMonkey.dom">
+      <updateSite url="http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.groovy"/>
+      <dom
+            class="groovy.jface.JFaceDOMFactory"
+            variableName="jface"/>
+   </extension>
+
 </fragment>
