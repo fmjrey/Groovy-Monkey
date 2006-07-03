@@ -322,7 +322,7 @@ public class RunMonkeyScript
 			ScriptMetadata metadata) {
 		IExtensionRegistry registry = getExtensionRegistry();
 		IExtensionPoint point = registry
-				.getExtensionPoint("org.eclipse.eclipsemonkey.dom");
+				.getExtensionPoint("net.sf.groovyMonkey.dom");
 		if (point != null) {
 			IExtension[] extensions = point.getExtensions();
 			for (int i = 0; i < extensions.length; i++) {
@@ -362,7 +362,7 @@ public class RunMonkeyScript
     {
         final Map< String, IMonkeyScriptFactory > factories = new HashMap< String, IMonkeyScriptFactory >();
         final IExtensionRegistry registry = getExtensionRegistry();
-        final IExtensionPoint point = registry.getExtensionPoint( "org.eclipse.eclipsemonkey.lang" );
+        final IExtensionPoint point = registry.getExtensionPoint( "net.sf.groovyMonkey.lang" );
         if( point == null )
             return factories;
         final IExtension[] extensions = point.getExtensions();

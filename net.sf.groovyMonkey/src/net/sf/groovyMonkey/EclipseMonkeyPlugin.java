@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class EclipseMonkeyPlugin extends AbstractUIPlugin implements IStartup {
-    public static final String PLUGIN_ID = "org.eclipse.eclipsemonkey";
+    public static final String PLUGIN_ID = "net.sf.groovyMonkey";
 	public static final String PUBLISH_BEFORE_MARKER = "--- Came wiffling through the eclipsey wood ---";
 
 	public static final String PUBLISH_AFTER_MARKER = "--- And burbled as it ran! ---";
