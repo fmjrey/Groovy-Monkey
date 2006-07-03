@@ -6,10 +6,10 @@ Bundle-Version: 1.0.0
 Bundle-Activator: net.sf.groovymonkey.tests.Activator
 Bundle-Vendor: James E. Ervin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: net.sf.groovyMonkey,
+ org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.ui,
- org.eclipse.eclipsemonkey,
  groovy.swt,
  net.sf.groovyMonkey.dom,
  org.codehaus.groovy,

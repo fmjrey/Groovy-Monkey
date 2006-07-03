@@ -4,7 +4,7 @@ Bundle-Name: DOM Plugins for Eclipse Monkey.
 Bundle-SymbolicName: net.sf.groovyMonkey.dom;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.eclipsemonkey,
+Require-Bundle: net.sf.groovyMonkey,
  org.eclipse.debug.core,
  org.eclipse.core.runtime,
  org.eclipse.debug.ui,

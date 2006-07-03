@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Eclipse Monkey" >
+	<topic label="Installing Eclipse Monkey"  href="html/installing.html"> 
+	</topic>
+	<topic label="Running Scripts"  href="html/running.html"> 
+	</topic>
+	<topic label="Writing Scripts"  href="html/writing.html"> 
+	</topic>
+	<topic label="Publishing Scripts"  href="html/publishing.html"> 
+	</topic>
+	<topic label="Writing your own DOMs"  href="html/writing-doms.html"> 
+	</topic>
+	<topic label="New &amp; Noteworthy"  href="html/noteworthy.html"> 
+	</topic>
+</toc>

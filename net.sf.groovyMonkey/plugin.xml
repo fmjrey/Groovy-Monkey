@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>
+   <extension-point id="dom" name="DOM for Monkey scripts" schema="schema/dom.exsd"/>
+   <extension-point id="lang" name="Language implementation for Monkey Scripts" schema="schema/lang.exsd"/>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="Eclipse Monkey Actions"
+            visible="true"
+            id="eclipsemonkeyAction.actionSet">
+         <menu
+               id="eclipsemonkeyMenu"
+               label="Monkey">
+            <separator
+                  name="eclipsemonkeyGroup">
+            </separator>
+         </menu>
+         <action
+               class="net.sf.groovyMonkey.actions.CreateMonkeyExamplesAction"
+               icon="icons/monkey.gif"
+               id="org.eclipse.eclipsemonkey.action1"
+               label="Eclipse Monkey Examples"
+               menubarPath="eclipsemonkeyMenu/eclipsemonkeyGroup"
+               toolbarPath="eclipsemonkeyGroup"
+               tooltip="Create the Examples project">
+         </action>
+      </actionSet>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.eclipsemonkey.emFileContextMenu"
+            nameFilter="*.em"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="net.sf.groovyMonkey.actions.PublishScriptForBlogger"
+               id="org.eclipse.eclipsemonkey.action2"
+               label="as Blogger (HTML)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in blogging format"/>
+         <action
+               class="net.sf.groovyMonkey.actions.PublishScriptForWiki"
+               id="org.eclipse.eclipsemonkey.action4"
+               label="as Wiki (indented)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <action
+               class="net.sf.groovyMonkey.actions.PublishScript"
+               id="org.eclipse.eclipsemonkey.action5"
+               label="as Bugzilla (text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               tooltip="Publish script in wiki format"/>
+         <menu
+               id="org.eclipse.eclipsemonkey.navigatorContextMenu"
+               label="Copy for Publication"
+               path="group.managing"/>
+         <action
+               class="net.sf.groovyMonkey.actions.PublishScriptForEmail"
+               id="org.eclipse.eclipsemonkey.action6"
+               label="as Email (wrapped text)"
+               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"/>
+         <action
+               class="net.sf.groovyMonkey.actions.AddDOM"
+               enablesFor="1"
+               icon="icons/feature_obj.gif"
+               id="org.eclipse.eclipsemonkey.actions.AddDOM"
+               label="Add DOM to Script"
+               menubarPath="group.editor"
+               tooltip="Add existing DOM to Monkey Script"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.eclipseMonkey.monkeyFolderContextMenu"
+            nameFilter="monkey"
+            objectClass="org.eclipse.core.resources.IFolder">
+         <action
+               class="net.sf.groovyMonkey.actions.PasteScriptFromClipboardAction"
+               id="org.eclipse.eclipsemonkey.action3"
+               label="Paste New Script"
+               menubarPath="group.editor"
+               tooltip="Paste Script from Clipboard"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="net.sf.groovyMonkey.dom">
+      <dom
+            class="net.sf.groovyMonkey.dom.window.WindowDOMFactory"
+            id="Window"
+            resource="org.eclipse.ui.IWorkbenchWindow"
+            variableName="window"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.runner.RunnerDOM"
+            id="Monkey Runner"
+            resource="net.sf.groovyMonkey.dom.runner.MonkeyRunner"
+            variableName="monkeyRunner"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.VarsDOM"
+            id="Vars"
+            resource="java.util.Map"
+            variableName="vars"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.MonitorDOM"
+            id="Progress Monitor"
+            resource="org.eclipse.core.runtime.SubProgressMonitor"
+            variableName="monitor"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="net.sf.groovyMonkey.editor.ScriptEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="em"
+            filenames="*.em"
+            icon="icons/monkey.gif"
+            id="org.eclipse.eclipsemonkey.editor.ScriptEditor"
+            name="Monkey Script Editor"/>
+   </extension>
+
+
+</plugin>

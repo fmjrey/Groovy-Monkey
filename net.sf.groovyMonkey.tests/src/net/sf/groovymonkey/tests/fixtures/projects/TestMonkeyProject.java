@@ -2,9 +2,9 @@ package net.sf.groovymonkey.tests.fixtures.projects;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.InputStream;
+import net.sf.groovyMonkey.RunMonkeyScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.eclipsemonkey.RunMonkeyScript;
 import org.eclipse.ui.IWorkbenchWindow;
 
 public class TestMonkeyProject 

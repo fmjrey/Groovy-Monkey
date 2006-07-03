@@ -1,5 +1,5 @@
 package net.sf.groovymonkey.tests.fixtures.dom;
-import org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory;
+import net.sf.groovyMonkey.dom.IMonkeyDOMFactory;
 
 public class TestDOMFactory 
 implements IMonkeyDOMFactory

@@ -1,5 +1,5 @@
 package net.sf.groovyMonkey.dom.console;
-import org.eclipse.eclipsemonkey.dom.IMonkeyDOMFactory;
+import net.sf.groovyMonkey.dom.IMonkeyDOMFactory;
 
 public class ConsoleDOMFactory 
 implements IMonkeyDOMFactory

@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Eclipse Monkey</title>
+</head>
+<body>
+<h2>Writing a script</h2>
+<h3>Script file locations</h3>
+<p>
+Scripts are installed in the <em>Monkey</em> menu by placing them in "*.em" files in a top-level "monkey" folder of any project (obviously, scripts are un-installed by renaming or moving them). The complete set of scripts is the union of the scripts in all the top-level monkey folders in the workspace.
+</p>
+
+<center>
+<img src="images/monkey-tree.png">
+</center>
+
+<h3>Script metadata
+</h3>
+
+<p>Scripts include metadata that specifiy how a script is to be run and additional resources required for successful operation. Metadata consists of keyword values pairs. These are placed in the first comment block of the script. This must be a /* ... */ style comment. Currently only the Menu: and DOM: keywords are processed.</p>
+
+
+<center>
+<img src="images/monkey-editor.png">
+</center>
+
+<h3>Script menus
+</h3>
+<p>The <b>Menu:</b> metadata tag specifies that this script is to be included in 
+the <em>Monkey</em> menu. If more than one script specifies the same menu item, 
+the menu item will appear more than once. Submenus are created using the Eclipse
+standard notation "Menu > SubMenu" or "Menu > SubMenu > SubSubMenu" (etc.) in the metadata string.</p>
+
+<h3>Objects of all Kinds</h3>
+
+<p>Scripts manipulate script objects such as strings and arrays, native Java objects including native Eclipse objects, and special DOM objects made specifically to simplify scripting.</p>
+
+<p>Native Java objects can be accessed through their fully qualified class names. Eclipse objects require that the fully qualified name be prepended with the additional name "Packages". Here are some valid scripting expressions that show how this works</p>
+
+<ul>
+<li><code>java.lang.System.out.println("hello world");</code></li>
+<li><code>Packages.org.eclipse.jface.dialogs.MessageDialog.openInformation( 	
+	window.getShell(), 	
+	"Monkey Dialog", 
+	"Hello World"	
+	)</code></li>
+</ul>
+
+<p>One of the challenges in scripting for Eclipse is dealing with the restricted namespaces of the various plug-ins. The classes and packages that are directly referencable are those in the plug-in pre-requisites of the org.eclipse.eclipsemonkey plug-in such as org.eclipse.ui and org.eclipse.jface.text. To use other packages and classes, you must use a DOM (see below).
+</p>
+
+<h3>Built-In DOM Objects</h3>
+
+<p>DOM objects appear as globals in the script namespace. Some DOMs are primitively supported, others are supplied by DOM plug-ins (standard Eclipse plug-ins that contribute an org.eclipse.eclipsemonkey.dom extensions). The built-in DOMs available with this release are:
+
+<ul>
+<li><code>window</code> -- direct access to the Eclipse IWorkbenchWindow object.
+</ul>
+
+<h3>Plug-In DOM Objects</h3>
+
+Plugin-DOMs are specified in the metadata with the "DOM:" tag who's value is a URI of the form:
+
+<blockquote>
+http://<i>&lt;update-site&gt;</i>/<i>&lt;dom-plugin-ID&gt;</i>
+</blockquote>
+
+The &lt;update-site&gt; refers to a normal Eclipse Update Manager update site. The &lt;dom-plugin-ID&gt; is the unique ID of the plug-in that supplies the DOM (via the org.eclipse.eclipsemonkey.dom extension point). Eclipse Monkey checks to be sure that all specified DOMs are loaded and notifies you if they aren't. 
+
+<center>
+<img src="images/missing-dom-dialog.png">
+</center>
+
+<p>If you ask, Eclipse Monkey will open an approximately configured update dialog to load missing DOMs:</p>
+
+<center>
+<img src="images/missing-dom-update.png">
+</center>
+<h4>Standard DOM Objects</h4>
+
+<p>The following DOMs are contributed by the <code>org.eclipse.dash.doms</code> plug-in</p>
+
+<ul>
+<li><code>workspace</code> -- direct acccess to the Eclipse IWorkspace object. 
+<li><code>resources</code> -- indirect access to Eclipse IResources through custom wrappers: Resources, File and Line. 
+</ul>
+
+<p>Learn about these DOM through the examples or by reading the source code of the Eclipse Monkey Standard DOMs plug-in (org.eclipse.dash.doms).</p>
+
+
+</body>
+</html>

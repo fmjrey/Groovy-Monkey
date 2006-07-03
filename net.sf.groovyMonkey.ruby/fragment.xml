@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<fragment>
+   <extension
+         point="net.sf.groovyMonkey.lang">
+      <lang
+            factory="net.sf.groovyMonkey.ruby.RubyMonkeyScriptFactory"
+            name="Ruby"/>
+   </extension>
+
+</fragment>
