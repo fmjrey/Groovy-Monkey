@@ -87,13 +87,13 @@ This Agreement is governed by the laws of the State of New York and the intellec
    </url>
 
    <plugin
-         id="org.eclipse.eclipsemonkey"
+         id="net.sf.groovyMonkey"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
 
    <plugin
-         id="org.eclipse.eclipsemonkey.help"
+         id="net.sf.groovyMonkey.help"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
@@ -151,14 +151,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
 
    <plugin
          id="net.sf.groovyMonkey.ruby"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="net.sf.groovyMonkey.tcl"
          download-size="0"
          install-size="0"
          version="0.0.0"
