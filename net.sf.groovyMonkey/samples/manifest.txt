@@ -1,3 +1,0 @@
-monkey/Find_System_Prints.em
-monkey/Hello__Ward.em
-monkey/Hello__Bjorn.em

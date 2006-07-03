@@ -57,7 +57,7 @@ public class ScriptMetadata
         Job, UIJob, WorkspaceJob
     }
     public static final String DEFAULT_LANG = "Groovy";
-    public static final ExecModes DEFAULT_MODE = ExecModes.UIJob;
+    public static final ExecModes DEFAULT_MODE = ExecModes.Job;
 	private IFile file;
 	private String menuName;
 	private String scopeName;

@@ -3,6 +3,7 @@
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham
  * License: EPL 1.0
  * LANG: Javascript
+ * Exec-Mode: UIJob
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
   
