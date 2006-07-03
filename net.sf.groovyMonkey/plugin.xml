@@ -100,7 +100,7 @@
             class="net.sf.groovyMonkey.dom.runner.RunnerDOM"
             id="Monkey Runner"
             resource="net.sf.groovyMonkey.dom.runner.MonkeyRunner"
-            variableName="monkeyRunner"/>
+            variableName="runner"/>
       <dom
             class="net.sf.groovyMonkey.dom.VarsDOM"
             id="Vars"

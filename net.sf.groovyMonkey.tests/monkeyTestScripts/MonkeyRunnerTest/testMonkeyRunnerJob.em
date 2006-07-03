@@ -7,6 +7,6 @@
  */
 map.message = 'testMonkeyRunnerJob'
 map.returnedValue = []
-monkeyRunner.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.em', map )
+runner.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.em', map )
 if( map.returnedValue[0] != true )
 	throw new RuntimeException( "Error no returned value: " + map.returnedValue )
