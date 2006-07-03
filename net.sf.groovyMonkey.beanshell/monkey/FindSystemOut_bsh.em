@@ -17,4 +17,11 @@ for( i = 0; i < files.length; i++ )
        lines[j].addMyTask( lines[j].string.trim() );
   }
 }
-window.getActivePage().showView( "org.eclipse.ui.views.TaskList" );
+final Runnable runnable = new Runnable()
+{
+	public void run()
+	{
+		window.getActivePage().showView( "org.eclipse.ui.views.TaskList" );
+	}
+};
+runner.asyncExec( runnable );

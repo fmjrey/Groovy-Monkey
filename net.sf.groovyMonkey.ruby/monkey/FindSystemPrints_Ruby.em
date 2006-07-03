@@ -3,6 +3,7 @@
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Ruby
+ * Exec-Mode: UIJob
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
  files = $resources.filesMatching( ".*\\.java" )
