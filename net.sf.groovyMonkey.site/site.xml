@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://groovy-monkey.sourceforge.net/update/">
+      Groovy Monkey scripting tool for Eclipse
+   </description>
+   <feature url="features/net.sf.groovyMonkey_0.2.0.jar" id="net.sf.groovyMonkey" version="0.2.0">
+      <category name="Groovy Monkey"/>
+   </feature>
+   <category-def name="Groovy Monkey" label="Groovy Monkey"/>
+</site>

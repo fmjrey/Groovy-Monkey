@@ -1,0 +1,9 @@
+	1. Checkpoint everything to CVS, just in case
+	2. Update version number in plugin.xml(s)
+	3. Update version number in feature.xml
+	4. Use "synchronize version on build" in feature.xml (set once)
+	5. Add the new numbered feature to the site.xml using the "Add" button
+	6. Press the "Build All" button on the site.xml
+	7. Version and tag all the projects into the repository (use e.g. R0_1_2)
+	8. use release-to-update-site.pl to rsync up to the download.eclipse.org machine
+	   (run via external tools configuration)
