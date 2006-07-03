@@ -52,6 +52,7 @@ implements IObjectActionDelegate
     {
         run();
     }
+    @Override
     public void run()
     {
         final IFile script = getTargetScript();

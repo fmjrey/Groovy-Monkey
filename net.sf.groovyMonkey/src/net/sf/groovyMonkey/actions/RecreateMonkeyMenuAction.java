@@ -159,7 +159,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		final RunMonkeyScript runner = new RunMonkeyScript(value, window);
 		Action action = new Action(key) {
 			public void run() {
-				runner.run();
+				runner.run( false );
 			}
 		};
 		if (RunMonkeyScript.last_run != null

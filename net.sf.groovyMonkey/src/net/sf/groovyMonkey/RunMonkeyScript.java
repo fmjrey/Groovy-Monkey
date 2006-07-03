@@ -67,6 +67,7 @@ public class RunMonkeyScript
     private final boolean throwError;    
     private volatile Map< String, Object > map = Collections.synchronizedMap( new HashMap< String, Object >() );
     private StoredScript storedScript = null;
+    private boolean synchronous = true;
     
 	public RunMonkeyScript( final IFile file, 
                             final IWorkbenchWindow window ) 
@@ -89,7 +90,12 @@ public class RunMonkeyScript
         this.throwError = throwError;
         this.map = map != null ? map : this.map;
     }
-	public void run() 
+    public void run( final boolean synchronous )
+    {
+        this.synchronous = synchronous;
+        run();
+    }
+	public void run()
     {
         final String fileName = key( file );
         storedScript = ( StoredScript )scriptStore().get( fileName );
@@ -155,7 +161,8 @@ public class RunMonkeyScript
     {
         job.setUser( true );
         job.schedule();
-        join( job );
+        if( synchronous )
+            join( job );
     }
     private void join( final Job job )
     {

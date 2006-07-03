@@ -75,6 +75,14 @@
                label="Add DOM to Script"
                menubarPath="group.editor"
                tooltip="Add existing DOM to Monkey Script"/>
+         <action
+               class="net.sf.groovyMonkey.actions.RunScript"
+               enablesFor="1"
+               icon="icons/run_exc.gif"
+               id="net.sf.groovyMonkey.actions.RunScript"
+               label="Run Script"
+               menubarPath="group.editor"
+               tooltip="Run Groovy Monkey Script"/>
       </objectContribution>
       <objectContribution
             adaptable="false"

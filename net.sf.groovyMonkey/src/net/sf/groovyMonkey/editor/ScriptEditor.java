@@ -1,5 +1,7 @@
 package net.sf.groovyMonkey.editor;
+import static org.eclipse.ui.texteditor.ITextEditorActionConstants.GROUP_EDIT;
 import net.sf.groovyMonkey.actions.AddDOM;
+import net.sf.groovyMonkey.actions.RunScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -21,8 +23,8 @@ extends TextEditor
     protected void createActions()
     {
         super.createActions();
-        final IAction action = new AddDOM( this );
-        setAction( "addDOM", action );
+        setAction( "addDOM", new AddDOM( this ) );
+        setAction( "runScript", new RunScript( this ) );
     }
     @Override
     public Object getAdapter( final Class adapter )
@@ -46,9 +48,8 @@ extends TextEditor
     protected void editorContextMenuAboutToShow( final IMenuManager menu )
     {
         super.editorContextMenuAboutToShow( menu );
-        final IAction action = getAction( "addDOM" );
-        final String editGroup = "group.edit";
-        menu.appendToGroup( ITextEditorActionConstants.GROUP_EDIT, new Separator( editGroup ) ); 
-        menu.appendToGroup( editGroup, action );
+        menu.appendToGroup( GROUP_EDIT, new Separator( GROUP_EDIT ) ); 
+        menu.appendToGroup( GROUP_EDIT, getAction( "addDOM" ) );
+        menu.appendToGroup( GROUP_EDIT, getAction( "runScript" ) );
     }
 }
