@@ -154,7 +154,7 @@ implements IObjectActionDelegate
         return PlatformUI.getWorkbench()
                          .getActiveWorkbenchWindow()
                          .getActivePage()
-                         .openEditor( new FileEditorInput( script ), "org.eclipse.eclipsemonkey.editor.ScriptEditor" );
+                         .openEditor( new FileEditorInput( script ), "net.sf.groovyMonkey.editor.ScriptEditor" );
     }
     private IFile getTargetScript()
     {

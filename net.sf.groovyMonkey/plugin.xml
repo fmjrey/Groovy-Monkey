@@ -20,7 +20,7 @@
          <action
                class="net.sf.groovyMonkey.actions.CreateMonkeyExamplesAction"
                icon="icons/monkey.gif"
-               id="org.eclipse.eclipsemonkey.action1"
+               id="net.sf.groovymonkey.action1"
                label="Eclipse Monkey Examples"
                menubarPath="eclipsemonkeyMenu/eclipsemonkeyGroup"
                toolbarPath="eclipsemonkeyGroup"
@@ -37,53 +37,53 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
-            id="org.eclipse.eclipsemonkey.emFileContextMenu"
+            id="net.sf.groovymonkey.emFileContextMenu"
             nameFilter="*.em"
             objectClass="org.eclipse.core.resources.IFile">
          <action
                class="net.sf.groovyMonkey.actions.PublishScriptForBlogger"
-               id="org.eclipse.eclipsemonkey.action2"
+               id="net.sf.groovymonkey.action2"
                label="as Blogger (HTML)"
-               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"
                tooltip="Publish script in blogging format"/>
          <action
                class="net.sf.groovyMonkey.actions.PublishScriptForWiki"
-               id="org.eclipse.eclipsemonkey.action4"
+               id="net.sf.groovymonkey.action4"
                label="as Wiki (indented)"
-               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"
                tooltip="Publish script in wiki format"/>
          <action
                class="net.sf.groovyMonkey.actions.PublishScript"
-               id="org.eclipse.eclipsemonkey.action5"
+               id="net.sf.groovymonkey.action5"
                label="as Bugzilla (text)"
-               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"
+               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"
                tooltip="Publish script in wiki format"/>
          <menu
-               id="org.eclipse.eclipsemonkey.navigatorContextMenu"
+               id="net.sf.groovymonkey.navigatorContextMenu"
                label="Copy for Publication"
                path="group.managing"/>
          <action
                class="net.sf.groovyMonkey.actions.PublishScriptForEmail"
-               id="org.eclipse.eclipsemonkey.action6"
+               id="net.sf.groovymonkey.action6"
                label="as Email (wrapped text)"
-               menubarPath="org.eclipse.eclipsemonkey.navigatorContextMenu/group1"/>
+               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"/>
          <action
                class="net.sf.groovyMonkey.actions.AddDOM"
                enablesFor="1"
                icon="icons/feature_obj.gif"
-               id="org.eclipse.eclipsemonkey.actions.AddDOM"
+               id="net.sf.groovymonkey.actions.AddDOM"
                label="Add DOM to Script"
                menubarPath="group.editor"
                tooltip="Add existing DOM to Monkey Script"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
-            id="org.eclipse.eclipseMonkey.monkeyFolderContextMenu"
+            id="net.sf.groovyMonkey.monkeyFolderContextMenu"
             nameFilter="monkey"
             objectClass="org.eclipse.core.resources.IFolder">
          <action
                class="net.sf.groovyMonkey.actions.PasteScriptFromClipboardAction"
-               id="org.eclipse.eclipsemonkey.action3"
+               id="net.sf.groovymonkey.action3"
                label="Paste New Script"
                menubarPath="group.editor"
                tooltip="Paste Script from Clipboard"/>
@@ -121,7 +121,7 @@
             extensions="em"
             filenames="*.em"
             icon="icons/monkey.gif"
-            id="org.eclipse.eclipsemonkey.editor.ScriptEditor"
+            id="net.sf.groovymonkey.editor.ScriptEditor"
             name="Monkey Script Editor"/>
    </extension>
 

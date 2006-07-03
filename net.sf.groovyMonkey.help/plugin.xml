@@ -2,8 +2,8 @@
 <?eclipse version="3.0"?>
 <plugin>
    <extension
-         id="org.eclipse.eclipsemonkey.help"
-         name="Eclipse Monkey"
+         id="net.sf.groovyMonkey.help"
+         name="Groovy Monkey"
          point="org.eclipse.help.toc">
       <toc
             file="toc.xml"

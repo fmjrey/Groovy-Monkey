@@ -242,7 +242,7 @@ public class Utilities {
     private static IExtensionPoint getDOMExtensionPoint()
     {
         final IExtensionRegistry registry = Platform.getExtensionRegistry();
-        final IExtensionPoint point = registry.getExtensionPoint( "org.eclipse.eclipsemonkey.dom" );
+        final IExtensionPoint point = registry.getExtensionPoint( "net.sf.groovyMonkey.dom" );
         return point;
     }
     public static void error( final String title, 
