@@ -1,5 +1,6 @@
 package net.sf.groovyMonkey.editor;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
+import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getDOM;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
+import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
@@ -68,6 +70,20 @@ implements ITreeContentProvider
         public String toString()
         {
             return "Job: " + mode;
+        }
+    }
+    public static class ExecDescriptor
+    extends Descriptor
+    {
+        public ExecModes mode;
+        public ExecDescriptor( final ExecModes mode )
+        {
+            this.mode = mode;
+        }
+        @Override
+        public String toString()
+        {
+            return "Exec-Mode: " + mode;
         }
     }
     public static class MenuDescriptor
@@ -177,7 +193,8 @@ implements ITreeContentProvider
         }
     }
     private final LangDescriptor lang = new LangDescriptor( DEFAULT_LANG );
-    private final JobDescriptor job = new JobDescriptor( DEFAULT_MODE );
+    private final JobDescriptor job = new JobDescriptor( DEFAULT_JOB );
+    private final ExecDescriptor exec = new ExecDescriptor( DEFAULT_MODE );
     private final MenuDescriptor menu = new MenuDescriptor( "" );
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
@@ -254,6 +271,7 @@ implements ITreeContentProvider
         elements.add( menu );
         elements.add( lang );
         elements.add( job );
+        elements.add( exec );
         elements.addAll( doms );
         elements.addAll( includes );
         return elements.toArray();
@@ -276,6 +294,7 @@ implements ITreeContentProvider
             menu.menu = data.getMenuName();
             lang.lang = data.getLang();
             job.mode = data.getJobMode();
+            exec.mode = data.getExecMode();
             doms.clear();
             doms.addAll( data.getDOMs() );
             includes.clear();

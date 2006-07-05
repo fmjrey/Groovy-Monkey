@@ -159,7 +159,8 @@ public class RunMonkeyScript
     }
     private void exec( final Job job )
     {
-        job.setUser( true );
+        if( storedScript.metadata.isForeground() )
+            job.setUser( true );
         job.schedule();
         if( synchronous )
             join( job );

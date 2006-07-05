@@ -51,7 +51,6 @@ import org.eclipse.update.ui.UpdateJob;
 import org.eclipse.update.ui.UpdateManagerUI;
 import org.osgi.framework.Bundle;
 
-
 public class ScriptMetadata 
 {
     public enum JobModes
@@ -63,7 +62,8 @@ public class ScriptMetadata
         Background, Foreground
     }
     public static final String DEFAULT_LANG = "Groovy";
-    public static final JobModes DEFAULT_MODE = JobModes.Job;
+    public static final JobModes DEFAULT_JOB = JobModes.Job;
+    public static final ExecModes DEFAULT_MODE = ExecModes.Background;
 	private IFile file;
 	private String menuName;
 	private String scopeName;
@@ -72,7 +72,8 @@ public class ScriptMetadata
 	private final List< Subscription > subscriptions = new ArrayList< Subscription >();
     private final Set< String > includes = new LinkedHashSet< String >();
     private final Set< String > includedBundles = new LinkedHashSet< String >();
-    private JobModes jobMode = DEFAULT_MODE;
+    private JobModes jobMode = DEFAULT_JOB;
+    private ExecModes execMode = DEFAULT_MODE; 
     
     public void setJobMode( final String jobMode )
     {
@@ -88,6 +89,29 @@ public class ScriptMetadata
     public JobModes getJobMode()
     {
         return jobMode;
+    }
+    public void setExecMode( final String execMode )
+    {
+        for( final ExecModes mode : ExecModes.values() )
+        {
+            if( mode.toString().equalsIgnoreCase( execMode.trim() ) )
+            {
+                this.execMode = mode;
+                break;
+            }
+        }
+    }
+    public ExecModes getExecMode()
+    {
+        return execMode;
+    }
+    public boolean isBackground()
+    {
+        return execMode.equals( ExecModes.Background );
+    }
+    public boolean isForeground()
+    {
+        return execMode.equals( ExecModes.Foreground );
     }
     public void addInclude( final String include )
     {
@@ -330,8 +354,13 @@ public class ScriptMetadata
         
         pattern = Pattern.compile( "Job:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
-        while( matcher.find() )
+        if( matcher.find() )
             metadata.setJobMode( matcher.group( 1 ) );
+        
+        pattern = Pattern.compile( "Exec-Mode:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        matcher = pattern.matcher( comment );
+        if( matcher.find() )
+            metadata.setExecMode( matcher.group( 1 ) );
         
         return metadata;
 	}
