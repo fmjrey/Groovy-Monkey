@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
@@ -8,6 +9,7 @@ import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,11 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import net.sf.groovyMonkey.DOMDescriptor;
-import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -335,8 +338,7 @@ implements ITreeContentProvider
         bundles.clear();
         for( final String bundle : data.getIncludedBundles() )
             bundles.add( new BundleDescriptor( bundle ) );
-        final List< String > required = GroovyMonkeyPlugin.getRequiredBundles();
-        for( final String bundle : required )
+        for( final String bundle : getAllRequiredBundles() )
             bundles.add( new BundleDescriptor( bundle ) );
     }
     public boolean diff( final ScriptMetadata data )

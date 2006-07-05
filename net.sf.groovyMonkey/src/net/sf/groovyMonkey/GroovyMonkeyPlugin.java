@@ -11,10 +11,12 @@
  *******************************************************************************/
 package net.sf.groovyMonkey;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-import java.util.ArrayList;
+
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -141,21 +143,49 @@ implements IStartup
     {
         return getPlatformAdmin();
     }
-    public static BundleDescription getBundleDescription()
+    public static BundleDescription getBundleDescription( final long id )
     {
         final PlatformAdmin admin = getPlatformAdmin();
-        return admin.getState().getBundle( getDefault().getBundle().getBundleId() );
+        return admin.getState().getBundle( id );
+    }
+    public static BundleDescription bundleDescription( final long id )
+    {
+        return getBundleDescription( id );
+    }
+    public static BundleDescription getBundleDescription( final String name )
+    {
+        final PlatformAdmin admin = getPlatformAdmin();
+        return admin.getState().getBundle( name, null );
+    }
+    public static BundleDescription bundleDescription( final String name )
+    {
+        return getBundleDescription( name );
+    }
+    public static BundleDescription getBundleDescription()
+    {
+        return getBundleDescription( getDefault().getBundle().getBundleId() );
     }
     public static BundleDescription bundleDescription()
     {
         return getBundleDescription();
     }
-    public static List< String > getRequiredBundles()
+    public static Set< String > getAllRequiredBundles( final long id )
     {
-        final List< String > list = new ArrayList< String >();
-        final BundleDescription description = bundleDescription();
+        final Set< String > set = new LinkedHashSet< String >();
+        final BundleDescription description = bundleDescription( id );
+        addRequiredBundles( set, description );
+        for( final BundleDescription bundleDescription : description.getFragments() )
+            addRequiredBundles( set, bundleDescription );
+        return set;
+    }
+    public static Set< String > getAllRequiredBundles()
+    {
+        return getAllRequiredBundles( getDefault().getBundle().getBundleId() );
+    }
+    private static void addRequiredBundles( final Set< String > set, 
+                                            final BundleDescription description )
+    {
         for( final BundleSpecification required : description.getRequiredBundles() )
-            list.add( required.getName() );
-        return list;
+            set.add( required.getName() );
     }
 }
