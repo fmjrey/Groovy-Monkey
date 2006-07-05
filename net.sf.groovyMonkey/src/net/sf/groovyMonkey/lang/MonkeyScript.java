@@ -188,7 +188,7 @@ implements IMonkeyScript
         catch( final BSFException e )
         {
             if( e.getTargetException() != null )
-                throw new CompilationException( "" + e + ": " + e.getTargetException(), e );
+                throw new CompilationException( "" + e + ": " + e.getTargetException(), e.getTargetException() );
             throw new CompilationException( e );
         }
         finally

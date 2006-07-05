@@ -2,7 +2,6 @@ package net.sf.groovyMonkey;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -236,13 +235,13 @@ extends IconAndMessageDialog
    protected List createDropDownList(Composite parent) {
        // create the list
        list = new List(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-               | SWT.MULTI);
+               | SWT.MULTI | SWT.RESIZE );
        // fill the list
        populateList(list);
        GridData data = new GridData(GridData.HORIZONTAL_ALIGN_FILL
                | GridData.GRAB_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL
                | GridData.GRAB_VERTICAL);
-       data.heightHint = list.getItemHeight() * LIST_ITEM_COUNT;
+       data.heightHint = list.getItemHeight() * ( LIST_ITEM_COUNT > list.getItemCount() ? LIST_ITEM_COUNT : list.getItemCount() );
        data.horizontalSpan = 2;
        list.setLayoutData(data);
        list.setFont(parent.getFont());
