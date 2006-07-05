@@ -21,6 +21,7 @@ import static net.sf.groovyMonkey.dom.Utilities.state;
 import static net.sf.groovyMonkey.lang.MonkeyScript.addIncludes;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
+import static org.eclipse.core.runtime.SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK;
 import static org.mozilla.javascript.Context.javaToJS;
 import static org.mozilla.javascript.ScriptableObject.putProperty;
 import java.io.IOException;
@@ -180,7 +181,7 @@ public class RunMonkeyScript
     {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         monitor.beginTask( file.getName(), 1 );
-        this.map.put( "monitor", new SubProgressMonitor( monitor, 1, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK ) );
+        this.map.put( "monitor", new SubProgressMonitor( monitor, 1, PREPEND_MAIN_LABEL_TO_SUBTASK ) );
         try
         {
             if( storedScript == null )
