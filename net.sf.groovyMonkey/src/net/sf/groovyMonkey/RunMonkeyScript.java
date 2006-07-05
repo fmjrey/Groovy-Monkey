@@ -11,8 +11,8 @@
  *******************************************************************************/
 package net.sf.groovyMonkey;
 import static java.lang.Thread.currentThread;
-import static net.sf.groovyMonkey.EclipseMonkeyPlugin.scopeStore;
-import static net.sf.groovyMonkey.EclipseMonkeyPlugin.scriptStore;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scopeStore;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
 import static net.sf.groovyMonkey.dom.Utilities.SCRIPT_NAME;
 import static net.sf.groovyMonkey.dom.Utilities.getFileContents;

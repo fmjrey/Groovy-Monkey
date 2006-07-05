@@ -1,7 +1,8 @@
 package net.sf.groovyMonkey.editor;
-import static net.sf.groovyMonkey.EclipseMonkeyPlugin.icon;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.icon;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import net.sf.groovyMonkey.DOMDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.BundleDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.ClassDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.ExecDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.JobDescriptor;
@@ -47,6 +48,8 @@ extends LabelProvider
                 return icon( "jar_obj.gif" );
             return icon( "fldr_obj.gif" );
         }
+        if( element instanceof BundleDescriptor )
+            return icon( "plugin_obj.gif" );
         return super.getImage( element );
     } 
 }

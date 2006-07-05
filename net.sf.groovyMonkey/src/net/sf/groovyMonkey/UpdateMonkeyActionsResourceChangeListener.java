@@ -107,19 +107,19 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 			store.metadata = new ScriptMetadata();
 			// log an error in the error log
 		}
-		EclipseMonkeyPlugin.getDefault().addScript(name, store);
+		GroovyMonkeyPlugin.getDefault().addScript(name, store);
         for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
             factory.changed( file );
 	}
 
 	private void processRemovedScript(String name, IFile file) {
-		EclipseMonkeyPlugin.getDefault().removeScript(name);
+		GroovyMonkeyPlugin.getDefault().removeScript(name);
         for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
             factory.changed( file );
 	}
 
 	public void rescanAllFiles() {
-		EclipseMonkeyPlugin.getDefault().clearScripts();
+		GroovyMonkeyPlugin.getDefault().clearScripts();
         for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
             factory.clearCachedScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();

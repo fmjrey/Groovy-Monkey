@@ -16,7 +16,7 @@ public class DOMDescriptor
     @Override
     public String toString()
     {
-        if( plugin_name.equals( EclipseMonkeyPlugin.PLUGIN_ID ) )
+        if( plugin_name.equals( GroovyMonkeyPlugin.PLUGIN_ID ) )
             return "Default";
         return url.endsWith( "/" ) ? url + plugin_name : url + "/" + plugin_name;
     }

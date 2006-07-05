@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.groovyMonkey.EclipseMonkeyPlugin;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.dom.Utilities;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -73,9 +73,9 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 	}
 
 	protected String decorateText(String contents) {
-		return EclipseMonkeyPlugin.PUBLISH_BEFORE_MARKER
+		return GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER
 		+ "\n" + contents + "\n"
-		+ EclipseMonkeyPlugin.PUBLISH_AFTER_MARKER;
+		+ GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
 	}
 
 	private ISelection selection;

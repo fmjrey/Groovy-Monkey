@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor;
-import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
+import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getDOM;
@@ -13,11 +13,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
@@ -98,6 +100,20 @@ implements ITreeContentProvider
         public String toString()
         {
             return "Menu: " + menu;
+        }
+    }
+    public static class BundleDescriptor
+    extends Descriptor
+    {
+        public final String name;
+        public BundleDescriptor( final String name )
+        {
+            this.name = name;
+        }
+        @Override
+        public String toString()
+        {
+            return name;
         }
     }
     public static class VarDescriptor
@@ -198,6 +214,7 @@ implements ITreeContentProvider
     private final MenuDescriptor menu = new MenuDescriptor( "" );
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
+    private final Set< BundleDescriptor > bundles = new LinkedHashSet< BundleDescriptor >();
     private ScriptMetadata data = null;
     
     public Object[] getChildren( final Object parentElement )
@@ -274,6 +291,7 @@ implements ITreeContentProvider
         elements.add( exec );
         elements.addAll( doms );
         elements.addAll( includes );
+        elements.addAll( bundles );
         return elements.toArray();
     }
     public void dispose()
@@ -299,6 +317,7 @@ implements ITreeContentProvider
             doms.addAll( data.getDOMs() );
             includes.clear();
             includes.addAll( data.getIncludes() );
+            addBundles();
         }
         catch( final IOException ioe )
         {
@@ -310,6 +329,15 @@ implements ITreeContentProvider
             e.printStackTrace();
             throw new RuntimeException( e );
         }
+    }
+    private void addBundles()
+    {
+        bundles.clear();
+        for( final String bundle : data.getIncludedBundles() )
+            bundles.add( new BundleDescriptor( bundle ) );
+        final List< String > required = GroovyMonkeyPlugin.getRequiredBundles();
+        for( final String bundle : required )
+            bundles.add( new BundleDescriptor( bundle ) );
     }
     public boolean diff( final ScriptMetadata data )
     {

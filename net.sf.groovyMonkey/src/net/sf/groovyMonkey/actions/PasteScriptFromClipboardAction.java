@@ -13,7 +13,7 @@
 package net.sf.groovyMonkey.actions;
 
 import java.io.ByteArrayInputStream;
-import net.sf.groovyMonkey.EclipseMonkeyPlugin;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ScriptMetadata;
 import org.eclipse.ui.views.navigator.*;
 import java.io.IOException;
@@ -194,8 +194,8 @@ public class PasteScriptFromClipboardAction implements
 	private List< String > extractScriptsFromText(TextAndRTF text) {
 		final List< String > result = new ArrayList< String >();
 		Pattern pattern = Pattern.compile(
-				EclipseMonkeyPlugin.PUBLISH_BEFORE_MARKER + "\\s*(.*?)\\s*"
-						+ EclipseMonkeyPlugin.PUBLISH_AFTER_MARKER,
+				GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER + "\\s*(.*?)\\s*"
+						+ GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER,
 				Pattern.DOTALL);
 		Pattern crpattern = Pattern.compile("\r\n?");
 		if (text.text != null) {

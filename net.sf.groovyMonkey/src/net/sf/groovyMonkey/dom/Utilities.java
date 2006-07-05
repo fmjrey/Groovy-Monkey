@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import net.sf.groovyMonkey.EclipseMonkeyPlugin;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.internal.DynamicState;
@@ -264,7 +264,7 @@ public class Utilities {
         final ErrorDialog dialog = new ErrorDialog( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
                                                     title, 
                                                     message, 
-                                                    new Status( IStatus.ERROR, EclipseMonkeyPlugin.PLUGIN_ID, IStatus.ERROR, message, exception ),
+                                                    new Status( IStatus.ERROR, GroovyMonkeyPlugin.PLUGIN_ID, IStatus.ERROR, message, exception ),
                                                     IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR );
         dialog.open();
     }

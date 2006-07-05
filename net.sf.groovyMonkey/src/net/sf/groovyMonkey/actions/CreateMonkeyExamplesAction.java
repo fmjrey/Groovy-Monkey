@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 package net.sf.groovyMonkey.actions;
-import static net.sf.groovyMonkey.EclipseMonkeyPlugin.getDefault;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;

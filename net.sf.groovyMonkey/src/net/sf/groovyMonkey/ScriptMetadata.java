@@ -310,7 +310,7 @@ public class ScriptMetadata
 	public static ScriptMetadata getScriptMetadata( final String contents ) 
     {
 		final ScriptMetadata metadata = new ScriptMetadata();
-        metadata.addDOM( new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", EclipseMonkeyPlugin.PLUGIN_ID ) );
+        metadata.addDOM( new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", GroovyMonkeyPlugin.PLUGIN_ID ) );
         Pattern pattern = Pattern.compile( "^\\s*\\/\\*.*?\\*\\/", Pattern.DOTALL );
         Matcher matcher = pattern.matcher( contents );
         if( !matcher.find() )

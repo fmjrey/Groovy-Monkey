@@ -1,7 +1,7 @@
 package net.sf.groovyMonkey.lang;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.synchronizedMap;
-import static net.sf.groovyMonkey.EclipseMonkeyPlugin.context;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getExtensionGlobalVariables;
 import static net.sf.groovyMonkey.dom.Utilities.getFileContents;

@@ -19,7 +19,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sf.groovyMonkey.EclipseMonkeyPlugin;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.StoredScript;
@@ -52,7 +52,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private List< ScriptMetadata > getAllMetadatas() 
     {
 		final List< ScriptMetadata > result = new ArrayList< ScriptMetadata >();
-		Iterator iter = EclipseMonkeyPlugin.getDefault().getScriptStore().values().iterator();
+		Iterator iter = GroovyMonkeyPlugin.getDefault().getScriptStore().values().iterator();
 		for (; iter.hasNext();) {
 			StoredScript element = (StoredScript) iter.next();
 			result.add(element.metadata);
