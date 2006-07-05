@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
+import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.dom.IMonkeyDOMFactory;
 import net.sf.groovyMonkey.dom.Utilities;
 import net.sf.groovyMonkey.lang.CompilationException;
@@ -99,12 +99,12 @@ public class RunMonkeyScript
     {
         final String fileName = key( file );
         storedScript = ( StoredScript )scriptStore().get( fileName );
-        if( storedScript.metadata.getExecMode() == ExecModes.UIJob )
+        if( storedScript.metadata.getJobMode() == JobModes.UIJob )
         {
             runUIJob();
             return;
         }
-        if( storedScript.metadata.getExecMode() == ExecModes.WorkspaceJob )
+        if( storedScript.metadata.getJobMode() == JobModes.WorkspaceJob )
         {
             runWorkspaceJob();
             return;

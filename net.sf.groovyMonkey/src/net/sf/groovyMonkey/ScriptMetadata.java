@@ -11,7 +11,10 @@
  *******************************************************************************/
 
 package net.sf.groovyMonkey;
-
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.join;
+import static org.apache.commons.lang.StringUtils.split;
+import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 import java.lang.reflect.InvocationHandler;
@@ -30,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
@@ -52,12 +54,16 @@ import org.osgi.framework.Bundle;
 
 public class ScriptMetadata 
 {
-    public enum ExecModes
+    public enum JobModes
     {
         Job, UIJob, WorkspaceJob
     }
+    public enum ExecModes
+    {
+        Background, Foreground
+    }
     public static final String DEFAULT_LANG = "Groovy";
-    public static final ExecModes DEFAULT_MODE = ExecModes.Job;
+    public static final JobModes DEFAULT_MODE = JobModes.Job;
 	private IFile file;
 	private String menuName;
 	private String scopeName;
@@ -66,22 +72,22 @@ public class ScriptMetadata
 	private final List< Subscription > subscriptions = new ArrayList< Subscription >();
     private final Set< String > includes = new LinkedHashSet< String >();
     private final Set< String > includedBundles = new LinkedHashSet< String >();
-    private ExecModes execMode = DEFAULT_MODE;
+    private JobModes jobMode = DEFAULT_MODE;
     
-    public void setExecMode( final String execMode )
+    public void setJobMode( final String jobMode )
     {
-        for( final ExecModes mode : ExecModes.values() )
+        for( final JobModes mode : JobModes.values() )
         {
-            if( mode.toString().equalsIgnoreCase( execMode.trim() ) )
+            if( mode.toString().equalsIgnoreCase( jobMode.trim() ) )
             {
-                this.execMode = mode;
+                this.jobMode = mode;
                 break;
             }
         }
     }
-    public ExecModes getExecMode()
+    public JobModes getJobMode()
     {
-        return execMode;
+        return jobMode;
     }
     public void addInclude( final String include )
     {
@@ -322,28 +328,28 @@ public class ScriptMetadata
         while( matcher.find() )
             metadata.addIncludedBundle( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Exec-Mode:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = Pattern.compile( "Job:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
         while( matcher.find() )
-            metadata.setExecMode( matcher.group( 1 ) );
+            metadata.setJobMode( matcher.group( 1 ) );
         
         return metadata;
 	}
     public static List< String > getMetadataLines( final String contents )
     {
-        final String[] lines = StringUtils.split( contents, "\r\n" );
+        final String[] lines = split( contents, "\r\n" );
         final List< String > code = new ArrayList< String >();
         boolean started = false;
         boolean finished = false;
         for( final String line : lines )
         {
-            if( StringUtils.strip( line ).startsWith( "/*" ) )
+            if( strip( line ).startsWith( "/*" ) )
             {
                 started = true;
                 code.add( line );
                 continue;
             }
-            if( StringUtils.strip( line ).endsWith( "*/" ) )
+            if( strip( line ).endsWith( "*/" ) )
             {
                 finished = true;
                 code.add( line );
@@ -359,18 +365,18 @@ public class ScriptMetadata
     }
 	public static String stripMetadata( final String contents )
     {
-	    final String[] lines = StringUtils.split( contents, "\r\n" );
+	    final String[] lines = split( contents, "\r\n" );
         final List< String > code = new ArrayList< String >();
         boolean started = false;
         boolean finished = false;
         for( final String line : lines )
         {
-            if( StringUtils.strip( line ).startsWith( "/*" ) )
+            if( strip( line ).startsWith( "/*" ) )
             {
                 started = true;
                 continue;
             }
-            if( StringUtils.strip( line ).endsWith( "*/" ) )
+            if( strip( line ).endsWith( "*/" ) )
             {
                 finished = true;
                 continue;
@@ -379,7 +385,7 @@ public class ScriptMetadata
                 continue;
             code.add( line );
         }
-        return StringUtils.join( code.toArray( new String[ 0 ] ), "\n" );
+        return join( code.toArray( new String[ 0 ] ), "\n" );
     }
 	public void subscribe() {
 		for (int i = 0; i < subscriptions.size(); i++) {
@@ -394,13 +400,13 @@ public class ScriptMetadata
 			subscription.unsubscribe();
 		}
 	}
-
-	public String getLang() {
+	public String getLang() 
+    {
 		return lang;
 	}
-
-	public void setLang(String lang) {
-		this.lang = StringUtils.isNotBlank( lang ) ? lang : DEFAULT_LANG;
+	public void setLang( final String lang ) 
+    {
+		this.lang = isNotBlank( lang ) ? lang : DEFAULT_LANG;
 	}
 
 }

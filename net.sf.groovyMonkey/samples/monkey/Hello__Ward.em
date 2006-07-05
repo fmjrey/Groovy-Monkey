@@ -3,7 +3,7 @@
  * Kudos: Ward Cunningham & Bjorn Freeman-Benson
  * License: EPL 1.0
  * Lang: Javascript
- * Exec-Mode: UIJob
+ * Job: UIJob
  */
  
 function main() {

@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
-import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
+import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -56,18 +56,18 @@ implements ITreeContentProvider
             return "LANG: " + lang;
         }
     }
-    public static class ExecDescriptor
+    public static class JobDescriptor
     extends Descriptor
     {
-        public ExecModes mode;
-        public ExecDescriptor( final ExecModes mode )
+        public JobModes mode;
+        public JobDescriptor( final JobModes mode )
         {
             this.mode = mode;
         }
         @Override
         public String toString()
         {
-            return "Exec-Mode: " + mode;
+            return "Job: " + mode;
         }
     }
     public static class MenuDescriptor
@@ -177,7 +177,7 @@ implements ITreeContentProvider
         }
     }
     private final LangDescriptor lang = new LangDescriptor( DEFAULT_LANG );
-    private final ExecDescriptor exec = new ExecDescriptor( DEFAULT_MODE );
+    private final JobDescriptor job = new JobDescriptor( DEFAULT_MODE );
     private final MenuDescriptor menu = new MenuDescriptor( "" );
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
@@ -253,7 +253,7 @@ implements ITreeContentProvider
         final List< Object > elements = new ArrayList< Object >();
         elements.add( menu );
         elements.add( lang );
-        elements.add( exec );
+        elements.add( job );
         elements.addAll( doms );
         elements.addAll( includes );
         return elements.toArray();
@@ -275,7 +275,7 @@ implements ITreeContentProvider
             data = getScriptMetadata( getFileContents( script ) );
             menu.menu = data.getMenuName();
             lang.lang = data.getLang();
-            exec.mode = data.getExecMode();
+            job.mode = data.getJobMode();
             doms.clear();
             doms.addAll( data.getDOMs() );
             includes.clear();

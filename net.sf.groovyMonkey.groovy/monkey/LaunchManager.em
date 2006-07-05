@@ -4,7 +4,7 @@
  * License: EPL 1.0
  * LANG: Groovy
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
- * Exec-Mode: UIJob
+ * Job: UIJob
  */
 import org.eclipse.swt.SWT
  

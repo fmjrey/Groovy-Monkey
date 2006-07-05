@@ -3,7 +3,7 @@ import static net.sf.groovyMonkey.EclipseMonkeyPlugin.icon;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.ClassDescriptor;
-import net.sf.groovyMonkey.editor.ScriptContentProvider.ExecDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.JobDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.LangDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MenuDescriptor;
@@ -22,7 +22,7 @@ extends LabelProvider
             return icon( "submenu.gif" );
         if( element instanceof LangDescriptor )
             return icon( "classpath.gif" );
-        if( element instanceof ExecDescriptor )
+        if( element instanceof JobDescriptor )
             return icon( "run_exc.gif" );
         if( element instanceof DOMDescriptor )
         {

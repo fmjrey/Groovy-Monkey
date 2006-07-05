@@ -3,7 +3,6 @@
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * LANG: Groovy
- * Exec-Mode: Job
  */
 map.message = 'testMonkeyRunnerJob'
 map.returnedValue = []

@@ -3,7 +3,7 @@
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Python
- * Exec-Mode: UIJob
+ * Job: UIJob
  * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
 files = resources.filesMatching('.*\\.java').tolist()

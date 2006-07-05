@@ -3,7 +3,7 @@
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/plugins/groovy.swt
- * Exec-Mode: UIJob
+ * Job: UIJob
  */
  
  def subapp = jface.shell( window.getShell() ) 
