@@ -3,11 +3,9 @@ import static org.eclipse.ui.texteditor.ITextEditorActionConstants.GROUP_EDIT;
 import net.sf.groovyMonkey.actions.AddDOM;
 import net.sf.groovyMonkey.actions.RunScript;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.editors.text.TextEditor;
-import org.eclipse.ui.texteditor.ITextEditorActionConstants;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class ScriptEditor 
