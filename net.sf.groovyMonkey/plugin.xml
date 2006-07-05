@@ -119,6 +119,11 @@
             id="Progress Monitor"
             resource="org.eclipse.core.runtime.SubProgressMonitor"
             variableName="monitor"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.bundle.BundleDOMFactory"
+            id="Bundle"
+            resource="net.sf.groovyMonkey.dom.bundle.BundleDOM"
+            variableName="bundle"/>
    </extension>
    <extension
          point="org.eclipse.ui.editors">

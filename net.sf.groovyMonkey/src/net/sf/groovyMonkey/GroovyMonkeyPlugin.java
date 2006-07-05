@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.mozilla.javascript.Scriptable;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 
@@ -135,6 +136,10 @@ implements IStartup
     {
         return context;
     }
+    public static Bundle bundle()
+    {
+        return getDefault().getBundle();
+    }
     public static PlatformAdmin getPlatformAdmin()
     {
         return ( PlatformAdmin )getDefault().tracker.getService();
@@ -163,7 +168,7 @@ implements IStartup
     }
     public static BundleDescription getBundleDescription()
     {
-        return getBundleDescription( getDefault().getBundle().getBundleId() );
+        return getBundleDescription( bundle().getBundleId() );
     }
     public static BundleDescription bundleDescription()
     {
@@ -181,6 +186,10 @@ implements IStartup
     public static Set< String > getAllRequiredBundles()
     {
         return getAllRequiredBundles( getDefault().getBundle().getBundleId() );
+    }
+    public static Set< String > getAllRequiredBundles( final String name )
+    {
+        return getAllRequiredBundles( bundleDescription( name ).getBundleId() );
     }
     private static void addRequiredBundles( final Set< String > set, 
                                             final BundleDescription description )
