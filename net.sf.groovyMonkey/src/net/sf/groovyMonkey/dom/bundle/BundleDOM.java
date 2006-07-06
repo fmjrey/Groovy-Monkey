@@ -1,8 +1,6 @@
 package net.sf.groovyMonkey.dom.bundle;
 import java.util.Set;
-
 import net.sf.groovyMonkey.GroovyMonkeyPlugin;
-
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.PlatformAdmin;
 import org.osgi.framework.Bundle;
