@@ -1,4 +1,6 @@
 package net.sf.groovyMonkey.editor;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.bundleDescription;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllReexportedBundles;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
@@ -9,29 +11,28 @@ import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.service.resolver.ExportPackageDescription;
 
 public class ScriptContentProvider 
 implements ITreeContentProvider
@@ -109,14 +110,39 @@ implements ITreeContentProvider
     extends Descriptor
     {
         public final String name;
-        public BundleDescriptor( final String name )
+        public final Object parent;
+        public BundleDescriptor( final String name,
+                                 final Object parent )
         {
             this.name = name;
+            this.parent = parent;
         }
         @Override
         public String toString()
         {
             return name;
+        }
+    }
+    public static class PackageDescriptor
+    extends Descriptor
+    implements Comparable< PackageDescriptor >
+    {
+        public final String name;
+        public final Object parent;
+        public PackageDescriptor( final String name,
+                                  final Object parent )
+        {
+            this.name = name;
+            this.parent = parent;
+        }
+        @Override
+        public String toString()
+        {
+            return name;
+        }
+        public int compareTo( final PackageDescriptor descriptor )
+        {
+            return name.compareTo( descriptor.name );
         }
     }
     public static class VarDescriptor
@@ -263,6 +289,26 @@ implements ITreeContentProvider
                 list.add( 0, new ClassDescriptor( descriptor.clase.getSuperclass(), descriptor ) );
             return list.toArray();
         }
+        if( parentElement instanceof BundleDescriptor )
+        {
+            final BundleDescriptor descriptor = ( BundleDescriptor )parentElement;
+            final List< Object > list = new ArrayList< Object >();
+            final Set< String > reexportedBundles = getAllReexportedBundles( descriptor.name );
+            final Set< BundleDescriptor > existing = new HashSet< BundleDescriptor >( bundles );
+            for( final String reexported : reexportedBundles )
+            {
+                final BundleDescriptor bundleDescriptor = new BundleDescriptor( reexported, descriptor );
+                if( existing.contains( bundleDescriptor ) )
+                    continue;
+                list.add( bundleDescriptor );
+                existing.add( bundleDescriptor );
+            }
+            final Set< PackageDescriptor > packages = new TreeSet< PackageDescriptor >();
+            for( final ExportPackageDescription description : bundleDescription( descriptor.name ).getExportPackages() )
+                packages.add( new PackageDescriptor( description.getName(), descriptor ) );
+            list.addAll( packages );
+            return list.toArray();
+        }
         return null;
     }
     public Object getParent( final Object element )
@@ -271,6 +317,8 @@ implements ITreeContentProvider
             return (( VarDescriptor )element).parent;
         if( element instanceof ClassDescriptor )
             return (( ClassDescriptor )element).parent;
+        if( element instanceof PackageDescriptor )
+            return (( PackageDescriptor )element).parent;
         return null;
     }
     public boolean hasChildren( final Object element )
@@ -284,6 +332,8 @@ implements ITreeContentProvider
         if( element instanceof VarDescriptor )
             return true;
         if( element instanceof ClassDescriptor )
+            return true;
+        if( element instanceof BundleDescriptor )
             return true;
         return false;
     }
@@ -339,9 +389,9 @@ implements ITreeContentProvider
     {
         bundles.clear();
         for( final String bundle : data.getIncludedBundles() )
-            bundles.add( new BundleDescriptor( bundle ) );
+            bundles.add( new BundleDescriptor( bundle, null ) );
         for( final String bundle : getAllRequiredBundles() )
-            bundles.add( new BundleDescriptor( bundle ) );
+            bundles.add( new BundleDescriptor( bundle, null ) );
     }
     public boolean diff( final ScriptMetadata data )
     {

@@ -10,6 +10,7 @@ import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.LangDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MenuDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.PackageDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.VarDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -50,6 +51,8 @@ extends LabelProvider
         }
         if( element instanceof BundleDescriptor )
             return icon( "plugin_obj.gif" );
+        if( element instanceof PackageDescriptor )
+            return icon( "package_obj.gif" );
         return super.getImage( element );
     } 
 }
