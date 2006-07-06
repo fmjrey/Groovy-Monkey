@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.actions;
+package net.sf.groovyMonkey.editor.actions;
 import static net.sf.groovyMonkey.ScriptMetadata.getMetadataLines;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;

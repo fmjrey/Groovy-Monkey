@@ -1,7 +1,7 @@
 package net.sf.groovyMonkey.editor;
 import static org.eclipse.ui.texteditor.ITextEditorActionConstants.GROUP_EDIT;
-import net.sf.groovyMonkey.actions.AddDOM;
-import net.sf.groovyMonkey.actions.RunScript;
+import net.sf.groovyMonkey.editor.actions.AddDOM;
+import net.sf.groovyMonkey.editor.actions.RunScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;

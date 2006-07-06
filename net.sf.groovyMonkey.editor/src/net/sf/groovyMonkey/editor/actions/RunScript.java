@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.actions;
+package net.sf.groovyMonkey.editor.actions;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import net.sf.groovyMonkey.editor.ScriptEditor;
 import org.eclipse.core.resources.IFile;

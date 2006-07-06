@@ -67,22 +67,6 @@
                id="net.sf.groovymonkey.action6"
                label="as Email (wrapped text)"
                menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"/>
-         <action
-               class="net.sf.groovyMonkey.actions.AddDOM"
-               enablesFor="1"
-               icon="icons/feature_obj.gif"
-               id="net.sf.groovymonkey.actions.AddDOM"
-               label="Add DOM to Script"
-               menubarPath="group.editor"
-               tooltip="Add existing DOM to Monkey Script"/>
-         <action
-               class="net.sf.groovyMonkey.actions.RunScript"
-               enablesFor="1"
-               icon="icons/run_exc.gif"
-               id="net.sf.groovyMonkey.actions.RunScript"
-               label="Run Script"
-               menubarPath="group.editor"
-               tooltip="Run Groovy Monkey Script"/>
       </objectContribution>
       <objectContribution
             adaptable="false"
@@ -125,18 +109,4 @@
             resource="net.sf.groovyMonkey.dom.bundle.BundleDOM"
             variableName="bundle"/>
    </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="net.sf.groovyMonkey.editor.ScriptEditor"
-            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
-            default="true"
-            extensions="em"
-            filenames="*.em"
-            icon="icons/monkey.gif"
-            id="net.sf.groovymonkey.editor.ScriptEditor"
-            name="Monkey Script Editor"/>
-   </extension>
-
-
 </plugin>

@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.actions;
+package net.sf.groovyMonkey.editor.actions;
 import static org.eclipse.jface.resource.JFaceResources.TEXT_FONT;
 import static org.eclipse.jface.resource.JFaceResources.getFontRegistry;
 import static org.eclipse.swt.SWT.BORDER;

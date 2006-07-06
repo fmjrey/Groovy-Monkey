@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.actions;
+package net.sf.groovyMonkey.editor.actions;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jface.dialogs.Dialog;
