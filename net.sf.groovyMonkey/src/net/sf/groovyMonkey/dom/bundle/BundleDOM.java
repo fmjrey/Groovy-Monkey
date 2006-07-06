@@ -46,4 +46,12 @@ public class BundleDOM
     {
         return GroovyMonkeyPlugin.getAllRequiredBundles( name );
     }
+    public static Set< String > getAllReexportedBundles( final long id )
+    {
+        return GroovyMonkeyPlugin.getAllReexportedBundles( id );
+    }
+    public static Set< String > getAllReexportedBundles( final String name )
+    {
+        return GroovyMonkeyPlugin.getAllReexportedBundles( name );
+    }
 }

@@ -183,6 +183,15 @@ implements IStartup
             addRequiredBundles( set, bundleDescription );
         return set;
     }
+    public static Set< String > getAllReexportedBundles( final long id )
+    {
+        final Set< String > set = new LinkedHashSet< String >();
+        final BundleDescription description = bundleDescription( id );
+        addReexportedBundles( set, description );
+        for( final BundleDescription bundleDescription : description.getFragments() )
+            addReexportedBundles( set, bundleDescription );
+        return set;
+    }
     public static Set< String > getAllRequiredBundles()
     {
         return getAllRequiredBundles( getDefault().getBundle().getBundleId() );
@@ -191,10 +200,21 @@ implements IStartup
     {
         return getAllRequiredBundles( bundleDescription( name ).getBundleId() );
     }
+    public static Set< String > getAllReexportedBundles( final String name )
+    {
+        return getAllReexportedBundles( bundleDescription( name ).getBundleId() );
+    }
     private static void addRequiredBundles( final Set< String > set, 
                                             final BundleDescription description )
     {
         for( final BundleSpecification required : description.getRequiredBundles() )
             set.add( required.getName() );
+    }
+    private static void addReexportedBundles( final Set< String > set, 
+                                              final BundleDescription description )
+    {
+        for( final BundleSpecification required : description.getRequiredBundles() )
+            if( required.isExported() )
+                set.add( required.getName() );
     }
 }
