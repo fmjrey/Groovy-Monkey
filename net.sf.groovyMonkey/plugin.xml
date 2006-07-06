@@ -18,7 +18,7 @@
             </separator>
          </menu>
          <action
-               class="net.sf.groovyMonkey.actions.CreateMonkeyExamplesAction"
+               class="net.sf.groovyMonkey.actions.CreateGroovyMonkeyExamplesAction"
                icon="icons/monkey.gif"
                id="net.sf.groovymonkey.action1"
                label="Eclipse Monkey Examples"

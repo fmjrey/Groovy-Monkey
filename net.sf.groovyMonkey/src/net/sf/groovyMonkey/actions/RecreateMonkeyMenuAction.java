@@ -119,7 +119,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		if (sorted.size() == 0) {
 			menuManager.add(new Action("Examples") {
 				public void run() {
-					IWorkbenchWindowActionDelegate delegate = new CreateMonkeyExamplesAction();
+					IWorkbenchWindowActionDelegate delegate = new CreateGroovyMonkeyExamplesAction();
 					delegate.init(_window);
 					delegate.run(action);
 				}
