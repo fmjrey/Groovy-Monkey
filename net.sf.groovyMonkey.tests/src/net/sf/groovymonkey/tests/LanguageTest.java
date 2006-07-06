@@ -51,12 +51,6 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string() );
     }
-    public void testJavascriptRuntime()
-    throws Exception
-    {
-        runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
-    }
     public void testPythonRuntime()
     throws Exception
     {

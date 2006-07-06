@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry path="src" kind="src"/>
 	<classpathentry sourcepath="lib/commons-io-1.2-src-ide.zip" path="lib/commons-io-1.2.jar" exported="true" kind="lib"/>
-	<classpathentry sourcepath="lib/rhino1_6R2.zip" path="lib/js.jar" exported="true" kind="lib"/>
 	<classpathentry sourcepath="lib/bsf-src-2.3.0.zip" path="lib/bsf.jar" exported="true" kind="lib"/>
 	<classpathentry sourcepath="lib/commons-lang-2.1-src.zip" path="lib/commons-lang-2.1.jar" exported="true" kind="lib"/>
 	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>

@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 package net.sf.groovyMonkey.actions;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -19,10 +20,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import net.sf.groovyMonkey.ScriptMetadata;
-import net.sf.groovyMonkey.StoredScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -52,11 +51,8 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private List< ScriptMetadata > getAllMetadatas() 
     {
 		final List< ScriptMetadata > result = new ArrayList< ScriptMetadata >();
-		Iterator iter = GroovyMonkeyPlugin.getDefault().getScriptStore().values().iterator();
-		for (; iter.hasNext();) {
-			StoredScript element = (StoredScript) iter.next();
-			result.add(element.metadata);
-		}
+        for( final ScriptMetadata metadata : scriptStore().values() )
+            result.add( metadata );
 		return result;
 	}
 
@@ -163,7 +159,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 			}
 		};
 		if (RunMonkeyScript.last_run != null
-				&& value.equals(RunMonkeyScript.last_run.scriptFile))
+				&& value.equals(RunMonkeyScript.last_run.getFile()))
 			action.setAccelerator(SWT.ALT | SWT.CONTROL | 'M');
 		return action;
 	}

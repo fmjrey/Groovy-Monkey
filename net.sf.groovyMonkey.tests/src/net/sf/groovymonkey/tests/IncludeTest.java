@@ -72,12 +72,6 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string() );
     }
-    public void testIncludeInJavascript()
-    throws Exception
-    {
-        runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
-    }
     public void testIncludeInPython()
     throws Exception
     {

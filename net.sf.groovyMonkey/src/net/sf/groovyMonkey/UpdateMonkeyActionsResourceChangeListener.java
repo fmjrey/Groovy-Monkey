@@ -95,32 +95,35 @@ public class UpdateMonkeyActionsResourceChangeListener implements
 		}
 	}
 
-	private void processNewOrChangedScript(String name, IFile file) {
-		StoredScript store = new StoredScript();
-		store.scriptFile = file;
+	private void processNewOrChangedScript( final String name, 
+                                            final IFile file ) 
+    {
+        ScriptMetadata metadata;
 		try {
-			store.metadata = getMetadataFrom(file);
+			metadata = getMetadataFrom(file);
 		} catch (CoreException x) {
-			store.metadata = new ScriptMetadata();
+			metadata = new ScriptMetadata();
+            metadata.setFile( file );
 			// log an error in the error log
 		} catch (IOException x) {
-			store.metadata = new ScriptMetadata();
-			// log an error in the error log
+			metadata = new ScriptMetadata();
+            metadata.setFile( file );
+            // log an error in the error log
 		}
-		GroovyMonkeyPlugin.getDefault().addScript(name, store);
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
+		GroovyMonkeyPlugin.getDefault().addScript(name, metadata);
+        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
             factory.changed( file );
 	}
 
 	private void processRemovedScript(String name, IFile file) {
 		GroovyMonkeyPlugin.getDefault().removeScript(name);
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
+        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
             factory.changed( file );
 	}
 
 	public void rescanAllFiles() {
 		GroovyMonkeyPlugin.getDefault().clearScripts();
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getFactories().values() )
+        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
             factory.clearCachedScripts();
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		for (int i = 0; i < workspace.getRoot().getProjects().length; i++) {
