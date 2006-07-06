@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,6 +107,7 @@ implements ITreeContentProvider
     }
     public static class BundleDescriptor
     extends Descriptor
+    implements Comparable< BundleDescriptor >
     {
         public final String name;
         public final Object parent;
@@ -121,6 +121,10 @@ implements ITreeContentProvider
         public String toString()
         {
             return name;
+        }
+        public int compareTo( final BundleDescriptor descriptor )
+        {
+            return name.compareTo( descriptor.name );
         }
     }
     public static class PackageDescriptor
@@ -243,7 +247,7 @@ implements ITreeContentProvider
     private final MenuDescriptor menu = new MenuDescriptor( "" );
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
-    private final Set< BundleDescriptor > bundles = new LinkedHashSet< BundleDescriptor >();
+    private final Set< BundleDescriptor > bundles = new TreeSet< BundleDescriptor >();
     private ScriptMetadata data = null;
     
     public Object[] getChildren( final Object parentElement )
@@ -292,22 +296,10 @@ implements ITreeContentProvider
         if( parentElement instanceof BundleDescriptor )
         {
             final BundleDescriptor descriptor = ( BundleDescriptor )parentElement;
-            final List< Object > list = new ArrayList< Object >();
-            final Set< String > reexportedBundles = getAllReexportedBundles( descriptor.name );
-            final Set< BundleDescriptor > existing = new HashSet< BundleDescriptor >( bundles );
-            for( final String reexported : reexportedBundles )
-            {
-                final BundleDescriptor bundleDescriptor = new BundleDescriptor( reexported, descriptor );
-                if( existing.contains( bundleDescriptor ) )
-                    continue;
-                list.add( bundleDescriptor );
-                existing.add( bundleDescriptor );
-            }
             final Set< PackageDescriptor > packages = new TreeSet< PackageDescriptor >();
             for( final ExportPackageDescription description : bundleDescription( descriptor.name ).getExportPackages() )
                 packages.add( new PackageDescriptor( description.getName(), descriptor ) );
-            list.addAll( packages );
-            return list.toArray();
+            return packages.toArray();
         }
         return null;
     }
@@ -388,10 +380,39 @@ implements ITreeContentProvider
     private void addBundles()
     {
         bundles.clear();
+        final Set< String > visited = new HashSet< String >();
         for( final String bundle : data.getIncludedBundles() )
+        {
             bundles.add( new BundleDescriptor( bundle, null ) );
+            visited.add( bundle );
+        }
         for( final String bundle : getAllRequiredBundles() )
+        {
             bundles.add( new BundleDescriptor( bundle, null ) );
+            visited.add( bundle );
+        }
+        addReexportedBundles( visited, new HashSet< String >( visited ) );
+    }
+    private void addReexportedBundles( final Set< String > visited,
+                                       final Set< String > bundles )
+    {
+        if( bundles == null || bundles.size() == 0 )
+            return;
+        final Set< String > newBundles = new HashSet< String >();
+        for( final String bundle : bundles )
+        {
+            final Set< String > reexported = getAllReexportedBundles( bundle );
+            for( final String exported : reexported )
+            {
+                if( visited.contains( exported ) )
+                    continue;
+                visited.add( exported );
+                this.bundles.add( new BundleDescriptor( exported, null ) );
+                newBundles.add( exported );
+            }
+        }
+        if( newBundles.size() > 0 )
+            addReexportedBundles( visited, newBundles );
     }
     public boolean diff( final ScriptMetadata data )
     {
