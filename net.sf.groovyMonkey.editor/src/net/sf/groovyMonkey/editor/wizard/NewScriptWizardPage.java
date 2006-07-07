@@ -250,7 +250,7 @@ extends WizardPage
     }
     public void finished()
     {
-        final IProject project = getWorkspace().getRoot().findMember( new Path( getFileName() ) ).getProject();
+        final IProject project = getWorkspace().getRoot().getFolder( new Path( getContainerName() ) ).getProject();
         final IFolder folder = getMonkeyFolder( project );
         try
         {
@@ -287,11 +287,16 @@ extends WizardPage
      */
     private void dialogChanged()
     {
-        final IResource container = getWorkspace().getRoot().findMember( new Path( getContainerName() ) );
-        final String fileName = getFileName();
-        if( getContainerName().length() == 0 )
+        if( isBlank( getContainerName() ) )
         {
             updateStatus( "File container must be specified" );
+            return;
+        }
+        final IResource container = getWorkspace().getRoot().getFolder( new Path( getContainerName() ) );
+        final String fileName = getFileName();
+        if( !container.getProject().exists() )
+        {
+            updateStatus( "Project must exist: " + container.getProject().getName() );
             return;
         }
         if( container == null || ( container.getType() & ( PROJECT | FOLDER ) ) == 0 )
@@ -299,7 +304,7 @@ extends WizardPage
             updateStatus( "File container must exist" );
             return;
         }
-        if( !container.isAccessible() )
+        if( !container.getProject().isAccessible() )
         {
             updateStatus( "Project must be writable" );
             return;
