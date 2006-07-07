@@ -11,13 +11,20 @@
  *******************************************************************************/
 package net.sf.groovyMonkey.dom;
 import static java.util.Collections.synchronizedMap;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.eclipse.core.runtime.IStatus.ERROR;
+import static org.eclipse.core.runtime.IStatus.INFO;
+import static org.eclipse.core.runtime.IStatus.OK;
+import static org.eclipse.core.runtime.IStatus.WARNING;
+import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
+import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.internal.DynamicState;
@@ -28,12 +35,9 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
 
 public class Utilities {
 
@@ -95,7 +99,7 @@ public class Utilities {
     }
     public static boolean isJavaScript( final String fullPath )
     {
-        return fullPath.endsWith( ".em" );
+        return fullPath.endsWith( FILE_EXTENSION );
     }
     public static String key( final IFile file )
     {
@@ -122,7 +126,9 @@ public class Utilities {
         getExtensionGlobalVariables( metadata, point, vars );
         return vars;
     }
-    private static void getExtensionGlobalVariables( final ScriptMetadata metadata, final IExtensionPoint point, final Map< String, Object > vars )
+    private static void getExtensionGlobalVariables( final ScriptMetadata metadata, 
+                                                     final IExtensionPoint point, 
+                                                     final Map< String, Object > vars )
     {
         final IExtension[] extensions = point.getExtensions();
         for( int i = 0; i < extensions.length; i++ )
@@ -241,7 +247,7 @@ public class Utilities {
     }
     private static IExtensionPoint getDOMExtensionPoint()
     {
-        final IExtensionRegistry registry = Platform.getExtensionRegistry();
+        final IExtensionRegistry registry = getExtensionRegistry();
         final IExtensionPoint point = registry.getExtensionPoint( "net.sf.groovyMonkey.dom" );
         return point;
     }
@@ -261,11 +267,11 @@ public class Utilities {
             Display.getDefault().asyncExec( runnable );
             return;
         }
-        final ErrorDialog dialog = new ErrorDialog( PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), 
+        final ErrorDialog dialog = new ErrorDialog( getWorkbench().getActiveWorkbenchWindow().getShell(), 
                                                     title, 
                                                     message, 
-                                                    new Status( IStatus.ERROR, GroovyMonkeyPlugin.PLUGIN_ID, IStatus.ERROR, message, exception ),
-                                                    IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR );
+                                                    new Status( ERROR, PLUGIN_ID, ERROR, message, exception ),
+                                                    OK | INFO | WARNING | ERROR );
         dialog.open();
     }
 }

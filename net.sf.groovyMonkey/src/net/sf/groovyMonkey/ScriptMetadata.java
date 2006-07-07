@@ -1,22 +1,16 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
-
 package net.sf.groovyMonkey;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+import static org.eclipse.ui.PlatformUI.getWorkbench;
+import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
+import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -33,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Platform;
@@ -43,16 +38,15 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.internal.Workbench;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.update.search.UpdateSearchRequest;
 import org.eclipse.update.search.UpdateSearchScope;
 import org.eclipse.update.ui.UpdateJob;
-import org.eclipse.update.ui.UpdateManagerUI;
 import org.osgi.framework.Bundle;
 
 public class ScriptMetadata 
 {
+    public static final DOMDescriptor DEFAULT_DOM = new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", PLUGIN_ID );
     public enum JobModes
     {
         Job, UIJob, WorkspaceJob
@@ -65,8 +59,9 @@ public class ScriptMetadata
     public static final JobModes DEFAULT_JOB = JobModes.Job;
     public static final ExecModes DEFAULT_MODE = ExecModes.Background;
 	private IFile file;
-	private String menuName;
-	private String scopeName;
+	private String menuName = "";
+    private String kudos = "";
+    private String license = "EPL 1.0";
 	private String lang = DEFAULT_LANG;
 	private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
 	private final List< Subscription > subscriptions = new ArrayList< Subscription >();
@@ -79,7 +74,7 @@ public class ScriptMetadata
     {
         for( final JobModes mode : JobModes.values() )
         {
-            if( mode.toString().equalsIgnoreCase( jobMode.trim() ) )
+            if( equalsIgnoreCase( mode.toString(), jobMode.trim() ) )
             {
                 this.jobMode = mode;
                 break;
@@ -94,7 +89,7 @@ public class ScriptMetadata
     {
         for( final ExecModes mode : ExecModes.values() )
         {
-            if( mode.toString().equalsIgnoreCase( execMode.trim() ) )
+            if( equalsIgnoreCase( mode.toString(), execMode.trim() ) )
             {
                 this.execMode = mode;
                 break;
@@ -145,14 +140,6 @@ public class ScriptMetadata
 		return menuName;
 	}
 
-	public String getScopeName() {
-		return scopeName;
-	}
-
-	public void setScopeName(String s) {
-		scopeName = s;
-	}
-
     public void addDOM( final DOMDescriptor dom )
     {
         doms.add( dom );
@@ -162,29 +149,31 @@ public class ScriptMetadata
 		return doms;
 	}
 
-	public String getReasonableFilename() {
-		if (file != null)
-			return file.getName();
-		if (menuName != null && !menuName.equals("")) {
-			String result = menuName;
-			result = result.replaceAll(" ", "_");
-			Pattern illegalChars = Pattern.compile("[^\\p{Alnum}_-]");
-			Matcher match = illegalChars.matcher(result);
-			result = match.replaceAll("");
-			if (!result.equals(""))
-				return result + ".em";
-		}
-		return "script.em";
-	}
-
-	public boolean containsDOM_by_plugin(String plugin_id) {
-		for (Iterator iter = doms.iterator(); iter.hasNext();) {
-			DOMDescriptor element = (DOMDescriptor) iter.next();
-			if (element.plugin_name.equals(plugin_id))
-				return true;
-		}
-		return false;
-	}
+	public String getReasonableFilename()
+    {
+        if( file != null )
+            return file.getName();
+        if( isNotBlank( menuName ) )
+        {
+            String result = menuName;
+            result = result.replaceAll( " ", "_" );
+            final Pattern illegalChars = Pattern.compile( "[^\\p{Alnum}_-]" );
+            final Matcher match = illegalChars.matcher( result );
+            result = match.replaceAll( "" );
+            if( !result.equals( "" ) )
+                return result + FILE_EXTENSION;
+        }
+        return "script" + FILE_EXTENSION;
+    }
+    public boolean containsDOM_by_plugin( final String pluginID )
+    {
+        for( final DOMDescriptor dom : doms )
+        {
+            if( StringUtils.equals( dom.plugin_name, pluginID ) )
+                return true;
+        }
+        return false;
+    }
 
 	public boolean ensure_doms_are_loaded(IWorkbenchWindow window) {
 		String missing_plugin_names = "";
@@ -224,32 +213,31 @@ public class ScriptMetadata
         return reflectionHashCode( this );
     }
 
-    class URLtoPluginMap {
-		Map< String, Set< String > > map = new HashMap< String, Set< String > >();
+    class URLtoPluginMap
+    {
+        final Map< String, Set< String > > map = new HashMap< String, Set< String > >();
 
-		Iterator iterator() {
-			return map.keySet().iterator();
-		}
-
-		String getPluginNames(String url) {
-			Set ids = (Set) map.get(url);
-			String idstr = "";
-			for (Iterator iterator = ids.iterator(); iterator.hasNext();) {
-				String id = (String) iterator.next();
-				idstr += id + ", ";
-			}
-			idstr = idstr.substring(0, idstr.length() - 2);
-			return idstr;
-		}
-
-		void add(DOMDescriptor domdesc) {
-			Set< String > ids = map.get(domdesc.url);
-			if (ids == null)
-				ids = new HashSet< String >();
-			ids.add(domdesc.plugin_name);
-			map.put(domdesc.url, ids);
-		}
-	}
+        String getPluginNames( String url )
+        {
+            Set ids = ( Set )map.get( url );
+            String idstr = "";
+            for( Iterator iterator = ids.iterator(); iterator.hasNext(); )
+            {
+                String id = ( String )iterator.next();
+                idstr += id + ", ";
+            }
+            idstr = idstr.substring( 0, idstr.length() - 2 );
+            return idstr;
+        }
+        void add( DOMDescriptor domdesc )
+        {
+            Set< String > ids = map.get( domdesc.url );
+            if( ids == null )
+                ids = new HashSet< String >();
+            ids.add( domdesc.plugin_name );
+            map.put( domdesc.url, ids );
+        }
+    }
 
 	private void openEditor() {
 		try {
@@ -268,27 +256,24 @@ public class ScriptMetadata
 							+ x.toString());
 		}
 	}
-
-	private void launchUpdateInstaller(URLtoPluginMap missing_urls) {
-		UpdateSearchScope scope = new UpdateSearchScope();
-		String[] skips = {};
-		for (Iterator iter = missing_urls.iterator(); iter.hasNext();) {
-			String url = (String) iter.next();
-			try {
-				String idstr = missing_urls.getPluginNames(url);
-				String plural2 = idstr.indexOf(",") >= 0 ? "s" : "";
-				scope.addSearchSite("Site providing DOM" + plural2 + " ("
-						+ idstr + ")", new URL(url), skips);
-			} catch (MalformedURLException x) {
-				// ignore
-			}
+	private void launchUpdateInstaller( final URLtoPluginMap missingUrls ) 
+    {
+		final UpdateSearchScope scope = new UpdateSearchScope();
+        for( final String url : missingUrls.map.keySet() )
+        {
+            final String id = missingUrls.getPluginNames( url );
+            final String plural = id.indexOf( "," ) >= 0 ? "s" : "";
+            final String description = "Site providing DOM" + plural + " ( " + id + " )";
+			try 
+            {
+				scope.addSearchSite( description, new URL( url ), new String[ 0 ] );
+			} 
+            catch( final MalformedURLException x ) {}
 		}
-		UpdateSearchRequest request = new UpdateSearchRequest(
-				UpdateSearchRequest.createDefaultSiteSearchCategory(), scope);
-		UpdateJob job = new UpdateJob("Install Eclipse Monkey DOMs", request);
-		Shell shell = Workbench.getInstance().getWorkbenchWindows()[0]
-				.getShell();
-		UpdateManagerUI.openInstaller(shell, job);
+		final UpdateSearchRequest request = new UpdateSearchRequest( createDefaultSiteSearchCategory(), scope );
+		final UpdateJob job = new UpdateJob( "Install Eclipse Monkey DOMs", request );
+        final Shell shell = getWorkbench().getActiveWorkbenchWindow().getShell();
+		openInstaller( shell, job );
 	}
 
 	private String notifyMissingDOMs(String missing_plugin_names) {
@@ -307,10 +292,37 @@ public class ScriptMetadata
 		String choice = choices[result];
 		return choice;
 	}
+    public String toHeader()
+    {
+        final StringBuffer buffer = new StringBuffer();
+        buffer.append( "/*" ).append( "\n" );
+        buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
+        buffer.append( " * Kudos: " + getKudos() ).append( "\n" );
+        buffer.append( " * License: " + getLicense() ).append( "\n" );
+        if( !getLang().equals( DEFAULT_LANG ) )
+            buffer.append( " * LANG: " + getLang() ).append( "\n" );
+        if( !getJobMode().equals( DEFAULT_JOB ) )
+            buffer.append( " * Job: " + getJobMode() ).append( "\n" );
+        if( !getExecMode().equals( DEFAULT_MODE ) )
+            buffer.append( " * Exec-Mode: " + getExecMode() ).append( "\n" );
+        for( final DOMDescriptor dom : getDOMs() )
+        {
+            if( dom.equals( DEFAULT_DOM ) )
+                continue;
+            buffer.append( " * DOM: " + dom ).append( "\n" );
+        }
+        for( final String include : getIncludes() )
+            buffer.append( " * Include: " + include ).append( "\n" );
+        for( final String include : getIncludedBundles() )
+            buffer.append( " * Include-Bundle: " + include ).append( "\n" );
+        buffer.append( "*/" ).append( "\n" );
+        buffer.append( "\n" );
+        return buffer.toString();
+    }
 	public static ScriptMetadata getScriptMetadata( final String contents ) 
     {
 		final ScriptMetadata metadata = new ScriptMetadata();
-        metadata.addDOM( new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", GroovyMonkeyPlugin.PLUGIN_ID ) );
+        metadata.addDOM( DEFAULT_DOM );
         Pattern pattern = Pattern.compile( "^\\s*\\/\\*.*?\\*\\/", Pattern.DOTALL );
         Matcher matcher = pattern.matcher( contents );
         if( !matcher.find() )
@@ -322,10 +334,15 @@ public class ScriptMetadata
         if( matcher.find() )
             metadata.setMenuName( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Scope:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = Pattern.compile( "Kudos:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
-            metadata.setScopeName( matcher.group( 1 ) );
+            metadata.setKudos( matcher.group( 1 ) );
+        
+        pattern = Pattern.compile( "License:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        matcher = pattern.matcher( comment );
+        if( matcher.find() )
+            metadata.setLicense( matcher.group( 1 ) );
         
         pattern = Pattern.compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
@@ -344,12 +361,12 @@ public class ScriptMetadata
         
         pattern = Pattern.compile( "Include:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
-        while( matcher.find() )
+        if( matcher.find() )
             metadata.addInclude( matcher.group( 1 ) );
 
         pattern = Pattern.compile( "Include-Bundle:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
         matcher = pattern.matcher( comment );
-        while( matcher.find() )
+        if( matcher.find() )
             metadata.addIncludedBundle( matcher.group( 1 ) );
         
         pattern = Pattern.compile( "Job:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
@@ -437,7 +454,22 @@ public class ScriptMetadata
     {
 		this.lang = isNotBlank( lang ) ? lang : DEFAULT_LANG;
 	}
-
+    public String getKudos()
+    {
+        return kudos;
+    }
+    public void setKudos( String kudos )
+    {
+        this.kudos = kudos;
+    }
+    public String getLicense()
+    {
+        return license;
+    }
+    public void setLicense( String license )
+    {
+        this.license = license;
+    }
 }
 
 class Subscription {

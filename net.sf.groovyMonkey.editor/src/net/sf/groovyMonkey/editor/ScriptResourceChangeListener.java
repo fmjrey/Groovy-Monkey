@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 
 public class ScriptResourceChangeListener 
 implements IResourceChangeListener
@@ -68,12 +69,25 @@ implements IResourceChangeListener
             x.printStackTrace();
         }
         final boolean anyMatches = ( ( Boolean )( changes[ 0 ] ) ).booleanValue();
-        if( anyMatches )
+        if( anyMatches && diff( changedFile[ 0 ] ) )
+            updateViewer();
+    }
+    private void updateViewer()
+    {
+        if( Display.getCurrent() == null )
         {
-            // This is how I get it to bloody well redraw, it is an ugly hack aint it?
-            if( diff( changedFile[ 0 ] ) )
-                viewer.setInput( viewer.getInput() );
+            final Runnable runnable = new Runnable()
+            {
+                public void run()
+                {
+                    updateViewer();
+                }
+            };
+            Display.getDefault().asyncExec( runnable );
+            return;
         }
+        // This is how I get it to bloody well redraw, it is an ugly hack aint it?        
+        viewer.setInput( viewer.getInput() );
     }
     private boolean diff( final IFile changedScript )
     {

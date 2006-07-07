@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
+import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 
 public class DOMDescriptor
 {
@@ -16,18 +17,18 @@ public class DOMDescriptor
     @Override
     public String toString()
     {
-        if( plugin_name.equals( GroovyMonkeyPlugin.PLUGIN_ID ) )
+        if( plugin_name.equals( PLUGIN_ID ) )
             return "Default";
         return url.endsWith( "/" ) ? url + plugin_name : url + "/" + plugin_name;
     }
     @Override
     public boolean equals( final Object obj )
     {
-        return EqualsBuilder.reflectionEquals( this, obj );
+        return reflectionEquals( this, obj );
     }
     @Override
     public int hashCode()
     {
-        return HashCodeBuilder.reflectionHashCode( this );
+        return reflectionHashCode( this );
     }
 }

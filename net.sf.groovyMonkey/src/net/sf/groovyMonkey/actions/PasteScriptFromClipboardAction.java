@@ -12,10 +12,8 @@
 
 package net.sf.groovyMonkey.actions;
 
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import java.io.ByteArrayInputStream;
-import net.sf.groovyMonkey.GroovyMonkeyPlugin;
-import net.sf.groovyMonkey.ScriptMetadata;
-import org.eclipse.ui.views.navigator.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
+import net.sf.groovyMonkey.ScriptMetadata;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -46,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 public class PasteScriptFromClipboardAction implements
 		IWorkbenchWindowActionDelegate, IObjectActionDelegate {
@@ -148,7 +148,7 @@ public class PasteScriptFromClipboardAction implements
 			basename = basename.substring(0, ix);
 		}
 		IResource[] members = destination.members(0);
-		Pattern suffix = Pattern.compile(basename + "(-(\\d+))?\\.em");
+		Pattern suffix = Pattern.compile(basename + "(-(\\d+))?\\" + FILE_EXTENSION );
 		int maxsuffix = -1;
 		for (int i = 0; i < members.length; i++) {
 			IResource resource = members[i];
@@ -166,8 +166,8 @@ public class PasteScriptFromClipboardAction implements
 				}
 			}
 		}
-		String filename = (maxsuffix == -1) ? filename = basename + ".em"
-				: basename + "-" + (maxsuffix + 1) + ".em";
+		String filename = (maxsuffix == -1) ? filename = basename + FILE_EXTENSION
+				: basename + "-" + (maxsuffix + 1) + FILE_EXTENSION;
 
 		ByteArrayInputStream stream = new ByteArrayInputStream(script
 				.getBytes());

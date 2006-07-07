@@ -12,6 +12,7 @@
 
 package net.sf.groovyMonkey;
 
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import junit.framework.TestCase;
 
 public class ScriptMetadataTest extends TestCase {
@@ -19,16 +20,16 @@ public class ScriptMetadataTest extends TestCase {
 	public void testLegalFilenames() {
 		ScriptMetadata data = new ScriptMetadata();
 		data.setMenuName("This is a test");
-		assertEquals("This_is_a_test.em", data.getReasonableFilename());
+		assertEquals("This_is_a_test" + FILE_EXTENSION, data.getReasonableFilename());
 		
 		data.setMenuName("ABCD@#$%@$#DEFG");
-		assertEquals("ABCDDEFG.em", data.getReasonableFilename());
+		assertEquals("ABCDDEFG" + FILE_EXTENSION, data.getReasonableFilename());
 		
 		data.setMenuName("!!!+++");
-		assertEquals("script.em", data.getReasonableFilename());
+		assertEquals("script" + FILE_EXTENSION, data.getReasonableFilename());
 		
 		data.setMenuName(null);
-		assertEquals("script.em", data.getReasonableFilename());
+		assertEquals("script" + FILE_EXTENSION, data.getReasonableFilename());
 		
 	}
 }

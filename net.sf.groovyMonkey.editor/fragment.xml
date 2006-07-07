@@ -38,4 +38,16 @@
             id="net.sf.groovymonkey.editor.ScriptEditor"
             name="Monkey Script Editor"/>
    </extension>
+ <extension
+       point="org.eclipse.ui.newWizards">
+    <category
+          id="net.sf.groovyMonkey"
+          name="Groovy Monkey"/>
+    <wizard
+          category="net.sf.groovyMonkey"
+          class="net.sf.groovyMonkey.editor.wizard.NewScriptWizard"
+          icon="icons/monkey-new.gif"
+          id="net.sf.groovyMonkey.editor.NewScript"
+          name="New Groovy Monkey Script"/>
+ </extension>
 </fragment>

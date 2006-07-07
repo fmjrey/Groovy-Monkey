@@ -1,4 +1,5 @@
 package net.sf.groovymonkey.tests;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovymonkey.tests.Activator.bundle;
 import static net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject.MONKEY_EXT;
 import static net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject.runMonkeyScript;
@@ -27,7 +28,7 @@ extends TestCaseAbstract
         input = bundle().getResource( MONKEY_TEST_SCRIPTS + MonkeyRunnerTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         included = bundle().getResource( MONKEY_TEST_SCRIPTS + MonkeyRunnerTest.class.getSimpleName() + "/monkeyRunner" + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), input );
-        monkeyProject.makeFile( "includedScripts", "monkeyRunner.em", included );
+        monkeyProject.makeFile( "includedScripts", "monkeyRunner" + FILE_EXTENSION, included );
     }
     @Override
     protected void tearDown() 

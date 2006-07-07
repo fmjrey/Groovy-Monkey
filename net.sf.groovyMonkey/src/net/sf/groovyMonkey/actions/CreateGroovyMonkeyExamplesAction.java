@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.actions;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -81,8 +82,8 @@ implements IWorkbenchWindowActionDelegate
     public List< URL > getExampleScripts( final Bundle bundle )
     {
         final List< URL > list = new ArrayList< URL >();
-        findEntries( bundle, list, "/samples", "*.em" );
-        findEntries( bundle, list, "/monkey", "*.em" );
+        findEntries( bundle, list, "/samples", FILE_EXTENSION_WILDCARD );
+        findEntries( bundle, list, "/monkey", FILE_EXTENSION_WILDCARD );
         return list;
     }
     private void findEntries( final Bundle bundle, 

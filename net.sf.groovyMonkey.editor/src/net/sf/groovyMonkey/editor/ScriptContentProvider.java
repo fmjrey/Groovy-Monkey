@@ -257,7 +257,6 @@ implements ITreeContentProvider
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
             final Map< String, Object > dom = getDOM( descriptor.plugin_name );
             final List< VarDescriptor > list = new ArrayList< VarDescriptor >();
-            System.out.println( "ScriptContentProvider.getChildren(): " + dom );
             for( final String var : dom.keySet() )
                 if( dom.get( var ) != null )
                     list.add( new VarDescriptor( descriptor, var, dom.get( var ).getClass() ) );

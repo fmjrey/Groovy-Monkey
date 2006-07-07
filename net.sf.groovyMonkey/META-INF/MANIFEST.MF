@@ -21,6 +21,7 @@ Export-Package: net.sf.groovyMonkey,
 Bundle-ClassPath: monkey.jar,
  lib/commons-lang-2.1.jar,
  lib/bsf.jar,
- lib/commons-io-1.2.jar
+ lib/commons-io-1.2.jar,
+ lib/commons-collections-3.2.jar
 Bundle-Vendor: James E. Ervin
 Eclipse-BuddyPolicy: dependent

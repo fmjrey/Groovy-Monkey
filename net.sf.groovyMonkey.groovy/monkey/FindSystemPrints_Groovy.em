@@ -14,7 +14,6 @@ for( file in files )
 {
 	if( monitor.isCanceled() )
 		return
-	Thread.sleep( 500 )
 	monitor.subTask( 'file: ' + file.getEclipseObject().getName() )
 	file.removeMyTasks()
   	for( line in file.lines )

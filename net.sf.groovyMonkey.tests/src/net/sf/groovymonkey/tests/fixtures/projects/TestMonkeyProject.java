@@ -1,4 +1,5 @@
 package net.sf.groovymonkey.tests.fixtures.projects;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.InputStream;
@@ -11,7 +12,7 @@ public class TestMonkeyProject
 extends TestProject
 {
     public static String MONKEY_PATH = "monkey/";
-    public static String MONKEY_EXT = ".em";
+    public static String MONKEY_EXT = FILE_EXTENSION;
     public static IWorkbenchWindow workbenchWindow()
     {
         return getWorkbench().getActiveWorkbenchWindow();
