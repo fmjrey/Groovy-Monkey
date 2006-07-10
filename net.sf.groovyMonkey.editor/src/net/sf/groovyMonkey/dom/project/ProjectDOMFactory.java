@@ -11,7 +11,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class ProjectDOMFactory 
@@ -42,7 +41,7 @@ implements IMonkeyDOMFactory
         else if( selection instanceof ITextSelection )
         {
             final ITextSelection textsel = ( ITextSelection )selection;
-            final IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            final IWorkbenchPage page = getWorkbench().getActiveWorkbenchWindow().getActivePage();
             final IWorkbenchPart part = page.getActiveEditor();
             if( part instanceof IEditorPart )
             {
