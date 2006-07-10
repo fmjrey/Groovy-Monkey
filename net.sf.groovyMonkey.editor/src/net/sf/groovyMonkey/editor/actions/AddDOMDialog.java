@@ -36,6 +36,7 @@ implements ISelectionChangedListener
     {
         super( parentShell );
         this.availableDOMPlugins = availableDOMPlugins;
+        setShellStyle( getShellStyle() | SWT.RESIZE );
     }
     protected void configureShell( final Shell newShell )
     {
@@ -44,10 +45,9 @@ implements ISelectionChangedListener
     }
     protected Control createDialogArea( final Composite parent )
     {
-        final Composite composite = new Composite( parent, SWT.RESIZE );
         final GridLayout layout = new GridLayout( 1, false );
-        composite.setLayout( layout );
-        table = new TableViewer( composite, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE | SWT.RESIZE );
+        parent.setLayout( layout );
+        table = new TableViewer( parent, SWT.CHECK | SWT.BORDER | SWT.V_SCROLL | SWT.SINGLE | SWT.RESIZE );
         table.setContentProvider( new ArrayContentProvider() );
         final LabelProvider labelProvider = new LabelProvider()
         {
@@ -65,7 +65,7 @@ implements ISelectionChangedListener
         table.setInput( availableDOMPlugins );
         table.addSelectionChangedListener( this );
         table.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-        details = new TreeViewer( composite, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.RESIZE );
+        details = new TreeViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.RESIZE );
         details.setLabelProvider( new ScriptLabelProvider() );
         final ScriptContentProvider contentProvider = new ScriptContentProvider()
         {
@@ -83,7 +83,7 @@ implements ISelectionChangedListener
         };
         details.setContentProvider( contentProvider );
         details.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
-        return composite;
+        return parent;
     }
     protected void okPressed()
     {
@@ -102,10 +102,5 @@ implements ISelectionChangedListener
             return;
         final IStructuredSelection selection = ( IStructuredSelection )event.getSelection();
         details.setInput( selection.getFirstElement() );
-    }
-    @Override
-    protected int getShellStyle()
-    {
-        return super.getShellStyle() | SWT.RESIZE;
     }
 }
