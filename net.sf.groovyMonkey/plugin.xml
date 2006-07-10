@@ -113,5 +113,10 @@
             id="Workspace"
             resource="org.eclipse.core.resources.IWorkspace"
             variableName="workspace"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.resources.ResourcesDOMFactory"
+            id="Resources"
+            resource="net.sf.groovyMonkey.dom.resources.Resources"
+            variableName="resources"/>
    </extension>
 </plugin>

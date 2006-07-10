@@ -15,8 +15,11 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Export-Package: net.sf.groovyMonkey,
  net.sf.groovyMonkey.dom,
+ net.sf.groovyMonkey.dom.bundle,
+ net.sf.groovyMonkey.dom.resources,
  net.sf.groovyMonkey.dom.runner,
  net.sf.groovyMonkey.dom.window,
+ net.sf.groovyMonkey.dom.workspace,
  net.sf.groovyMonkey.lang
 Bundle-ClassPath: monkey.jar,
  lib/commons-lang-2.1.jar,
