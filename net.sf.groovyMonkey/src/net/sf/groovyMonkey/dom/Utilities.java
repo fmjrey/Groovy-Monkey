@@ -13,6 +13,7 @@ package net.sf.groovyMonkey.dom;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.IStatus.INFO;
 import static org.eclipse.core.runtime.IStatus.OK;
@@ -178,6 +179,61 @@ public class Utilities {
         for( final IExtension extension : extensions )
             plugins.add( extension.getContributor().getName() );
         return plugins;
+    }
+    public static Map< String, Class > getDOMInfo( final String pluginID ) 
+    {
+        final IExtensionPoint point = getDOMExtensionPoint();
+        final Map< String, Class > vars = new LinkedHashMap< String, Class >();
+        if( point == null )
+            return vars;
+        final IExtension[] extensions = point.getExtensions();
+        if( extensions == null )
+            return vars;
+        for( int i = 0; i < extensions.length; i++ )
+        {
+            final IExtension extension = extensions[ i ];
+            final IConfigurationElement[] configurations = extension.getConfigurationElements();
+            for( int j = 0; j < configurations.length; j++ )
+            {
+                final IConfigurationElement element = configurations[ j ];
+                if( !element.getName().equals( "dom" ) )
+                    continue;
+                try
+                {
+                    final IExtension declaring = element.getDeclaringExtension();
+                    final String declaring_plugin_id = declaring.getContributor().getName();
+                    if( pluginID.trim().equals( declaring_plugin_id.trim() ) )
+                    {
+                        final String variableName = element.getAttribute( "variableName" );
+                        final String resourceName = element.getAttribute( "resource" );
+                        try
+                        {
+                            if( isNotBlank( resourceName ) )
+                            {
+                                vars.put( variableName, Class.forName( resourceName ) );
+                                continue;
+                            }
+                        }
+                        catch( final ClassNotFoundException e )
+                        {
+                            error( "Class Not Found", "Could not find named class: " + resourceName, e );
+                        }
+                        final IMonkeyDOMFactory factory = ( IMonkeyDOMFactory )element.createExecutableExtension( "class" );
+                        final Object rootObject = factory.getDOMroot();
+                        vars.put( variableName, rootObject.getClass() );
+                    }
+                }
+                catch( final InvalidRegistryObjectException x )
+                {
+                    // ignore bad extensions
+                }
+                catch( final CoreException x )
+                {
+                    // ignore bad extensions
+                }
+            }
+        }
+        return vars;
     }
     public static Map< String, Object > getDOM( final String pluginID ) 
     {

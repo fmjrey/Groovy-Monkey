@@ -6,7 +6,7 @@ import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
-import static net.sf.groovyMonkey.dom.Utilities.getDOM;
+import static net.sf.groovyMonkey.dom.Utilities.getDOMInfo;
 import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
@@ -255,11 +255,11 @@ implements ITreeContentProvider
         if( parentElement instanceof DOMDescriptor )
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
-            final Map< String, Object > dom = getDOM( descriptor.plugin_name );
+            final Map< String, Class > dom = getDOMInfo( descriptor.plugin_name );
             final List< VarDescriptor > list = new ArrayList< VarDescriptor >();
             for( final String var : dom.keySet() )
                 if( dom.get( var ) != null )
-                    list.add( new VarDescriptor( descriptor, var, dom.get( var ).getClass() ) );
+                    list.add( new VarDescriptor( descriptor, var, dom.get( var ) ) );
             return list.toArray( new VarDescriptor[ 0 ] );
         }
         if( parentElement instanceof VarDescriptor )
