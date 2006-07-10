@@ -108,5 +108,10 @@
             id="Bundle"
             resource="net.sf.groovyMonkey.dom.bundle.BundleDOM"
             variableName="bundle"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.workspace.WorkspaceDOMFactory"
+            id="Workspace"
+            resource="org.eclipse.core.resources.IWorkspace"
+            variableName="workspace"/>
    </extension>
 </plugin>
