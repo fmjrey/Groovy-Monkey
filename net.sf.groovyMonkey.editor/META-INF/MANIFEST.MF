@@ -11,4 +11,8 @@ Require-Bundle: org.eclipse.jdt.core,
  org.eclipse.ui.views,
  org.eclipse.jface.text,
  org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.editors
+ org.eclipse.ui.editors,
+ org.eclipse.pde.core,
+ org.eclipse.pde.ui
+Export-Package: net.sf.groovyMonkey.dom.domifier,
+ net.sf.groovyMonkey.dom.project

@@ -50,4 +50,17 @@
           id="net.sf.groovyMonkey.editor.NewScript"
           name="New Groovy Monkey Script"/>
  </extension>
+ <extension
+       point="net.sf.groovyMonkey.dom">
+    <dom
+          class="net.sf.groovyMonkey.dom.domifier.DomifierDOMFactory"
+          id="Domifier"
+          resource="net.sf.groovyMonkey.dom.domifier.Domifier"
+          variableName="domifier"/>
+    <dom
+          class="net.sf.groovyMonkey.dom.project.ProjectDOMFactory"
+          id="Project"
+          resource="net.sf.groovyMonkey.dom.project.Project"
+          variableName="project"/>
+ </extension>
 </fragment>
