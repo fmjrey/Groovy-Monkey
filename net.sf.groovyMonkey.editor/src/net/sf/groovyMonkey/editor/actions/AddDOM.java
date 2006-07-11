@@ -111,7 +111,7 @@ implements IObjectActionDelegate
         for( final Iterator< String > iterator = availableDOMPlugins.iterator(); iterator.hasNext(); )
         {
             final String pluginID = iterator.next();
-            if( data.containsDOM_by_plugin( pluginID ) )
+            if( data.containsDOMByPlugin( pluginID ) )
                 iterator.remove();
         }
         return availableDOMPlugins;

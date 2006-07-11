@@ -145,7 +145,7 @@ public class Utilities {
                 {
                     final IExtension declaring = element.getDeclaringExtension();
                     final String declaring_plugin_id = declaring.getContributor().getName();
-                    if( metadata.containsDOM_by_plugin( declaring_plugin_id ) )
+                    if( metadata.containsDOMByPlugin( declaring_plugin_id ) )
                     {
                         final String variableName = element.getAttribute( "variableName" );
                         final IMonkeyDOMFactory factory = ( IMonkeyDOMFactory )element.createExecutableExtension( "class" );

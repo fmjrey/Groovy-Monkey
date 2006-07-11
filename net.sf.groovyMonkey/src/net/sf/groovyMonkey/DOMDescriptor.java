@@ -6,20 +6,20 @@ import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode
 public class DOMDescriptor
 {
     public final String url;
-    public final String plugin_name;
+    public final String pluginName;
 
     public DOMDescriptor( final String url, 
-                          final String plugin_name ) 
+                          final String pluginName ) 
     {
         this.url = url;
-        this.plugin_name = plugin_name;
+        this.pluginName = pluginName;
     }
     @Override
     public String toString()
     {
-        if( plugin_name.equals( PLUGIN_ID ) )
+        if( pluginName.equals( PLUGIN_ID ) )
             return "Default";
-        return url.endsWith( "/" ) ? url + plugin_name : url + "/" + plugin_name;
+        return url.endsWith( "/" ) ? url + pluginName : url + "/" + pluginName;
     }
     @Override
     public boolean equals( final Object obj )

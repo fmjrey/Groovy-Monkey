@@ -186,7 +186,7 @@ public class RunMonkeyScript
         try
         {
             defineDynamicVariables( file );
-            if( !metadata.ensure_doms_are_loaded( window ) )
+            if( !metadata.ensureDomsAreLoaded( window ) )
                 return;
             final String scriptLang = metadata.getLang();
             final Map< String, IMonkeyScriptFactory > factories = getScriptFactories();

@@ -1,6 +1,9 @@
 package net.sf.groovyMonkey;
+import static java.util.regex.Pattern.DOTALL;
+import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
@@ -8,9 +11,13 @@ import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+import static org.eclipse.core.runtime.Platform.getBundle;
+import static org.eclipse.jface.dialogs.MessageDialog.WARNING;
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
+import static org.osgi.framework.Bundle.UNINSTALLED;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,17 +34,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.update.search.UpdateSearchRequest;
 import org.eclipse.update.search.UpdateSearchScope;
@@ -74,11 +78,10 @@ public class ScriptMetadata
     {
         for( final JobModes mode : JobModes.values() )
         {
-            if( equalsIgnoreCase( mode.toString(), jobMode.trim() ) )
-            {
-                this.jobMode = mode;
-                break;
-            }
+            if( !equalsIgnoreCase( mode.toString(), jobMode.trim() ) )
+                continue;
+            this.jobMode = mode;
+            break;
         }
     }
     public JobModes getJobMode()
@@ -89,11 +92,10 @@ public class ScriptMetadata
     {
         for( final ExecModes mode : ExecModes.values() )
         {
-            if( equalsIgnoreCase( mode.toString(), execMode.trim() ) )
-            {
-                this.execMode = mode;
-                break;
-            }
+            if( !equalsIgnoreCase( mode.toString(), execMode.trim() ) )
+                continue;
+            this.execMode = mode;
+            break;
         }
     }
     public ExecModes getExecMode()
@@ -110,7 +112,7 @@ public class ScriptMetadata
     }
     public void addInclude( final String include )
     {
-        this.includes.add( include );
+        includes.add( include );
     }
 	public Set< String > getIncludes()
     {
@@ -118,37 +120,36 @@ public class ScriptMetadata
     }
     public void addIncludedBundle( final String bundleID )
     {
-        this.includedBundles.add( bundleID );
+        includedBundles.add( bundleID );
     }
     public Set< String > getIncludedBundles()
     {
         return includedBundles;
     }
-    public void setMenuName(String string) {
-		this.menuName = string;
-	}
-
-	public void setFile(IFile file) {
-		this.file = file;
-	}
-
-	public IFile getFile() {
-		return file;
-	}
-
-	public String getMenuName() {
-		return menuName;
-	}
-
+    public void setMenuName( final String string )
+    {
+        menuName = string;
+    }
+    public void setFile( final IFile file )
+    {
+        this.file = file;
+    }
+    public IFile getFile()
+    {
+        return file;
+    }
+    public String getMenuName()
+    {
+        return menuName;
+    }
     public void addDOM( final DOMDescriptor dom )
     {
         doms.add( dom );
     }
-    
-	public List< DOMDescriptor > getDOMs() {
+	public List< DOMDescriptor > getDOMs() 
+    {
 		return doms;
 	}
-
 	public String getReasonableFilename()
     {
         if( file != null )
@@ -157,7 +158,7 @@ public class ScriptMetadata
         {
             String result = menuName;
             result = result.replaceAll( " ", "_" );
-            final Pattern illegalChars = Pattern.compile( "[^\\p{Alnum}_-]" );
+            final Pattern illegalChars = compile( "[^\\p{Alnum}_-]" );
             final Matcher match = illegalChars.matcher( result );
             result = match.replaceAll( "" );
             if( !result.equals( "" ) )
@@ -165,43 +166,41 @@ public class ScriptMetadata
         }
         return "script" + FILE_EXTENSION;
     }
-    public boolean containsDOM_by_plugin( final String pluginID )
+    public boolean containsDOMByPlugin( final String pluginID )
     {
         for( final DOMDescriptor dom : doms )
-        {
-            if( StringUtils.equals( dom.plugin_name, pluginID ) )
+            if( equals( dom.pluginName, pluginID ) )
                 return true;
-        }
         return false;
     }
-
-	public boolean ensure_doms_are_loaded(IWorkbenchWindow window) {
-		String missing_plugin_names = "";
-		URLtoPluginMap missing_urls = new URLtoPluginMap();
-		for (Iterator iter = doms.iterator(); iter.hasNext();) {
-			DOMDescriptor element = (DOMDescriptor) iter.next();
-			Bundle b = Platform.getBundle(element.plugin_name);
-			if (b == null) {
-				missing_plugin_names += "     " + element.plugin_name + "\n";
-				missing_urls.add(element);
-			} else if (b.getState() == Bundle.UNINSTALLED) {
-				missing_plugin_names += "     " + element.plugin_name + "\n";
-			}
-		}
-		if (missing_plugin_names.length() > 0) {
-			missing_plugin_names = missing_plugin_names.substring(0,
-					missing_plugin_names.length() - 1);
-			String choice = notifyMissingDOMs(missing_plugin_names);
-			if (choice.startsWith("Install")) {
-				launchUpdateInstaller(missing_urls);
-			}
-			if (choice.startsWith("Edit")) {
-				openEditor();
-			}
-			return false;
-		}
-		return true;
-	}
+	public boolean ensureDomsAreLoaded( final IWorkbenchWindow window )
+    {
+        String missingPlugins = "";
+        final URLtoPluginMap missingUrls = new URLtoPluginMap();
+        for( final Object element0 : doms )
+        {
+            final DOMDescriptor element = ( DOMDescriptor )element0;
+            Bundle b = getBundle( element.pluginName );
+            if( b == null )
+            {
+                missingPlugins += "     " + element.pluginName + "\n";
+                missingUrls.add( element );
+            }
+            else if( b.getState() == UNINSTALLED )
+                missingPlugins += "     " + element.pluginName + "\n";
+        }
+        if( missingPlugins.length() > 0 )
+        {
+            missingPlugins = missingPlugins.substring( 0, missingPlugins.length() - 1 );
+            final String choice = notifyMissingDOMs( missingPlugins );
+            if( choice.startsWith( "Install" ) )
+                launchUpdateInstaller( missingUrls );
+            if( choice.startsWith( "Edit" ) )
+                openEditor();
+            return false;
+        }
+        return true;
+    }
 	@Override
     public boolean equals( final Object obj )
     {
@@ -212,50 +211,46 @@ public class ScriptMetadata
     {
         return reflectionHashCode( this );
     }
-
     class URLtoPluginMap
     {
         final Map< String, Set< String > > map = new HashMap< String, Set< String > >();
 
-        String getPluginNames( String url )
+        String getPluginNames( final String url )
         {
-            Set ids = ( Set )map.get( url );
+            final Set ids = map.get( url );
             String idstr = "";
-            for( Iterator iterator = ids.iterator(); iterator.hasNext(); )
+            for( final Iterator iterator = ids.iterator(); iterator.hasNext(); )
             {
-                String id = ( String )iterator.next();
+                final String id = ( String )iterator.next();
                 idstr += id + ", ";
             }
             idstr = idstr.substring( 0, idstr.length() - 2 );
             return idstr;
         }
-        void add( DOMDescriptor domdesc )
+        void add( final DOMDescriptor domdesc )
         {
             Set< String > ids = map.get( domdesc.url );
             if( ids == null )
                 ids = new HashSet< String >();
-            ids.add( domdesc.plugin_name );
+            ids.add( domdesc.pluginName );
             map.put( domdesc.url, ids );
         }
     }
-
-	private void openEditor() {
-		try {
-			IWorkbenchPage page = PlatformUI.getWorkbench()
-					.getActiveWorkbenchWindow().getActivePage();
-			IEditorDescriptor desc = PlatformUI.getWorkbench()
-					.getEditorRegistry().getDefaultEditor(file.getName());
-			if (desc == null) {
-				desc = PlatformUI.getWorkbench().getEditorRegistry()
-						.getDefaultEditor("foo.txt");
-			}
-			page.openEditor(new FileEditorInput(file), desc.getId());
-		} catch (PartInitException x) {
-			MessageDialog.openError(null, "Eclipse::PartInitException",
-					"Unable to open editor on " + file.getName() + " due to "
-							+ x.toString());
-		}
-	}
+	private void openEditor()
+    {
+        try
+        {
+            final IWorkbenchPage page = getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            IEditorDescriptor desc = getWorkbench().getEditorRegistry().getDefaultEditor( file.getName() );
+            if( desc == null )
+                desc = getWorkbench().getEditorRegistry().getDefaultEditor( "foo" + FILE_EXTENSION );
+            page.openEditor( new FileEditorInput( file ), desc.getId() );
+        }
+        catch( final PartInitException x )
+        {
+            openError( null, "Eclipse::PartInitException", "Unable to open editor on " + file.getName() + " due to " + x.toString() );
+        }
+    }
 	private void launchUpdateInstaller( final URLtoPluginMap missingUrls ) 
     {
 		final UpdateSearchScope scope = new UpdateSearchScope();
@@ -275,23 +270,22 @@ public class ScriptMetadata
         final Shell shell = getWorkbench().getActiveWorkbenchWindow().getShell();
 		openInstaller( shell, job );
 	}
-
-	private String notifyMissingDOMs(String missing_plugin_names) {
-		String plural = (missing_plugin_names.indexOf("\n") >= 0 ? "s" : "");
-		String[] choices = new String[] { "Cancel Script", "Edit Script",
-				"Install Plug-in" + plural };
-		MessageDialog dialog = new MessageDialog(null, "Missing DOM" + plural,
-				null, "The script "
-						+ this.file.getName()
-						+ " requires "
-						+ (missing_plugin_names.indexOf("\n") >= 0 ? "these"
-								: "this") + " missing DOM plug-in" + plural
-						+ ":\n" + missing_plugin_names, MessageDialog.WARNING,
-				choices, 2);
-		int result = dialog.open();
-		String choice = choices[result];
-		return choice;
-	}
+	private String notifyMissingDOMs( final String missingPlugins )
+    {
+        final String plural = missingPlugins.indexOf( "\n" ) >= 0 ? "s" : "";
+        final String these = isNotBlank( plural ) ? "these" : "this";
+        final String[] choices = new String[]{ "Cancel Script", "Edit Script", "Install Plug-in" + plural };
+        final MessageDialog dialog = new MessageDialog( null, 
+                                                        "Missing DOM" + plural, 
+                                                        null, 
+                                                        "The script " + file.getName() + " requires " + these + " missing DOM plug-in" + plural + ":\n" + missingPlugins,
+                                                        WARNING, 
+                                                        choices, 
+                                                        2 );
+        final int result = dialog.open();
+        final String choice = choices[ result ];
+        return choice;
+    }
     public String toHeader()
     {
         final StringBuffer buffer = new StringBuffer();
@@ -323,58 +317,58 @@ public class ScriptMetadata
     {
 		final ScriptMetadata metadata = new ScriptMetadata();
         metadata.addDOM( DEFAULT_DOM );
-        Pattern pattern = Pattern.compile( "^\\s*\\/\\*.*?\\*\\/", Pattern.DOTALL );
+        Pattern pattern = compile( "^\\s*\\/\\*.*?\\*\\/", DOTALL );
         Matcher matcher = pattern.matcher( contents );
         if( !matcher.find() )
             return metadata; // no meta-data comment - do nothing
 
         final String comment = matcher.group();
-        pattern = Pattern.compile( "Menu:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Menu:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setMenuName( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Kudos:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Kudos:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setKudos( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "License:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "License:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setLicense( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", Pattern.DOTALL );
+        pattern = compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
         matcher = pattern.matcher( comment );
         while( matcher.find() )
             metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
         
-        pattern = Pattern.compile( "Listener:", Pattern.DOTALL );
+        pattern = compile( "Listener:", DOTALL );
         matcher = pattern.matcher( comment );
         while( matcher.find() )
             metadata.subscriptions.add( new Subscription( "workspace", "addResourceChangeListener" ) );
         
-        pattern = Pattern.compile( "LANG:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "LANG:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setLang( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Include:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Include:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.addInclude( matcher.group( 1 ) );
 
-        pattern = Pattern.compile( "Include-Bundle:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Include-Bundle:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.addIncludedBundle( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Job:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Job:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setJobMode( matcher.group( 1 ) );
         
-        pattern = Pattern.compile( "Exec-Mode:\\s*((\\p{Graph}| )+)", Pattern.DOTALL );
+        pattern = compile( "Exec-Mode:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
         if( matcher.find() )
             metadata.setExecMode( matcher.group( 1 ) );
@@ -433,19 +427,16 @@ public class ScriptMetadata
         }
         return join( code.toArray( new String[ 0 ] ), "\n" );
     }
-	public void subscribe() {
-		for (int i = 0; i < subscriptions.size(); i++) {
-			Subscription subscription = (Subscription) subscriptions.get(i);
-			subscription.subscribe();
-		}
-	}
-
-	public void unsubscribe() {
-		for (int i = 0; i < subscriptions.size(); i++) {
-			Subscription subscription = (Subscription) subscriptions.get(i);
-			subscription.unsubscribe();
-		}
-	}
+	public void subscribe()
+    {
+        for( final Subscription subscription : subscriptions )
+            subscription.subscribe();
+    }
+    public void unsubscribe()
+    {
+        for( final Subscription subscription : subscriptions )
+            subscription.unsubscribe();
+    }
 	public String getLang() 
     {
 		return lang;
@@ -458,7 +449,7 @@ public class ScriptMetadata
     {
         return kudos;
     }
-    public void setKudos( String kudos )
+    public void setKudos( final String kudos )
     {
         this.kudos = kudos;
     }
@@ -466,99 +457,118 @@ public class ScriptMetadata
     {
         return license;
     }
-    public void setLicense( String license )
+    public void setLicense( final String license )
     {
         this.license = license;
     }
 }
+class Subscription
+{
+    private final String addMethodName;
+    private Object listenerProxy;
+    private Method removeMethod;
+    private Object source;
 
-class Subscription {
-
-	private final String addMethodName;
-	private Object listenerProxy;
-	private Method removeMethod;
-	private Object source;
-
-	public Subscription(String source, String addMethodName) {
-		this.addMethodName = addMethodName;
-	}
-
-	public void subscribe() {
-		source = ResourcesPlugin.getWorkspace();
-		try {
-			subscribe(source, addMethodName);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void unsubscribe() {
-		try {
-			removeMethod.invoke(source, new Object[] {listenerProxy});
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void subscribe(Object foo, String methodName)
-			throws InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException {
-		InvocationHandler listener = new GenericListener();
-		Method addMethod = findAddMethod(foo, methodName);
-		// TODO what if null is returned?
-
-		Class listenerType = addMethod.getParameterTypes()[0];
-		listenerProxy = Proxy.newProxyInstance(listenerType
-						.getClassLoader(), new Class[] { listenerType }, listener);
-		addMethod.invoke(foo, new Object[] { listenerProxy });
-	}
-
-	private Method findAddMethod(Object source, String methodName) {
-		Method methods[] = source.getClass().getMethods();
-		for (int i = 0; i < methods.length; i++) {
-			Method m = methods[i];
-			if (!(m.getName().equals(methodName)))
-				continue;
-			if (m.getParameterTypes().length != 1)
-				continue;
-			if (findRemoveMethod(source, methodName, m.getParameterTypes()) == null)
-				continue;
-
-			return m;
-		}
-		return null;
-	}
-
-	private Method findRemoveMethod(Object source, String methodName,
-			Class[] parameterTypes) {
-		String removeMethodName = "remove" + methodName.substring(3);
-		try {
-			removeMethod = source.getClass()
-					.getMethod(removeMethodName, parameterTypes);
-			return removeMethod;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	class GenericListener implements InvocationHandler {
-
-		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable {
-			System.out.println(method.getName() + " did it " + args[0]);
-			return null;
-		}
-
-	}
+    public Subscription( final String source, 
+                         final String addMethodName )
+    {
+        this.addMethodName = addMethodName;
+    }
+    public void subscribe()
+    {
+        source = ResourcesPlugin.getWorkspace();
+        try
+        {
+            subscribe( source, addMethodName );
+        }
+        catch( final InstantiationException e )
+        {
+            e.printStackTrace();
+        }
+        catch( final IllegalAccessException e )
+        {
+            e.printStackTrace();
+        }
+        catch( final InvocationTargetException e )
+        {
+            e.printStackTrace();
+        }
+        catch( final NoSuchMethodException e )
+        {
+            e.printStackTrace();
+        }
+    }
+    public void unsubscribe()
+    {
+        try
+        {
+            removeMethod.invoke( source, new Object[]{ listenerProxy } );
+        }
+        catch( final IllegalArgumentException e )
+        {
+            e.printStackTrace();
+        }
+        catch( final IllegalAccessException e )
+        {
+            e.printStackTrace();
+        }
+        catch( final InvocationTargetException e )
+        {
+            e.printStackTrace();
+        }
+    }
+    private void subscribe( final Object foo, 
+                            final String methodName ) 
+    throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    {
+        final InvocationHandler listener = new GenericListener();
+        final Method addMethod = findAddMethod( foo, methodName );
+        // TODO what if null is returned?
+        final Class listenerType = addMethod.getParameterTypes()[ 0 ];
+        listenerProxy = Proxy.newProxyInstance( listenerType.getClassLoader(), new Class[]{ listenerType }, listener );
+        addMethod.invoke( foo, new Object[]{ listenerProxy } );
+    }
+    private Method findAddMethod( final Object source, 
+                                  final String methodName )
+    {
+        final Method methods[] = source.getClass().getMethods();
+        for( final Method m : methods )
+        {
+            if( !m.getName().equals( methodName ) )
+                continue;
+            if( m.getParameterTypes().length != 1 )
+                continue;
+            if( findRemoveMethod( source, methodName, m.getParameterTypes() ) == null )
+                continue;
+            return m;
+        }
+        return null;
+    }
+    private Method findRemoveMethod( final Object source, 
+                                     final String methodName, 
+                                     final Class[] parameterTypes )
+    {
+        final String removeMethodName = "remove" + methodName.substring( 3 );
+        try
+        {
+            removeMethod = source.getClass().getMethod( removeMethodName, parameterTypes );
+            return removeMethod;
+        }
+        catch( final Exception e )
+        {
+            return null;
+        }
+    }
+    class GenericListener 
+    implements InvocationHandler
+    {
+        public Object invoke( final Object proxy, 
+                              final Method method, 
+                              final Object[] args ) 
+        throws Throwable
+        {
+            System.out.println( method.getName() + " did it " + args[ 0 ] );
+            return null;
+        }
+    }
 }

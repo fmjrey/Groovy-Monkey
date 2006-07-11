@@ -31,7 +31,7 @@ extends LabelProvider
             return icon( "progress_none.gif" );
         if( element instanceof DOMDescriptor )
         {
-            if( !hasDOM( (( DOMDescriptor )element).plugin_name ) )
+            if( !hasDOM( (( DOMDescriptor )element).pluginName ) )
                 return icon( "notinstalled_feature_obj.gif" );
             return icon( "feature_obj.gif" );
         }

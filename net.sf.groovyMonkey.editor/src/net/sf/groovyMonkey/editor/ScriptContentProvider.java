@@ -255,7 +255,7 @@ implements ITreeContentProvider
         if( parentElement instanceof DOMDescriptor )
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
-            final Map< String, Class > dom = getDOMInfo( descriptor.plugin_name );
+            final Map< String, Class > dom = getDOMInfo( descriptor.pluginName );
             final List< VarDescriptor > list = new ArrayList< VarDescriptor >();
             for( final String var : dom.keySet() )
                 if( dom.get( var ) != null )
@@ -316,7 +316,7 @@ implements ITreeContentProvider
     {
         if( element instanceof DOMDescriptor )
         {
-            if( !hasDOM( (( DOMDescriptor)element).plugin_name ) )
+            if( !hasDOM( (( DOMDescriptor)element).pluginName ) )
                 return false;
             return true;
         }
