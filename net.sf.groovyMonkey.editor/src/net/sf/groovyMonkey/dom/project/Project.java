@@ -46,19 +46,21 @@ public class Project
             return new Version( "0.0.0" );
         return new Version( version );
     }
-    public String provider() throws CoreException, IOException
+    public String provider() 
+    throws CoreException, IOException
     {
         final String vendor = manifestAttributes().getValue( "Bundle-Vendor" );
         if( vendor == null )
             return "no provider";
         return vendor;
     }
-    public Attributes manifestAttributes() throws CoreException, IOException
+    public Attributes manifestAttributes() 
+    throws CoreException, IOException
     {
         if( attributes != null )
             return attributes;
-        final Manifest m = new Manifest( project.getFile( "META-INF/MANIFEST.MF" ).getContents() );
-        attributes = m.getMainAttributes();
+        final Manifest manifest = new Manifest( project.getFile( "META-INF/MANIFEST.MF" ).getContents() );
+        attributes = manifest.getMainAttributes();
         return attributes;
     }
 }
