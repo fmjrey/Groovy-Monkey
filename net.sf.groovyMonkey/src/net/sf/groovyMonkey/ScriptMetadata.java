@@ -309,7 +309,7 @@ public class ScriptMetadata
             buffer.append( " * Include: " + include ).append( "\n" );
         for( final String include : getIncludedBundles() )
             buffer.append( " * Include-Bundle: " + include ).append( "\n" );
-        buffer.append( "*/" ).append( "\n" );
+        buffer.append( " */" ).append( "\n" );
         buffer.append( "\n" );
         return buffer.toString();
     }
