@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import net.sf.groovyMonkey.dom.project.Project;
+import org.apache.commons.lang.Validate;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -41,9 +42,10 @@ public class Domifier
     public void buildPluginJar( final IProject project ) 
     throws InvocationTargetException, InterruptedException
     {
+        Validate.notNull( project );
         final IModel model = getDefault().getModelManager().findModel( project );
         if( model == null )
-            return;
+            throw new RuntimeException( "Error no such plugin project: " + project.getName() );
         final FeatureExportInfo info = new FeatureExportInfo();
         info.toDirectory = true;
         info.useJarFormat = true;
