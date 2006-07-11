@@ -266,7 +266,7 @@ public class ScriptMetadata
             catch( final MalformedURLException x ) {}
 		}
 		final UpdateSearchRequest request = new UpdateSearchRequest( createDefaultSiteSearchCategory(), scope );
-		final UpdateJob job = new UpdateJob( "Install Eclipse Monkey DOMs", request );
+		final UpdateJob job = new UpdateJob( "Install Groovy Monkey DOMs", request );
         final Shell shell = getWorkbench().getActiveWorkbenchWindow().getShell();
 		openInstaller( shell, job );
 	}
