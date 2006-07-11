@@ -19,12 +19,13 @@ import org.eclipse.ui.progress.IProgressService;
 
 public class Domifier
 {
+    public static final String DEPLOY_DIR = "/tmp/domifier";
     private File tempdir;
 
     public void createTempDirectory() 
     throws IOException
     {
-        tempdir = new File( "/tmp/domifier" );
+        tempdir = new File( DEPLOY_DIR );
         if( tempdir.exists() )
             deleteDirectory( tempdir );
         try
