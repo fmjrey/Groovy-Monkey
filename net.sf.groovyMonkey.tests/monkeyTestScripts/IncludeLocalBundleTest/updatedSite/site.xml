@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/net.sf.test.dom_1.0.1.jar" id="net.sf.test.dom" version="1.0.1"/>
+</site>
