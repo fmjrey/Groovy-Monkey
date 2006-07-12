@@ -53,10 +53,10 @@
  <extension
        point="net.sf.groovyMonkey.dom">
     <dom
-          class="net.sf.groovyMonkey.dom.domifier.DomifierDOMFactory"
-          id="Domifier"
-          resource="net.sf.groovyMonkey.dom.domifier.Domifier"
-          variableName="domifier"/>
+          class="net.sf.groovyMonkey.dom.bundler.BundlerDOMFactory"
+          id="Bundler"
+          resource="net.sf.groovyMonkey.dom.bundler.Bundler"
+          variableName="bundlerDOM"/>
     <dom
           class="net.sf.groovyMonkey.dom.project.ProjectDOMFactory"
           id="Project"

@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.dom.domifier;
+package net.sf.groovyMonkey.dom.bundler;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.eclipse.pde.internal.core.PDECore.getDefault;
 import static org.eclipse.pde.internal.ui.PDEPluginImages.DESC_PLUGIN_OBJ;
@@ -17,9 +17,9 @@ import org.eclipse.pde.internal.core.exports.FeatureExportInfo;
 import org.eclipse.pde.internal.ui.build.PluginExportJob;
 import org.eclipse.ui.progress.IProgressService;
 
-public class Domifier
+public class Bundler
 {
-    public static final String DEPLOY_DIR = "/tmp/domifier";
+    public static final String DEPLOY_DIR = "/tmp/deployedBundles";
     private File tempdir;
 
     public void createTempDirectory() 

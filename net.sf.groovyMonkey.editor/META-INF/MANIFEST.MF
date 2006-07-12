@@ -14,5 +14,5 @@ Require-Bundle: org.eclipse.jdt.core,
  org.eclipse.ui.editors,
  org.eclipse.pde.core,
  org.eclipse.pde.ui
-Export-Package: net.sf.groovyMonkey.dom.domifier,
+Export-Package: net.sf.groovyMonkey.dom.bundler,
  net.sf.groovyMonkey.dom.project

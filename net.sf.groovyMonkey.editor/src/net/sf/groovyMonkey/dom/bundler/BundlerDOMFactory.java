@@ -1,11 +1,11 @@
-package net.sf.groovyMonkey.dom.domifier;
+package net.sf.groovyMonkey.dom.bundler;
 import net.sf.groovyMonkey.dom.IMonkeyDOMFactory;
 
-public class DomifierDOMFactory 
+public class BundlerDOMFactory 
 implements IMonkeyDOMFactory
 {
     public Object getDOMroot()
     {
-        return new Domifier();
+        return new Bundler();
     }
 }
