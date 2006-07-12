@@ -8,6 +8,7 @@ extends AbstractUIPlugin
 {
     public static final String PLUGIN_ID = "net.sf.groovyMonkey.tests";
     private static Activator plugin;
+    private static BundleContext context;
 
     public Activator()
     {
@@ -18,12 +19,14 @@ extends AbstractUIPlugin
     throws Exception
     {
         super.start( context );
+        Activator.context = context;
     }
     @Override
     public void stop( final BundleContext context ) 
     throws Exception
     {
         plugin = null;
+        Activator.context = null;
         super.stop( context );
     }
     public static Activator getDefault()
@@ -33,5 +36,9 @@ extends AbstractUIPlugin
     public static Bundle bundle()
     {
         return getDefault().getBundle();
+    }
+    public static BundleContext context()
+    {
+        return context;
     }
 }

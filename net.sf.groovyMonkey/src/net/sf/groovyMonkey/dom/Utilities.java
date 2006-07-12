@@ -13,6 +13,7 @@ package net.sf.groovyMonkey.dom;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.IStatus.INFO;
@@ -311,6 +312,19 @@ public class Utilities {
                               final String message,
                               final Throwable exception )
     {
+        showDialog( title, message, exception, ERROR );
+    }
+    public static void warning( final String title, 
+                                final String message,
+                                final Throwable exception )
+    {
+        showDialog( title, message, exception, WARNING );
+    }
+    private static void showDialog( final String title, 
+                                    final String message, 
+                                    final Throwable exception,
+                                    final int type )
+    {
         if( Display.getCurrent() == null )
         {
             final Runnable runnable = new Runnable()
@@ -320,13 +334,13 @@ public class Utilities {
                     error( title, message, exception );
                 }
             };
-            Display.getDefault().asyncExec( runnable );
+            Display.getDefault().syncExec( runnable );
             return;
         }
         final ErrorDialog dialog = new ErrorDialog( getWorkbench().getActiveWorkbenchWindow().getShell(), 
                                                     title, 
                                                     message, 
-                                                    new Status( ERROR, PLUGIN_ID, ERROR, message, exception ),
+                                                    new Status( type, PLUGIN_ID, type, defaultString( message ), exception ),
                                                     OK | INFO | WARNING | ERROR );
         dialog.open();
     }

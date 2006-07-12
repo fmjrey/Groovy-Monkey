@@ -12,7 +12,7 @@ import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 import static org.eclipse.core.runtime.Platform.getBundle;
-import static org.eclipse.jface.dialogs.MessageDialog.WARNING;
+import static org.eclipse.jface.dialogs.MessageDialog.QUESTION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -253,6 +254,18 @@ public class ScriptMetadata
     }
 	private void launchUpdateInstaller( final URLtoPluginMap missingUrls ) 
     {
+        if( Display.getCurrent() == null )
+        {
+            final Runnable runnable = new Runnable()
+            {
+                public void run()
+                {
+                    launchUpdateInstaller( missingUrls );
+                }
+            };
+            Display.getDefault().syncExec( runnable );
+            return;
+        }
 		final UpdateSearchScope scope = new UpdateSearchScope();
         for( final String url : missingUrls.map.keySet() )
         {
@@ -272,6 +285,19 @@ public class ScriptMetadata
 	}
 	private String notifyMissingDOMs( final String missingPlugins )
     {
+        if( Display.getCurrent() == null )
+        {
+            final String[] returnValue = new String[ 1 ];
+            final Runnable runnable = new Runnable()
+            {
+                public void run()
+                {
+                    returnValue[ 0 ] = notifyMissingDOMs( missingPlugins );
+                }
+            };
+            Display.getDefault().syncExec( runnable );
+            return returnValue[ 0 ];
+        }
         final String plural = missingPlugins.indexOf( "\n" ) >= 0 ? "s" : "";
         final String these = isNotBlank( plural ) ? "these" : "this";
         final String[] choices = new String[]{ "Cancel Script", "Edit Script", "Install Plug-in" + plural };
@@ -279,7 +305,7 @@ public class ScriptMetadata
                                                         "Missing DOM" + plural, 
                                                         null, 
                                                         "The script " + file.getName() + " requires " + these + " missing DOM plug-in" + plural + ":\n" + missingPlugins,
-                                                        WARNING, 
+                                                        QUESTION, 
                                                         choices, 
                                                         2 );
         final int result = dialog.open();
