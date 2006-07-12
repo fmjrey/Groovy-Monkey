@@ -269,6 +269,7 @@ public class ScriptMetadata
 		final UpdateSearchScope scope = new UpdateSearchScope();
         for( final String url : missingUrls.map.keySet() )
         {
+            System.out.println( "ScriptMetadata.launchUpdateInstaller(): url: " + url );
             final String id = missingUrls.getPluginNames( url );
             final String plural = id.indexOf( "," ) >= 0 ? "s" : "";
             final String description = "Site providing DOM" + plural + " ( " + id + " )";
