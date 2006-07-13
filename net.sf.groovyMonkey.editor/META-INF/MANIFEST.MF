@@ -13,6 +13,8 @@ Require-Bundle: org.eclipse.jdt.core,
  org.eclipse.ui.workbench.texteditor,
  org.eclipse.ui.editors,
  org.eclipse.pde.core,
- org.eclipse.pde.ui
+ org.eclipse.pde.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui
 Export-Package: net.sf.groovyMonkey.dom.bundler,
  net.sf.groovyMonkey.dom.project

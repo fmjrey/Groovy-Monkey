@@ -1,18 +1,8 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
 package net.sf.groovyMonkey.dom;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.eclipse.core.runtime.IStatus.ERROR;
@@ -21,15 +11,18 @@ import static org.eclipse.core.runtime.IStatus.OK;
 import static org.eclipse.core.runtime.IStatus.WARNING;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.internal.DynamicState;
+
+import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -41,42 +34,31 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 
-public class Utilities {
-
-	public static String getFileContents(IFile file) throws CoreException,
-			IOException {
-		final int BUF_SIZE = 100000;
-		InputStream in = null;
-		try {
-			in = file.getContents();
-			StringBuffer result = new StringBuffer();
-			while (true) {
-				byte[] buf = new byte[BUF_SIZE];
-				int count = in.read(buf);
-				if (count <= 0)
-					return result.toString();
-				byte[] buf2 = new byte[count];
-				for (int k = 0; k < count; k++) {
-					buf2[k] = buf[k];
-				}
-				result.append(new String(buf2));
-			}
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
-
-
-	private static IDynamicState _state = new DynamicState();
+public class Utilities 
+{
+	private static final IDynamicState state = new DynamicState();
 
 	public static IDynamicState state() {
-		return _state;
+		return state;
 	}
 
 
 	public static final String SCRIPT_NAME = "scriptName";
     
+    public static String getContents( final IFile file ) 
+    throws CoreException, IOException
+    {
+        InputStream contents = null;
+        try
+        {
+            contents = file.getContents();
+            return IOUtils.toString( contents );
+        }
+        finally
+        {
+            closeQuietly( contents );
+        }
+    }
     public static boolean isMonkeyScript( final IFile file )
     {
         return isMonkeyScript( file.getFullPath() );
@@ -133,13 +115,11 @@ public class Utilities {
                                                      final Map< String, Object > vars )
     {
         final IExtension[] extensions = point.getExtensions();
-        for( int i = 0; i < extensions.length; i++ )
+        for( final IExtension extension : extensions )
         {
-            final IExtension extension = extensions[ i ];
             final IConfigurationElement[] configurations = extension.getConfigurationElements();
-            for( int j = 0; j < configurations.length; j++ )
+            for( final IConfigurationElement element : configurations )
             {
-                final IConfigurationElement element = configurations[ j ];
                 if( !element.getName().equals( "dom" ) )
                     continue;
                 try
@@ -168,9 +148,9 @@ public class Utilities {
             return false;
         return true;
     }
-    public static List< String > getDOMPlugins()
+    public static Set< String > getDOMPlugins()
     {
-        final List< String > plugins = new ArrayList< String >();
+        final Set< String > plugins = new LinkedHashSet< String >();
         final IExtensionPoint point = getDOMExtensionPoint();
         if( point == null )
             return plugins;
@@ -190,13 +170,11 @@ public class Utilities {
         final IExtension[] extensions = point.getExtensions();
         if( extensions == null )
             return vars;
-        for( int i = 0; i < extensions.length; i++ )
+        for( final IExtension extension : extensions )
         {
-            final IExtension extension = extensions[ i ];
             final IConfigurationElement[] configurations = extension.getConfigurationElements();
-            for( int j = 0; j < configurations.length; j++ )
+            for( final IConfigurationElement element : configurations )
             {
-                final IConfigurationElement element = configurations[ j ];
                 if( !element.getName().equals( "dom" ) )
                     continue;
                 try
@@ -245,13 +223,11 @@ public class Utilities {
         final IExtension[] extensions = point.getExtensions();
         if( extensions == null )
             return vars;
-        for( int i = 0; i < extensions.length; i++ )
+        for( final IExtension extension : extensions )
         {
-            final IExtension extension = extensions[ i ];
             final IConfigurationElement[] configurations = extension.getConfigurationElements();
-            for( int j = 0; j < configurations.length; j++ )
+            for( final IConfigurationElement element : configurations )
             {
-                final IConfigurationElement element = configurations[ j ];
                 if( !element.getName().equals( "dom" ) )
                     continue;
                 try
@@ -286,15 +262,13 @@ public class Utilities {
         final IExtension[] extensions = point.getExtensions();
         if( extensions == null )
             return "";
-        for( int i = 0; i < extensions.length; i++ )
+        for( final IExtension extension : extensions )
         {
-            final IExtension extension = extensions[ i ];
             if( !extension.getContributor().getName().equals( pluginID ) )
                 continue;
             final IConfigurationElement[] configurations = extension.getConfigurationElements();
-            for( int j = 0; j < configurations.length; j++ )
+            for( final IConfigurationElement element : configurations )
             {
-                final IConfigurationElement element = configurations[ j ];
                 if( !element.getName().equals( "updateSite" ) )
                     continue;
                 return element.getAttribute( "url" );

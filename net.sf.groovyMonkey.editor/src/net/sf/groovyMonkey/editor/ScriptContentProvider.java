@@ -6,8 +6,8 @@ import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMInfo;
-import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
@@ -354,7 +354,7 @@ implements ITreeContentProvider
             return;
         try
         {
-            data = getScriptMetadata( getFileContents( script ) );
+            data = getScriptMetadata( getContents( script ) );
             menu.menu = data.getMenuName();
             lang.lang = data.getLang();
             job.mode = data.getJobMode();

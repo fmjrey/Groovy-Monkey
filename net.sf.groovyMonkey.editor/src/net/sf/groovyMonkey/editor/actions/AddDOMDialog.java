@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor.actions;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
@@ -26,13 +26,13 @@ public class AddDOMDialog
 extends Dialog
 implements ISelectionChangedListener
 {
-    private final List< String > availableDOMPlugins;
-    private final List< String > selectedDOMPlugins = new ArrayList< String >();
+    private final Set< String > availableDOMPlugins;
+    private final Set< String > selectedDOMPlugins = new LinkedHashSet< String >();
     private TableViewer table;
     private TreeViewer details;
     
     public AddDOMDialog( final Shell parentShell,
-                         final List< String > availableDOMPlugins )
+                         final Set< String > availableDOMPlugins )
     {
         super( parentShell );
         this.availableDOMPlugins = availableDOMPlugins;
@@ -92,7 +92,7 @@ implements ISelectionChangedListener
                 selectedDOMPlugins.add( item.getText() );
         super.okPressed();
     }
-    public List< String > selectedDOMPlugins()
+    public Set< String > selectedDOMPlugins()
     {
         return selectedDOMPlugins;
     }

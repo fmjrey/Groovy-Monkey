@@ -1,7 +1,10 @@
 package net.sf.groovyMonkey.editor;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
-import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.isMonkeyScript;
+import static org.eclipse.core.resources.IResourceDelta.ADDED;
+import static org.eclipse.core.resources.IResourceDelta.CHANGED;
+import static org.eclipse.core.resources.IResourceDelta.REMOVED;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -45,13 +48,13 @@ implements IResourceChangeListener
                     final IFile file = ( IFile )delta.getResource();
                     switch( delta.getKind() )
                     {
-                        case IResourceDelta.ADDED:
+                        case ADDED:
                             found_a_change( file );
                             break;
-                        case IResourceDelta.REMOVED:
+                        case REMOVED:
                             found_a_change( file );
                             break;
-                        case IResourceDelta.CHANGED:
+                        case CHANGED:
                             found_a_change( file );
                             break;
                     }
@@ -93,7 +96,7 @@ implements IResourceChangeListener
     {
         try
         {
-            return provider.diff( getScriptMetadata( getFileContents( changedScript ) ) );
+            return provider.diff( getScriptMetadata( getContents( changedScript ) ) );
         }
         catch( final Exception e ) {}
         return true;

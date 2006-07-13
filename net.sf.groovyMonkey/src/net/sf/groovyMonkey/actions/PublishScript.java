@@ -11,13 +11,11 @@
  *******************************************************************************/
 
 package net.sf.groovyMonkey.actions;
-
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-
 import net.sf.groovyMonkey.GroovyMonkeyPlugin;
-import net.sf.groovyMonkey.dom.Utilities;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
@@ -48,7 +46,7 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 			IFile element = (IFile) iter.next();
 
 			try {
-				String contents = Utilities.getFileContents(element);
+				String contents = getContents(element);
 
 				result += decorateText(contents);
 			} catch (IOException x) {

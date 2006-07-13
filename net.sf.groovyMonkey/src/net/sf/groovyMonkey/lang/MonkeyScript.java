@@ -3,8 +3,8 @@ import static java.lang.Thread.currentThread;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getExtensionGlobalVariables;
-import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
@@ -173,7 +173,7 @@ implements IMonkeyScript
             manager.loadScriptingEngine( languageName );
             for( final String varName : binding.keySet() )
                 manager.declareBean( varName, binding.get( varName ), binding.get( varName ).getClass() );
-            final String script = stripMetadata ? stripMetadata( getFileContents( scriptFile ) ) : getFileContents( scriptFile );
+            final String script = stripMetadata ? stripMetadata( getContents( scriptFile ) ) : getContents( scriptFile );
             final String scriptName = substringBeforeLast( scriptFile.getName(), "." ) + "." + fileNameExtension;
             manager.exec( languageName, scriptName, 1, 1, script );
         }

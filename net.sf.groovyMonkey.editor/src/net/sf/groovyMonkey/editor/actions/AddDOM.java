@@ -3,18 +3,19 @@ import static net.sf.groovyMonkey.ScriptMetadata.getMetadataLines;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.error;
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
-import static net.sf.groovyMonkey.dom.Utilities.getFileContents;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
+import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.editor.ScriptEditor;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,7 +70,7 @@ implements IObjectActionDelegate
                     return;
                 saveChangesInEditor( editor );
             }
-            final List< String > selectedDOMPlugins = openSelectDOMsDialog( getUnusedDOMs( script ) );
+            final Set< String > selectedDOMPlugins = openSelectDOMsDialog( getUnusedDOMs( script ) );
             if( selectedDOMPlugins.size() == 0 )
                 return;
             addDOMsToScript( script, selectedDOMPlugins );
@@ -84,30 +85,31 @@ implements IObjectActionDelegate
         }
     }
     private void addDOMsToScript( final IFile script, 
-                                  final List< String > selectedDOMPlugins ) 
+                                  final Set< String > selectedDOMPlugins ) 
     throws CoreException, IOException
     {
-        final List< String > metadata = getMetadataLines( getFileContents( script ) );
+        final List< String > metadata = getMetadataLines( getContents( script ) );
         for( final String selectedDOMPlugin : selectedDOMPlugins )
             metadata.add( metadata.size() - 1, " * DOM: " + getUpdateSiteForDOMPlugin( selectedDOMPlugin ) );
-        final String contents = StringUtils.join( metadata.toArray( new String[ 0 ] ), "\n" ) + "\n" + stripMetadata( getFileContents( script ) );
+        final String contents = join( metadata.toArray( new String[ 0 ] ), "\n" ) + "\n" + stripMetadata( getContents( script ) );
         script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
         script.refreshLocal( DEPTH_ONE, null );
     }
-    private List< String > openSelectDOMsDialog( final List< String > availableDOMPlugins )
+    private Set< String > openSelectDOMsDialog( final Set< String > availableDOMPlugins )
     {
         if( availableDOMPlugins == null || availableDOMPlugins.size() == 0 )
-            return new ArrayList< String >();
+            return new LinkedHashSet< String >();
         final AddDOMDialog dialog = new AddDOMDialog( getShell(), availableDOMPlugins );
         final int returnCode = dialog.open();
         if( returnCode != Window.OK )
-            return new ArrayList< String >();
+            return new LinkedHashSet< String >();
         return dialog.selectedDOMPlugins();
     }
-    private List< String > getUnusedDOMs( final IFile script ) throws CoreException, IOException
+    private Set< String > getUnusedDOMs( final IFile script ) 
+    throws CoreException, IOException
     {
-        final ScriptMetadata data = getScriptMetadata( getFileContents( script ) );
-        final List< String > availableDOMPlugins = getDOMPlugins();
+        final ScriptMetadata data = getScriptMetadata( getContents( script ) );
+        final Set< String > availableDOMPlugins = getDOMPlugins();
         for( final Iterator< String > iterator = availableDOMPlugins.iterator(); iterator.hasNext(); )
         {
             final String pluginID = iterator.next();

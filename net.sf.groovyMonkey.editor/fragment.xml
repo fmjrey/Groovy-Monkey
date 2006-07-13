@@ -63,4 +63,16 @@
           resource="net.sf.groovyMonkey.dom.project.Project"
           variableName="project"/>
  </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <category
+          id="net.sf.groovyMonkey.editor"
+          name="Groovy Monkey"/>
+    <view
+          category="net.sf.groovyMonkey.editor"
+          class="net.sf.groovyMonkey.editor.views.DOMView"
+          icon="icons/monkey.gif"
+          id="net.sf.groovyMonkey.editor.views.DOMView"
+          name="DOM View"/>
+ </extension>
 </fragment>
