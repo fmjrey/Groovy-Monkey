@@ -39,7 +39,7 @@ public class DOMView
 extends ViewPart
 {
     private TreeViewer viewer;
-    private DrillDownAdapter drillDownAdapter;
+    //private DrillDownAdapter drillDownAdapter;
     private Action action1;
     private Action action2;
     private Action doubleClickAction;
@@ -60,7 +60,7 @@ extends ViewPart
     public void createPartControl( final Composite parent )
     {
         viewer = new TreeViewer( parent, MULTI | H_SCROLL | V_SCROLL );
-        drillDownAdapter = new DrillDownAdapter( viewer );
+        //drillDownAdapter = new DrillDownAdapter( viewer );
         final ScriptContentProvider contentProvider = new ScriptContentProvider()
         {
             @Override
@@ -121,7 +121,7 @@ extends ViewPart
         manager.add( action1 );
         manager.add( action2 );
         manager.add( new Separator() );
-        drillDownAdapter.addNavigationActions( manager );
+        //drillDownAdapter.addNavigationActions( manager );
         // Other plug-ins can contribute there actions here
         manager.add( new Separator( MB_ADDITIONS ) );
     }
@@ -130,7 +130,7 @@ extends ViewPart
         manager.add( action1 );
         manager.add( action2 );
         manager.add( new Separator() );
-        drillDownAdapter.addNavigationActions( manager );
+        //drillDownAdapter.addNavigationActions( manager );
     }
     private void makeActions()
     {
