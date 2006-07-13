@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor;
+import static java.lang.reflect.Modifier.isPublic;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.bundleDescription;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllReexportedBundles;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
@@ -14,7 +15,6 @@ import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -274,14 +274,14 @@ implements ITreeContentProvider
             final Set< FieldDescriptor > fields = new TreeSet< FieldDescriptor >();
             for( final Field field : descriptor.clase.getDeclaredFields() )
             {
-                if( !Modifier.isPublic( field.getModifiers() ) )
+                if( !isPublic( field.getModifiers() ) )
                     continue;
                 fields.add( new FieldDescriptor( field ) );
             }
             final Set< MethodDescriptor > methods = new TreeSet< MethodDescriptor >();
             for( final Method method : descriptor.clase.getDeclaredMethods() )
             {
-                if( !Modifier.isPublic( method.getModifiers() ) )
+                if( !isPublic( method.getModifiers() ) )
                     continue;
                 methods.add( new MethodDescriptor( method ) );
             }

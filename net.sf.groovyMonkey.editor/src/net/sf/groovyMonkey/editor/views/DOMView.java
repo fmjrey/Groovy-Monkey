@@ -8,14 +8,14 @@ import static org.eclipse.swt.SWT.V_SCROLL;
 import static org.eclipse.ui.ISharedImages.IMG_OBJS_INFO_TSK;
 import static org.eclipse.ui.IWorkbenchActionConstants.MB_ADDITIONS;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
-
+import net.sf.groovyMonkey.editor.ScriptContentProvider.ClassDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.DrillDownAdapter;
 import org.eclipse.ui.part.ViewPart;
 
 public class DOMView 
@@ -47,6 +46,17 @@ extends ViewPart
     class NameSorter 
     extends ViewerSorter
     {
+        @Override
+        public int category( Object element )
+        {
+            if( element instanceof ClassDescriptor )
+                return 0;
+            if( element instanceof FieldDescriptor )
+                return 1;
+            if( element instanceof MethodDescriptor )
+                return 2;
+            return super.category( element );
+        }   
     }
 
     public DOMView()
