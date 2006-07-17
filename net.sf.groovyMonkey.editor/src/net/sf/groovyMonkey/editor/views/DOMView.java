@@ -195,7 +195,7 @@ implements IRegistryChangeListener
     }
     private void showMessage( final String message )
     {
-        openInformation( viewer.getControl().getShell(), "DOM View", message );
+        openInformation( viewer.getControl().getShell(), "Installed DOMs", message );
     }
     /**
      * Passing the focus request to the viewer's control.
