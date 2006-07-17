@@ -276,11 +276,10 @@ public class Utilities
         }
         return "";
     }
-    private static IExtensionPoint getDOMExtensionPoint()
+    public static IExtensionPoint getDOMExtensionPoint()
     {
         final IExtensionRegistry registry = getExtensionRegistry();
-        final IExtensionPoint point = registry.getExtensionPoint( "net.sf.groovyMonkey.dom" );
-        return point;
+        return registry.getExtensionPoint( "net.sf.groovyMonkey.dom" );
     }
     public static void error( final String title, 
                               final String message,

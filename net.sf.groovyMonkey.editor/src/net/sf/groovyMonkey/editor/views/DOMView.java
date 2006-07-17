@@ -1,6 +1,8 @@
 package net.sf.groovyMonkey.editor.views;
+import static net.sf.groovyMonkey.dom.Utilities.getDOMExtensionPoint;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
+import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import static org.eclipse.swt.SWT.H_SCROLL;
 import static org.eclipse.swt.SWT.MULTI;
@@ -16,6 +18,9 @@ import net.sf.groovyMonkey.editor.ScriptLabelProvider;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.ClassDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
+import org.eclipse.core.runtime.IExtensionDelta;
+import org.eclipse.core.runtime.IRegistryChangeEvent;
+import org.eclipse.core.runtime.IRegistryChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -36,6 +41,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class DOMView 
 extends ViewPart
+implements IRegistryChangeListener
 {
     private TreeViewer viewer;
     //private DrillDownAdapter drillDownAdapter;
@@ -47,7 +53,7 @@ extends ViewPart
     extends ViewerSorter
     {
         @Override
-        public int category( Object element )
+        public int category( final Object element )
         {
             if( element instanceof ClassDescriptor )
                 return 0;
@@ -97,8 +103,8 @@ extends ViewPart
         hookContextMenu();
         hookDoubleClickAction();
         contributeToActionBars();
+        getExtensionRegistry().addRegistryChangeListener( this );
     }
-
     private void hookContextMenu()
     {
         final MenuManager menuMgr = new MenuManager( "#PopupMenu" );
@@ -198,5 +204,23 @@ extends ViewPart
     public void setFocus()
     {
         viewer.getControl().setFocus();
+    }
+    @Override
+    public void dispose()
+    {
+        super.dispose();
+        getExtensionRegistry().removeRegistryChangeListener( this );
+    }
+    public void registryChanged( final IRegistryChangeEvent event )
+    {
+        if( event == null )
+            return;
+        for( final IExtensionDelta delta : event.getExtensionDeltas() )
+        {
+            if( !getDOMExtensionPoint().getUniqueIdentifier().equals( delta.getExtensionPoint().getUniqueIdentifier() ) )
+                continue;
+            viewer.setInput( viewer.getInput() );
+            break;
+        }
     }
 }

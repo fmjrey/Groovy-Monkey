@@ -73,6 +73,6 @@
           class="net.sf.groovyMonkey.editor.views.DOMView"
           icon="icons/monkey.gif"
           id="net.sf.groovyMonkey.editor.views.DOMView"
-          name="DOM View"/>
+          name="Installed DOMs"/>
  </extension>
 </fragment>
