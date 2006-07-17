@@ -3,20 +3,15 @@
  *
  */
 package groovy.jface.factory;
-
 import groovy.swt.SwtUtils;
 import groovy.swt.factory.SwtFactory;
 import groovy.swt.factory.WidgetFactory;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.TableTreeViewer;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Tree;
 
@@ -55,9 +50,6 @@ public class ViewerFactory extends WidgetFactory implements SwtFactory {
 
         if (beanClass.equals(TableViewer.class) && (parent instanceof Table)) {
             bean = new TableViewer((Table) parent, style);
-
-        } else if (beanClass.equals(TableTreeViewer.class) && (parent instanceof TableTree)) {
-            bean = new TableTreeViewer((TableTree) parent, style);
 
         } else if (beanClass.equals(TreeViewer.class) && (parent instanceof Tree)) {
             bean = new TreeViewer((Tree) parent, style);

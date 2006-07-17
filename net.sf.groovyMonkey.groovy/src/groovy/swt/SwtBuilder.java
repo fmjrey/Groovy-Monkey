@@ -3,7 +3,6 @@
  *  
  */
 package groovy.swt;
-
 import groovy.lang.Closure;
 import groovy.swt.factory.AwtSwtFactory;
 import groovy.swt.factory.Fontfactory;
@@ -17,13 +16,11 @@ import groovy.swt.factory.SwtFactory;
 import groovy.swt.factory.TrayFactory;
 import groovy.swt.factory.WidgetFactory;
 import groovy.util.BuilderSupport;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationListener;
@@ -36,8 +33,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.TableTree;
-import org.eclipse.swt.custom.TableTreeItem;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
@@ -234,8 +229,6 @@ public class SwtBuilder extends BuilderSupport {
         registerBeanFactory("cTabFolder", CTabFolder.class);
         registerBeanFactory("cTabItem", CTabItem.class);
         registerBeanFactory("sashForm", SashForm.class);
-        registerBeanFactory("tableTree", TableTree.class);
-        registerBeanFactory("tableTreeItem", TableTreeItem.class);
 
         // layouts
         registerFactory("fillLayout", new LayoutFactory(FillLayout.class));
