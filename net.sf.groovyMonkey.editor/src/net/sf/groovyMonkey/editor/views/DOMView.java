@@ -213,7 +213,7 @@ implements IRegistryChangeListener
     }
     public void registryChanged( final IRegistryChangeEvent event )
     {
-        if( event == null )
+        if( event == null || event.getExtensionDeltas() == null )
             return;
         for( final IExtensionDelta delta : event.getExtensionDeltas() )
         {
