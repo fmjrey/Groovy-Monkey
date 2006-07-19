@@ -7,6 +7,8 @@ import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import static org.eclipse.swt.SWT.H_SCROLL;
 import static org.eclipse.swt.SWT.MULTI;
 import static org.eclipse.swt.SWT.V_SCROLL;
+import static org.eclipse.swt.widgets.Display.getCurrent;
+import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.ISharedImages.IMG_OBJS_INFO_TSK;
 import static org.eclipse.ui.IWorkbenchActionConstants.MB_ADDITIONS;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
@@ -211,6 +213,22 @@ implements IRegistryChangeListener
         super.dispose();
         getExtensionRegistry().removeRegistryChangeListener( this );
     }
+    private void updateViewer()
+    {
+        if( getCurrent() == null )
+        {
+            final Runnable runnable = new Runnable()
+            {
+                public void run()
+                {
+                    updateViewer();
+                }
+            };
+            getDefault().syncExec( runnable );
+            return;
+        }
+        viewer.setInput( viewer.getInput() );
+    }
     public void registryChanged( final IRegistryChangeEvent event )
     {
         if( event == null || event.getExtensionDeltas() == null )
@@ -219,7 +237,7 @@ implements IRegistryChangeListener
         {
             if( !getDOMExtensionPoint().getUniqueIdentifier().equals( delta.getExtensionPoint().getUniqueIdentifier() ) )
                 continue;
-            viewer.setInput( viewer.getInput() );
+            updateViewer();
             break;
         }
     }
