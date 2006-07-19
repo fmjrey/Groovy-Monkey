@@ -20,27 +20,38 @@ import org.eclipse.ui.progress.IProgressService;
 public class Bundler
 {
     public static final String DEPLOY_DIR = "/tmp/deployedBundles";
-    private File tempdir;
+    private String deployDirPath = DEPLOY_DIR;
+    private File deployDir;
 
-    public void createTempDirectory() 
+    public Bundler setDeployDir( final String deployDirPath )
+    {
+        this.deployDirPath = deployDirPath;
+        return this;
+    }
+    public String getDeployDir()
+    {
+        return deployDirPath;
+    }
+    public Bundler createDeployDir() 
     throws IOException
     {
-        tempdir = new File( DEPLOY_DIR );
-        if( tempdir.exists() )
-            deleteDirectory( tempdir );
+        deployDir = new File( deployDirPath );
+        if( deployDir.exists() )
+            deleteDirectory( deployDir );
         try
         {
             Thread.sleep( 1000 );
         }
         catch( final InterruptedException e ) {}
-        tempdir.mkdir();
+        deployDir.mkdir();
+        return this;
     }
-    public void buildPluginJar( final Project project ) 
+    public Bundler buildPluginJar( final Project project ) 
     throws InterruptedException, InvocationTargetException
     {
-        buildPluginJar( project.getEclipseObject() );
+        return buildPluginJar( project.getEclipseObject() );
     }
-    public void buildPluginJar( final IProject project ) 
+    public Bundler buildPluginJar( final IProject project ) 
     throws InvocationTargetException, InterruptedException
     {
         Validate.notNull( project );
@@ -51,7 +62,7 @@ public class Bundler
         info.toDirectory = true;
         info.useJarFormat = true;
         info.exportSource = false;
-        info.destinationDirectory = tempdir.getAbsolutePath();
+        info.destinationDirectory = deployDir.getAbsolutePath();
         info.zipFileName = null;
         info.items = new Object[]{ model };
         info.signingInfo = null;
@@ -69,5 +80,6 @@ public class Bundler
             }
         } );
         System.out.println( job.getResult() + " done with building" );
+        return this;
     }
 }
