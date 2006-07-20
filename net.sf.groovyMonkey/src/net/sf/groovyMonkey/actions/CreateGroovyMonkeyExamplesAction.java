@@ -72,11 +72,11 @@ implements IWorkbenchWindowActionDelegate
 				}
             }
 			if( errors.length() > 0 )
-                openInformation( window.getShell(), "Eclipse Monkey", "Errors creating the Examples project: " + errors );
+                openInformation( window.getShell(), "Groovy Monkey", "Errors creating the Examples project: " + errors );
 		} 
         catch( final CoreException x ) 
         {
-			openInformation( window.getShell(), "Eclipse Monkey", "Unable to create the Examples project due to " + x );
+			openInformation( window.getShell(), "Groovy Monkey", "Unable to create the Examples project due to " + x );
 		}
 	}
     public List< URL > getExampleScripts( final Bundle bundle )

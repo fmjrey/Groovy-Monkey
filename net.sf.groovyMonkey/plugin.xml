@@ -7,23 +7,23 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Eclipse Monkey Actions"
+            label="Groovy Monkey Actions"
             visible="true"
-            id="eclipsemonkeyAction.actionSet">
+            id="groovyMonkeyAction.actionSet">
          <menu
-               id="eclipsemonkeyMenu"
-               label="Monkey">
+               id="groovyMonkeyMenu"
+               label="Groovy Monkey">
             <separator
-                  name="eclipsemonkeyGroup">
+                  name="groovyMonkeyGroup">
             </separator>
          </menu>
          <action
                class="net.sf.groovyMonkey.actions.CreateGroovyMonkeyExamplesAction"
                icon="icons/monkey.gif"
                id="net.sf.groovymonkey.action1"
-               label="Eclipse Monkey Examples"
-               menubarPath="eclipsemonkeyMenu/eclipsemonkeyGroup"
-               toolbarPath="eclipsemonkeyGroup"
+               label="Groovy Monkey Examples"
+               menubarPath="groovyMonkeyMenu/groovyMonkeyGroup"
+               toolbarPath="groovyMonkeyGroup"
                tooltip="Create the Examples project">
          </action>
       </actionSet>

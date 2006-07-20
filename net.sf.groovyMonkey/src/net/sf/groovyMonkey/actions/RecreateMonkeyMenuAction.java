@@ -37,7 +37,7 @@ import org.eclipse.ui.internal.ActionSetContributionItem;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate {
-
+    private static final String menuPath = "groovyMonkeyMenu";
 	public RecreateMonkeyMenuAction() {
 	}
 
@@ -60,7 +60,7 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		MenuManager manager = ((WorkbenchWindow) window).getMenuManager();
         if( manager == null )
             return;
-		IContributionItem two = manager.findUsingPath("eclipsemonkeyMenu");
+		IContributionItem two = manager.findUsingPath( menuPath );
 		IMenuManager three = (IMenuManager) ((ActionSetContributionItem) two)
 				.getInnerItem();
 		three.removeAll();
@@ -82,10 +82,8 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		MenuManager outerManager = ((WorkbenchWindow) window).getMenuManager();
         if( outerManager == null )
             return;
-		IContributionItem contribution = outerManager
-				.findUsingPath("eclipsemonkeyMenu");
-		IMenuManager menuManager = (IMenuManager) ((ActionSetContributionItem) contribution)
-				.getInnerItem();
+		IContributionItem contribution = outerManager.findUsingPath( menuPath );
+		IMenuManager menuManager = (IMenuManager) ((ActionSetContributionItem) contribution).getInnerItem();
 
 		MonkeyMenuStruct current = new MonkeyMenuStruct();
 		current.key = "";

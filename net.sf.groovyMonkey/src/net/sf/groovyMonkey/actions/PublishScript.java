@@ -50,11 +50,11 @@ public class PublishScript implements IWorkbenchWindowActionDelegate,
 
 				result += decorateText(contents);
 			} catch (IOException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey", x
+				MessageDialog.openInformation(shell, "Groovy Monkey", x
 						.toString()
 						+ " while trying to copy script for publication");
 			} catch (CoreException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey", x
+				MessageDialog.openInformation(shell, "Groovy Monkey", x
 						.toString()
 						+ " while trying to copy script for publication");
 			}

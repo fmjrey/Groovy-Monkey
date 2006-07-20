@@ -1,7 +1,7 @@
 package net.sf.groovyMonkey.editor.wizard;
+import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
-import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.ide.IDE.openEditor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +23,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWizard;
 import org.eclipse.ui.PartInitException;
 
@@ -146,10 +145,9 @@ implements INewWizard
         {
             public void run()
             {
-                final IWorkbenchPage page = getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 try
                 {
-                    openEditor( page, file, true );
+                    openEditor( activePage(), file, true );
                 }
                 catch( final PartInitException e )
                 {

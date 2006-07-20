@@ -2,10 +2,12 @@ package net.sf.groovyMonkey.editor.actions;
 import static net.sf.groovyMonkey.ScriptMetadata.getMetadataLines;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
+import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static net.sf.groovyMonkey.dom.Utilities.error;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
+import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import java.io.ByteArrayInputStream;
@@ -25,12 +27,10 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class AddDOM 
@@ -64,7 +64,7 @@ implements IObjectActionDelegate
             final IEditorPart editor = getEditor( script );
             if( editor.isDirty() )
             {
-                final SaveEditorDialog dialog = new SaveEditorDialog( getShell(), script );
+                final SaveEditorDialog dialog = new SaveEditorDialog( shell(), script );
                 final int returnCode = dialog.open();
                 if( returnCode != Window.OK )
                     return;
@@ -99,7 +99,7 @@ implements IObjectActionDelegate
     {
         if( availableDOMPlugins == null || availableDOMPlugins.size() == 0 )
             return new LinkedHashSet< String >();
-        final AddDOMDialog dialog = new AddDOMDialog( getShell(), availableDOMPlugins );
+        final AddDOMDialog dialog = new AddDOMDialog( shell(), availableDOMPlugins );
         final int returnCode = dialog.open();
         if( returnCode != Window.OK )
             return new LinkedHashSet< String >();
@@ -145,19 +145,13 @@ implements IObjectActionDelegate
             catch( final InterruptedException e ) {}
         }
     }
-    private Shell getShell()
-    {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-    }
-    private IEditorPart getEditor( final IFile script  )
+    private IEditorPart getEditor( final IFile script )
     throws PartInitException
     {
         if( targetEditor != null )
             return targetEditor;
-        return PlatformUI.getWorkbench()
-                         .getActiveWorkbenchWindow()
-                         .getActivePage()
-                         .openEditor( new FileEditorInput( script ), "net.sf.groovyMonkey.editor.ScriptEditor" );
+        return activePage().openEditor( new FileEditorInput( script ), 
+                                        ScriptEditor.class.getName() );
     }
     private IFile getTargetScript()
     {

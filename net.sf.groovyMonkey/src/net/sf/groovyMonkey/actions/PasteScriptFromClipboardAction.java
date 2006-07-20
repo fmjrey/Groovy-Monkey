@@ -50,9 +50,9 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 public class PasteScriptFromClipboardAction implements
 		IWorkbenchWindowActionDelegate, IObjectActionDelegate {
 
-	private static final String ECLIPSE_MONKEY_PROJECT = "Eclipse Monkey Scripts";
+	private static final String GROOVY_MONKEY_PROJECT = "Groovy Monkey Scripts";
 
-	private static final String ECLIPSE_MONKEY_DIRECTORY = "monkey";
+	private static final String GROOVY_MONKEY_DIRECTORY = "monkey";
 
 	public PasteScriptFromClipboardAction() {
 	}
@@ -68,10 +68,10 @@ public class PasteScriptFromClipboardAction implements
 				IFile file = createScriptFile(destination, scriptText);
 				highlightNewScriptInNavigator(file);
 			} catch (CoreException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey",
+				MessageDialog.openInformation(shell, "Groovy Monkey",
 						"Unable to create the Examples project due to " + x);
 			} catch (IOException x) {
-				MessageDialog.openInformation(shell, "Eclipse Monkey",
+				MessageDialog.openInformation(shell, "Groovy Monkey",
 						"Unable to create the Examples project due to " + x);
 			}
 		}
@@ -79,7 +79,7 @@ public class PasteScriptFromClipboardAction implements
 			MessageDialog
 					.openInformation(
 							shell,
-							"Eclipse Monkey",
+							"Groovy Monkey",
 							"Can't find any scripts on clipboard - make sure you include the Jabberwocky-inspired markers at the beginning and ending of the script");
 
 		}
@@ -123,17 +123,17 @@ public class PasteScriptFromClipboardAction implements
 		IProject project = null;
 		for (int i = 0; i < projects.length; i++) {
 			IProject p = projects[i];
-			if (p.getName().equals(ECLIPSE_MONKEY_PROJECT)) {
+			if (p.getName().equals(GROOVY_MONKEY_PROJECT)) {
 				project = p;
 				break;
 			}
 		}
 		if (project == null) {
-			project = workspace.getRoot().getProject(ECLIPSE_MONKEY_PROJECT);
+			project = workspace.getRoot().getProject(GROOVY_MONKEY_PROJECT);
 			project.create(null);
 			project.open(null);
 		}
-		IFolder folder = project.getFolder(ECLIPSE_MONKEY_DIRECTORY);
+		IFolder folder = project.getFolder(GROOVY_MONKEY_DIRECTORY);
 		if (!folder.exists())
 			folder.create(IResource.NONE, true, null);
 		return folder;

@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor;
+import static org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +25,7 @@ extends ContentOutlinePage
         if( editorInput != null )
             viewer.setInput( editorInput );
         listener = new ScriptResourceChangeListener( viewer, contentProvider );
-        getWorkspace().addResourceChangeListener( listener, IResourceChangeEvent.POST_CHANGE );
+        getWorkspace().addResourceChangeListener( listener, POST_CHANGE );
         viewer.addDoubleClickListener( new ScriptOutlineDoubleClickAction() );
     }
     public void setInput( final IEditorInput editorInput )

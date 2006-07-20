@@ -32,7 +32,11 @@ import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 
 public class Utilities 
 {
@@ -45,6 +49,11 @@ public class Utilities
 
 	public static final String SCRIPT_NAME = "scriptName";
     
+    public static String contents( final IFile file ) 
+    throws CoreException, IOException
+    {
+        return getContents( file );
+    }
     public static String getContents( final IFile file ) 
     throws CoreException, IOException
     {
@@ -316,5 +325,21 @@ public class Utilities
                                                     new Status( type, PLUGIN_ID, type, defaultString( message ), exception ),
                                                     OK | INFO | WARNING | ERROR );
         dialog.open();
+    }
+    public static IWorkbenchWindow activeWindow()
+    {
+        return getWorkbench().getActiveWorkbenchWindow();
+    }
+    public static Shell shell()
+    {
+        return activeWindow().getShell();
+    }
+    public static IWorkbenchPage activePage()
+    {
+        return activeWindow().getActivePage();
+    }
+    public static ImageDescriptor imageDescriptor( final String symbolicName )
+    {
+        return getWorkbench().getSharedImages().getImageDescriptor( symbolicName );
     }
 }

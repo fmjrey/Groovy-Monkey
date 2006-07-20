@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DOM Plugins for Eclipse Monkey.
+Bundle-Name: DOM Plugins for Groovy Monkey.
 Bundle-SymbolicName: net.sf.groovyMonkey.dom;singleton:=true
 Bundle-Version: 0.2.0
 Bundle-Localization: plugin

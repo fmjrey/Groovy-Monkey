@@ -2,6 +2,7 @@ package net.sf.groovyMonkey.editor.views;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMExtensionPoint;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
+import static net.sf.groovyMonkey.dom.Utilities.imageDescriptor;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import static org.eclipse.swt.SWT.H_SCROLL;
@@ -11,7 +12,6 @@ import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.ISharedImages.IMG_OBJS_INFO_TSK;
 import static org.eclipse.ui.IWorkbenchActionConstants.MB_ADDITIONS;
-import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import net.sf.groovyMonkey.DOMDescriptor;
@@ -162,7 +162,7 @@ implements IRegistryChangeListener
         };
         action1.setText( "Action 1" );
         action1.setToolTipText( "Action 1 tooltip" );
-        action1.setImageDescriptor( getWorkbench().getSharedImages().getImageDescriptor( IMG_OBJS_INFO_TSK ) );
+        action1.setImageDescriptor( imageDescriptor( IMG_OBJS_INFO_TSK ) );
         action2 = new Action()
         {
             @Override
@@ -173,7 +173,7 @@ implements IRegistryChangeListener
         };
         action2.setText( "Action 2" );
         action2.setToolTipText( "Action 2 tooltip" );
-        action2.setImageDescriptor( getWorkbench().getSharedImages().getImageDescriptor( IMG_OBJS_INFO_TSK ) );
+        action2.setImageDescriptor( imageDescriptor( IMG_OBJS_INFO_TSK ) );
         doubleClickAction = new Action()
         {
             @Override

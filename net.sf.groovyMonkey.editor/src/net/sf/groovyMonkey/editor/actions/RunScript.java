@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor.actions;
+import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import net.sf.groovyMonkey.editor.ScriptEditor;
 import org.eclipse.core.resources.IFile;
@@ -8,8 +9,6 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
 public class RunScript 
 extends Action 
@@ -37,11 +36,7 @@ implements IObjectActionDelegate
         final IFile script = getTargetScript();
         if( script == null )
             return;
-        new RunMonkeyScript( script, window() ).run( false );
-    }
-    private IWorkbenchWindow window()
-    {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        new RunMonkeyScript( script, activeWindow() ).run( false );
     }
     private IFile getTargetScript()
     {
