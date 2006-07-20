@@ -11,6 +11,7 @@ import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMInfo;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
 import static org.apache.commons.lang.StringUtils.defaultString;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 import java.io.IOException;
@@ -332,7 +333,8 @@ implements ITreeContentProvider
     public Object[] getElements( final Object inputElement )
     {
         final List< Object > elements = new ArrayList< Object >();
-        elements.add( menu );
+        if( isNotBlank( menu.menu ) )
+            elements.add( menu );
         elements.add( lang );
         elements.add( job );
         elements.add( exec );

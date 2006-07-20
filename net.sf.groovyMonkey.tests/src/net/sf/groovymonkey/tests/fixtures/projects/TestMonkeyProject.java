@@ -1,25 +1,22 @@
 package net.sf.groovymonkey.tests.fixtures.projects;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
+import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
 import static org.apache.commons.io.IOUtils.toInputStream;
-import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.InputStream;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.IWorkbenchWindow;
 
 public class TestMonkeyProject 
 extends TestProject
 {
-    public static String MONKEY_PATH = "monkey/";
+    public static String MONKEY_PATH = MONKEY_DIR + "/";
     public static String MONKEY_EXT = FILE_EXTENSION;
-    public static IWorkbenchWindow workbenchWindow()
-    {
-        return getWorkbench().getActiveWorkbenchWindow();
-    }
+
     public static void runMonkeyScript( final IFile script )
     {
-        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, workbenchWindow(), true );
+        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), true );
         monkeyScript.runScript( null );
     }
     public TestMonkeyProject( final String name ) 
