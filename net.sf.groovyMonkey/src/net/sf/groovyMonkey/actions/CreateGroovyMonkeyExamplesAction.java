@@ -1,5 +1,6 @@
 package net.sf.groovyMonkey.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -48,7 +49,7 @@ implements IWorkbenchWindowActionDelegate
 					final String filePath = example.getFile();
 					final String[] words = filePath.split( "/" );
                     final String fileName = words[ words.length - 1 ];
-					final IFolder folder = project.getFolder( "/monkey" );
+					final IFolder folder = project.getFolder( "/" + MONKEY_DIR );
 					if( !folder.exists() )
 						folder.create( IResource.NONE, true, null );
                     final InputStream input = example.openStream();
@@ -83,7 +84,7 @@ implements IWorkbenchWindowActionDelegate
     {
         final List< URL > list = new ArrayList< URL >();
         findEntries( bundle, list, "/samples", FILE_EXTENSION_WILDCARD );
-        findEntries( bundle, list, "/monkey", FILE_EXTENSION_WILDCARD );
+        findEntries( bundle, list, "/" + MONKEY_DIR, FILE_EXTENSION_WILDCARD );
         return list;
     }
     private void findEntries( final Bundle bundle, 

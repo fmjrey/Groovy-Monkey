@@ -11,7 +11,10 @@
  *******************************************************************************/
 
 package net.sf.groovyMonkey.actions;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,12 +39,14 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.internal.ActionSetContributionItem;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
-public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate {
+public class RecreateMonkeyMenuAction 
+implements IWorkbenchWindowActionDelegate 
+{
     private static final String menuPath = "groovyMonkeyMenu";
 	public RecreateMonkeyMenuAction() {
 	}
 
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		clearTheMenu();
 		final List< ScriptMetadata > metaDatas = getAllMetadatas();
 		final List< Association > menuData = createMenuFromMetadatas(metaDatas);
@@ -51,22 +56,29 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private List< ScriptMetadata > getAllMetadatas() 
     {
 		final List< ScriptMetadata > result = new ArrayList< ScriptMetadata >();
-        for( final ScriptMetadata metadata : scriptStore().values() )
-            result.add( metadata );
-		return result;
+        for( final String scriptPath : scriptStore().keySet() )
+        {
+            if( !scriptPath.contains( "/" + MONKEY_DIR + "/" ) )
+                continue;
+            final ScriptMetadata metadata = scriptStore().get( scriptPath );
+            if( isBlank( metadata.getMenuName() ) )
+                continue;
+            result.add( scriptStore().get( scriptPath ) );
+        }
+        return result;
 	}
 
 	private void clearTheMenu() {
-		MenuManager manager = ((WorkbenchWindow) window).getMenuManager();
+		final MenuManager manager = ((WorkbenchWindow) window).getMenuManager();
         if( manager == null )
             return;
-		IContributionItem two = manager.findUsingPath( menuPath );
-		IMenuManager three = (IMenuManager) ((ActionSetContributionItem) two)
+		final IContributionItem two = manager.findUsingPath( menuPath );
+		final IMenuManager three = (IMenuManager) ((ActionSetContributionItem) two)
 				.getInnerItem();
 		three.removeAll();
 	}
 
-	private Pattern submenu_pattern = Pattern.compile("^(.+?)>(.*)$");
+	private final Pattern submenu_pattern = Pattern.compile("^(.+?)>(.*)$");
 
 	class MonkeyMenuStruct {
 		String key;
@@ -79,13 +91,13 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 	private void createTheMenu( final List< Association > menuData, 
                                 final IAction action ) 
     {
-		MenuManager outerManager = ((WorkbenchWindow) window).getMenuManager();
+		final MenuManager outerManager = ((WorkbenchWindow) window).getMenuManager();
         if( outerManager == null )
             return;
-		IContributionItem contribution = outerManager.findUsingPath( menuPath );
-		IMenuManager menuManager = (IMenuManager) ((ActionSetContributionItem) contribution).getInnerItem();
+		final IContributionItem contribution = outerManager.findUsingPath( menuPath );
+		final IMenuManager menuManager = (IMenuManager) ((ActionSetContributionItem) contribution).getInnerItem();
 
-		MonkeyMenuStruct current = new MonkeyMenuStruct();
+		final MonkeyMenuStruct current = new MonkeyMenuStruct();
 		current.key = "";
 		current.menu = menuManager;
 		current.submenu = new MonkeyMenuStruct();
@@ -93,50 +105,51 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		final SortedSet< Association > sorted = new TreeSet< Association >();
 		sorted.addAll(menuData);
 
-		Iterator iter = sorted.iterator();
+		final Iterator iter = sorted.iterator();
 		while (iter.hasNext()) {
-			Association element = (Association) iter.next();
-			String menu_string = element.key;
+			final Association element = (Association) iter.next();
+			final String menu_string = element.key;
 			final IFile script_file_to_run = element.file;
 			addNestedMenuAction(current, menu_string, script_file_to_run);
 		}
 
-		final IWorkbenchWindow _window = this.window;
+		final IWorkbenchWindow _window = window;
 
 		if (sorted.size() != 0)
 			menuManager.add(new Separator());
 
 		menuManager.add(new Action("Paste New Script") {
-			public void run() {
-				IWorkbenchWindowActionDelegate delegate = new PasteScriptFromClipboardAction();
+			@Override
+            public void run() {
+				final IWorkbenchWindowActionDelegate delegate = new PasteScriptFromClipboardAction();
 				delegate.init(_window);
 				delegate.run(action);
 			}
 		});
 
-		if (sorted.size() == 0) {
-			menuManager.add(new Action("Examples") {
-				public void run() {
-					IWorkbenchWindowActionDelegate delegate = new CreateGroovyMonkeyExamplesAction();
+		if (sorted.size() == 0)
+            menuManager.add(new Action("Examples") {
+				@Override
+                public void run() {
+					final IWorkbenchWindowActionDelegate delegate = new CreateGroovyMonkeyExamplesAction();
 					delegate.init(_window);
 					delegate.run(action);
 				}
 			});
-		}
 		
 		menuManager.updateAll(true);
 
 	}
 
-	private void addNestedMenuAction(MonkeyMenuStruct current,
-			String menu_string, final IFile script_file_to_run) {
+	private void addNestedMenuAction(final MonkeyMenuStruct current,
+			final String menu_string, final IFile script_file_to_run) {
 		if( menu_string == null ) return;
-		Matcher match = submenu_pattern.matcher(menu_string);
+		final Matcher match = submenu_pattern.matcher(menu_string);
 		if (match.find()) {
-			String primary_key = match.group(1).trim();
-			String secondary_key = match.group(2).trim();
+			final String primary_key = match.group(1).trim();
+			final String secondary_key = match.group(2).trim();
 			if (!primary_key.equals(current.submenu.key)) {
-				IMenuManager submenu = new MenuManager(primary_key);
+				final IMenuManager submenu = new MenuManager(primary_key);
 				current.menu.add(submenu);
 				current.submenu.menu = submenu;
 				current.submenu.key = primary_key;
@@ -144,15 +157,16 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 			}
 			addNestedMenuAction(current.submenu, secondary_key,
 					script_file_to_run);
-		} else {
-			current.menu.add(menuAction(menu_string, script_file_to_run));
 		}
+        else
+            current.menu.add(menuAction(menu_string, script_file_to_run));
 	}
 
-	private Action menuAction(String key, final IFile value) {
+	private Action menuAction(final String key, final IFile value) {
 		final RunMonkeyScript runner = new RunMonkeyScript(value, window);
-		Action action = new Action(key) {
-			public void run() {
+		final Action action = new Action(key) {
+			@Override
+            public void run() {
 				runner.run( false );
 			}
 		};
@@ -162,11 +176,12 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		return action;
 	}
 
-	private List< Association > createMenuFromMetadatas(Collection metaDatas) {
+	private List< Association > createMenuFromMetadatas( final Collection< ScriptMetadata > metaDatas ) 
+    {
 		final List< Association > menuData = new ArrayList< Association >();
-		for (Iterator iter = metaDatas.iterator(); iter.hasNext();) {
-			ScriptMetadata data = (ScriptMetadata) iter.next();
-			if( data.getMenuName() != null ) 
+		for( final ScriptMetadata data : metaDatas ) 
+        {
+			if( isNotBlank( data.getMenuName() ) ) 
 				menuData.add(new Association(data.getMenuName(), data.getFile()));
 		}
 		return menuData;
@@ -181,15 +196,15 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 
 		int uniqueId;
 
-		Association(String k, IFile f) {
-			this.key = k;
-			this.file = f;
-			this.uniqueId = id++;
+		Association(final String k, final IFile f) {
+			key = k;
+			file = f;
+			uniqueId = id++;
 		}
 
-		public int compareTo(Object arg0) {
-			Association b = (Association) arg0;
-			int value = key.compareTo(b.key);
+		public int compareTo(final Object arg0) {
+			final Association b = (Association) arg0;
+			final int value = key.compareTo(b.key);
 			if (value == 0) {
 				if (uniqueId < b.uniqueId)
 					return -1;
@@ -200,13 +215,13 @@ public class RecreateMonkeyMenuAction implements IWorkbenchWindowActionDelegate 
 		}
 	}
 
-	public void selectionChanged(IAction action, ISelection selection) {
+	public void selectionChanged(final IAction action, final ISelection selection) {
 	}
 
 	public void dispose() {
 	}
 
-	public void init(IWorkbenchWindow window) {
+	public void init(final IWorkbenchWindow window) {
 		this.window = window;
 	}
 

@@ -38,6 +38,7 @@ implements IStartup
     public static final String SCRIPT_SUFFIX = "em";
     public static final String FILE_EXTENSION = "." + SCRIPT_SUFFIX;
     public static final String FILE_EXTENSION_WILDCARD = "*" + FILE_EXTENSION;
+    public static final String MONKEY_DIR = "monkey";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;
     private final Map< String, ScriptMetadata > scriptStore = new HashMap< String, ScriptMetadata >();

@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey.editor.wizard;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPT_SUFFIX;
 import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
@@ -246,7 +247,7 @@ extends WizardPage
     }
     private IFolder getMonkeyFolder( final IProject project )
     {
-        return project.getFolder( "/monkey" );
+        return project.getFolder( "/" + MONKEY_DIR );
     }
     public void finished()
     {

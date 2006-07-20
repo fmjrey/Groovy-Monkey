@@ -317,7 +317,8 @@ public class ScriptMetadata
     {
         final StringBuffer buffer = new StringBuffer();
         buffer.append( "/*" ).append( "\n" );
-        buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
+        if( isNotBlank( getMenuName() ) )
+            buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
         buffer.append( " * Kudos: " + getKudos() ).append( "\n" );
         buffer.append( " * License: " + getLicense() ).append( "\n" );
         if( !getLang().equals( DEFAULT_LANG ) )

@@ -10,6 +10,7 @@ import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMInfo;
 import static net.sf.groovyMonkey.dom.Utilities.hasDOM;
+import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 import java.io.IOException;
@@ -355,7 +356,7 @@ implements ITreeContentProvider
         try
         {
             data = getScriptMetadata( getContents( script ) );
-            menu.menu = data.getMenuName();
+            menu.menu = defaultString( data.getMenuName() );
             lang.lang = data.getLang();
             job.mode = data.getJobMode();
             exec.mode = data.getExecMode();
