@@ -13,7 +13,7 @@ public class AllTests
         suite.addTestSuite( LanguageTest.class );
         suite.addTestSuite( IncludeTest.class );
         suite.addTestSuite( ResourcesTest.class );
-        //suite.addTestSuite( IncludeLocalBundleTest.class );
+        suite.addTestSuite( IncludeLocalBundleTest.class );
         //$JUnit-END$
         return suite;
     }

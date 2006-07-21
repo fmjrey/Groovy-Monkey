@@ -1,9 +1,11 @@
 package net.sf.groovymonkey.tests.fixtures.projects;
+import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
 import static org.apache.commons.io.IOUtils.toInputStream;
 import java.io.InputStream;
+import java.util.Map;
 import net.sf.groovyMonkey.RunMonkeyScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -17,6 +19,12 @@ extends TestProject
     public static void runMonkeyScript( final IFile script )
     {
         final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), true );
+        monkeyScript.runScript( null );
+    }
+    public static void runMonkeyScript( final IFile script,
+                                        final Map< String, Object > map )
+    {
+        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), synchronizedMap( map ), true );
         monkeyScript.runScript( null );
     }
     public TestMonkeyProject( final String name ) 

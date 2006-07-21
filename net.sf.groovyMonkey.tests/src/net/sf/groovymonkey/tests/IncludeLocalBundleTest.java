@@ -12,8 +12,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
+import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.osgi.framework.Bundle;
 
@@ -22,6 +23,9 @@ extends TestCaseAbstract
 {
     private final String DEPLOY_DIR = "/tmp/PDEJUnit/" + getClass().getSimpleName() + "/" + getName();
     private final String TEST_DOM = "net.sf.test.dom";
+    private InputStream installScriptInput = null;
+    private IFile installScript = null;
+    private InputStream uninstallScriptInput = null;
     private InputStream scriptFileInput = null;
     private IFile script = null;
     
@@ -38,7 +42,10 @@ extends TestCaseAbstract
         new File( DEPLOY_DIR ).mkdirs();
         scriptFileInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeLocalBundleTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), scriptFileInput );
-        new TestDOM().callDOM( "" );
+        installScriptInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeLocalBundleTest.class.getSimpleName() + "/installTestDOM" + MONKEY_EXT ).openStream();
+        installScript = monkeyProject.makeMonkeyScript( "installTestDOM", installScriptInput );
+        uninstallScriptInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeLocalBundleTest.class.getSimpleName() + "/lib/uninstall" + MONKEY_EXT ).openStream();
+        monkeyProject.makeFile( "/lib", "uninstall" + MONKEY_EXT, uninstallScriptInput );
     }
     @Override
     protected void tearDown() 
@@ -46,6 +53,8 @@ extends TestCaseAbstract
     {
         super.tearDown();
         closeQuietly( scriptFileInput );
+        closeQuietly( installScriptInput );
+        closeQuietly( uninstallScriptInput );
         deleteDirectory( new File( DEPLOY_DIR ) );
     }
     private void deployFirstVersion()
@@ -81,13 +90,21 @@ extends TestCaseAbstract
                 bundles.add( bundle );
         return bundles;
     }
+    private void installTestDOM( final String version )
+    {
+        final Map< String, Object > map = new HashMap< String, Object >();
+        map.put( "bundleVersion", version );
+        map.put( "deployDir", DEPLOY_DIR );
+        runMonkeyScript( installScript, map );
+    }
     public void testIncludeLocalBundle()
     throws Exception
     {
         deployFirstVersion();
         final List< Bundle > installedBundles = getTestDOMBundles();
         if( installedBundles.size() > 0 )
-            fail( TEST_DOM + " is already installed: " + installedBundles );
+            fail( TEST_DOM + " is already installed: " + installedBundles + ". Check that your workspace doesn't have it open or that it is not included in the set of runtime plugins." );
+        installTestDOM( "1.0.0" );
         runMonkeyScript( script );
         final List< Bundle > updatedBundles = getTestDOMBundles();
         assertEquals( 1, updatedBundles.size() );
@@ -97,11 +114,11 @@ extends TestCaseAbstract
     public void testUpdateLocalBundle()
     throws Exception
     {
-        deployFirstVersion();
         deployUpdatedVersion();
         final List< Bundle > installedBundles = getTestDOMBundles();
-        if( installedBundles.size() > 0 )
-            fail( TEST_DOM + " is already installed: " + installedBundles );
+        if( installedBundles.size() == 0 )
+            fail( TEST_DOM + " is not already installed: " + installedBundles );
+        installTestDOM( "1.0.1" );
         runMonkeyScript( script );
         final List< Bundle > updatedBundles = getTestDOMBundles();
         assertEquals( 1, updatedBundles.size() );
