@@ -9,185 +9,192 @@
  *     Bjorn Freeman-Benson - initial implementation
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
-
 package net.sf.groovyMonkey;
-
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
+import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
+import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
+import static net.sf.groovyMonkey.dom.Utilities.contents;
+import static net.sf.groovyMonkey.dom.Utilities.isMonkeyScript;
+import static org.eclipse.core.resources.IResourceDelta.ADDED;
+import static org.eclipse.core.resources.IResourceDelta.CHANGED;
+import static org.eclipse.core.resources.IResourceDelta.CONTENT;
+import static org.eclipse.core.resources.IResourceDelta.MOVED_FROM;
+import static org.eclipse.core.resources.IResourceDelta.MOVED_TO;
+import static org.eclipse.core.resources.IResourceDelta.REMOVED;
+import static org.eclipse.core.resources.IResourceDelta.REPLACED;
+import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
+import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.IOException;
-import java.io.InputStream;
-
 import net.sf.groovyMonkey.actions.RecreateMonkeyMenuAction;
-import net.sf.groovyMonkey.dom.Utilities;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
-public class UpdateMonkeyActionsResourceChangeListener implements
-		IResourceChangeListener {
-	public void resourceChanged(IResourceChangeEvent event) {
-		final Boolean changes[] = new Boolean[1];
-		changes[0] = new Boolean(false);
-		IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-			private void found_a_change() {
-				changes[0] = new Boolean(true);
-			}
-
-			public boolean visit(IResourceDelta delta) {
+public class UpdateMonkeyActionsResourceChangeListener 
+implements IResourceChangeListener
+{
+    public void resourceChanged( final IResourceChangeEvent event )
+    {
+        final Boolean changes[] = new Boolean[ 1 ];
+        changes[ 0 ] = new Boolean( false );
+        final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
+        {
+            private void foundAChange()
+            {
+                changes[ 0 ] = new Boolean( true );
+            }
+            public boolean visit( final IResourceDelta delta )
+            {
                 if( !( delta.getResource() instanceof IFile ) )
                     return true;
-				String fullPath = delta.getFullPath().toString();
-				if (Utilities.isMonkeyScript( fullPath )) {
-					IFile file = (IFile) delta.getResource();
-					switch (delta.getKind()) {
-					case IResourceDelta.ADDED:
-						processNewOrChangedScript(fullPath, file);
-						found_a_change();
-						break;
-					case IResourceDelta.REMOVED:
-						processRemovedScript(fullPath, file);
-						found_a_change();
-						break;
-					case IResourceDelta.CHANGED:
-						if ((delta.getFlags() & IResourceDelta.MOVED_FROM) != 0) {
-							processRemovedScript(delta.getMovedFromPath()
-									.toString(), file);
-							processNewOrChangedScript(fullPath, file);
-							found_a_change();
-						}
-						if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
-							processRemovedScript(fullPath, file);
-							processNewOrChangedScript(delta.getMovedToPath()
-									.toString(), file);
-							found_a_change();
-						}
-						if ((delta.getFlags() & IResourceDelta.REPLACED) != 0) {
-							processNewOrChangedScript(fullPath, file);
-							found_a_change();
-						}
-						if ((delta.getFlags() & IResourceDelta.CONTENT) != 0) {
-							processNewOrChangedScript(fullPath, file);
-							found_a_change();
-						}
-						break;
-					}
-				}
-				return true;
-			}
-		};
-		try {
-			event.getDelta().accept(visitor);
-		} catch (CoreException x) {
-			// log an error in the error log
-		}
-		boolean anyMatches = ((Boolean) (changes[0])).booleanValue();
-		if (anyMatches) {
-			createTheMonkeyMenu();
-		}
-	}
-
-	private void processNewOrChangedScript( final String name, 
-                                            final IFile file ) 
+                final String fullPath = delta.getFullPath().toString();
+                if( isMonkeyScript( fullPath ) )
+                {
+                    final IFile file = ( IFile )delta.getResource();
+                    switch( delta.getKind() )
+                    {
+                        case ADDED:
+                            processNewOrChangedScript( fullPath, file );
+                            foundAChange();
+                            break;
+                        case REMOVED:
+                            processRemovedScript( fullPath, file );
+                            foundAChange();
+                            break;
+                        case CHANGED:
+                            if( ( delta.getFlags() & MOVED_FROM ) != 0 )
+                            {
+                                processRemovedScript( delta.getMovedFromPath().toString(), file );
+                                processNewOrChangedScript( fullPath, file );
+                                foundAChange();
+                            }
+                            if( ( delta.getFlags() & MOVED_TO ) != 0 )
+                            {
+                                processRemovedScript( fullPath, file );
+                                processNewOrChangedScript( delta.getMovedToPath().toString(), file );
+                                foundAChange();
+                            }
+                            if( ( delta.getFlags() & REPLACED ) != 0 )
+                            {
+                                processNewOrChangedScript( fullPath, file );
+                                foundAChange();
+                            }
+                            if( ( delta.getFlags() & CONTENT ) != 0 )
+                            {
+                                processNewOrChangedScript( fullPath, file );
+                                foundAChange();
+                            }
+                            break;
+                    }
+                }
+                return true;
+            }
+        };
+        try
+        {
+            event.getDelta().accept( visitor );
+        }
+        catch( final CoreException x )
+        {
+            // log an error in the error log
+        }
+        final boolean anyMatches = ( changes[ 0 ] ).booleanValue();
+        if( anyMatches )
+            createTheMonkeyMenu();
+    }
+    private void processNewOrChangedScript( final String name, 
+                                            final IFile file )
     {
         ScriptMetadata metadata;
-		try {
-			metadata = getMetadataFrom(file);
-		} catch (CoreException x) {
-			metadata = new ScriptMetadata();
-            metadata.setFile( file );
-			// log an error in the error log
-		} catch (IOException x) {
-			metadata = new ScriptMetadata();
+        try
+        {
+            metadata = getMetadataFrom( file );
+        }
+        catch( final CoreException x )
+        {
+            metadata = new ScriptMetadata();
             metadata.setFile( file );
             // log an error in the error log
-		}
-		GroovyMonkeyPlugin.getDefault().addScript(name, metadata);
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
+        }
+        catch( final IOException x )
+        {
+            metadata = new ScriptMetadata();
+            metadata.setFile( file );
+            // log an error in the error log
+        }
+        getDefault().addScript( name, metadata );
+        for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.changed( file );
-	}
-
-	private void processRemovedScript(String name, IFile file) {
-		GroovyMonkeyPlugin.getDefault().removeScript(name);
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
+    }
+    private void processRemovedScript( final String name, final IFile file )
+    {
+        getDefault().removeScript( name );
+        for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.changed( file );
-	}
-
-	public void rescanAllFiles() {
-		GroovyMonkeyPlugin.getDefault().clearScripts();
-        for( final IMonkeyScriptFactory factory : RunMonkeyScript.getScriptFactories().values() )
+    }
+    public void rescanAllFiles()
+    {
+        getDefault().clearScripts();
+        for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.clearCachedScripts();
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		for (int i = 0; i < workspace.getRoot().getProjects().length; i++) {
-			IProject project = workspace.getRoot().getProjects()[i];
-			IFolder folder = project.getFolder("monkey");
-			if (folder == null)
-				continue;
-			try {
-				for (int j = 0; j < folder.members().length; j++) {
-					IResource resource = folder.members()[j];
-					if (resource instanceof IFile) {
-						IFile file = (IFile) resource;
-						if (Utilities.isMonkeyScript( file ) ) {
-							processNewOrChangedScript(file.getFullPath().toString(), file);
-						}
-					}
-				}
-			} catch (CoreException x) {
-				// ignore folders we cannot access
-			}
-		}
-	}
-
-	private String getFileContents(IFile file) throws CoreException,
-			IOException {
-		InputStream in = null;
-		try {
-			in = file.getContents();
-			byte[] buf = new byte[100000];
-			int count = in.read(buf);
-			if (count <= 0)
-				return "";
-			byte[] buf2 = new byte[count];
-			for (int k = 0; k < count; k++) {
-				buf2[k] = buf[k];
-			}
-			return new String(buf2);
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
-
-	private ScriptMetadata getMetadataFrom(IFile file) throws CoreException,
-			IOException {
-		String contents = getFileContents(file);
-		ScriptMetadata metadata = ScriptMetadata.getScriptMetadata(contents);
-		metadata.setFile(file);
-		return metadata;
-	}
-
-	public static void createTheMonkeyMenu() {
-		IWorkbenchWindow[] windows = PlatformUI.getWorkbench()
-				.getWorkbenchWindows();
-		for (int i = 0; i < windows.length; i++) {
-			final IWorkbenchWindow window = windows[i];
-			window.getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					RecreateMonkeyMenuAction action = new RecreateMonkeyMenuAction();
-					action.init(window);
-					action.run(null);
-				}
-			});
-		}
-	}
-
+        final IWorkspace workspace = getWorkspace();
+        for( final IProject project : workspace.getRoot().getProjects() )
+        {
+            final IResourceVisitor visitor = new IResourceVisitor()
+            {
+                public boolean visit( final IResource resource ) 
+                throws CoreException
+                {
+                    if( !( resource instanceof IFile ) )
+                        return true;
+                    final IFile file = ( IFile )resource;
+                    if( isMonkeyScript( file ) )
+                        processNewOrChangedScript( file.getFullPath().toString(), file );
+                    return true;
+                }
+                
+            };
+            try
+            {
+                project.accept( visitor );
+            }
+            catch( final CoreException x )
+            {
+                // ignore folders we cannot access
+            }
+        }
+    }
+    private ScriptMetadata getMetadataFrom( final IFile file ) 
+    throws CoreException, IOException
+    {
+        final String contents = contents( file );
+        final ScriptMetadata metadata = getScriptMetadata( contents );
+        metadata.setFile( file );
+        return metadata;
+    }
+    public static void createTheMonkeyMenu()
+    {
+        final IWorkbenchWindow[] windows = getWorkbench().getWorkbenchWindows();
+        for( final IWorkbenchWindow window : windows )
+        {
+            window.getShell().getDisplay().asyncExec( new Runnable()
+            {
+                public void run()
+                {
+                    final RecreateMonkeyMenuAction action = new RecreateMonkeyMenuAction();
+                    action.init( window );
+                    action.run( null );
+                }
+            } );
+        }
+    }
 }

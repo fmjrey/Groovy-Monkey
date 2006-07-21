@@ -1,23 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
 package net.sf.groovyMonkey;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
+import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
 import static net.sf.groovyMonkey.dom.Utilities.SCRIPT_NAME;
+import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.key;
 import static net.sf.groovyMonkey.dom.Utilities.state;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.core.runtime.SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
@@ -79,8 +71,7 @@ public class RunMonkeyScript
     }
 	public void run()
     {
-        final String fileName = key( file );
-        metadata = scriptStore().get( fileName );
+        setMetadata();
         if( metadata.getJobMode() == JobModes.UIJob )
         {
             runUIJob();
@@ -93,6 +84,26 @@ public class RunMonkeyScript
         }
         runJob();
 	}
+    private void setMetadata()
+    {
+        final String fileName = key( file );
+        metadata = scriptStore().get( fileName );
+        if( metadata != null )
+            return;
+        try
+        {
+            metadata = getScriptMetadata( contents( file ) );
+            metadata.setFile( file );
+        }
+        catch( final IOException ioe )
+        {
+            throw new RuntimeException( "Could not load script: " + fileName + ". " + ioe, ioe );
+        }
+        catch( final CoreException e )
+        {
+            throw new RuntimeException( "Could not load script: " + fileName + ". " + e, e );
+        }
+    }
     private void runUIJob()
     {
         final UIJob job = new UIJob( "Script: " + file.getName() )
@@ -162,14 +173,10 @@ public class RunMonkeyScript
     {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         monitor.beginTask( file.getName(), 1 );
-        this.map.put( "monitor", new SubProgressMonitor( monitor, 1, PREPEND_MAIN_LABEL_TO_SUBTASK ) );
+        map.put( "monitor", new SubProgressMonitor( monitor, 1, PREPEND_MAIN_LABEL_TO_SUBTASK ) );
         try
         {
-            if( metadata == null )
-            {
-                final String fileName = key( file );
-                metadata = scriptStore().get( fileName );
-            }
+            setMetadata();
             runScript();
         }
         catch( final Throwable x )
@@ -216,15 +223,15 @@ public class RunMonkeyScript
         }
     }
     
-	private void defineDynamicVariables(IFile file) {
-		state().begin(file);
-		state().set(SCRIPT_NAME,file.getFullPath().toPortableString());
+	private void defineDynamicVariables( final IFile file ) 
+    {
+		state().begin( file );
+		state().set( SCRIPT_NAME, file.getFullPath().toPortableString() );
 	}
-
-	private void undefineDynamicVariables(IFile file) {
-		state().end(file);
+	private void undefineDynamicVariables( final IFile file ) 
+    {
+		state().end( file );
 	}
-
     public static Map< String, IMonkeyScriptFactory > getScriptFactories()
     {
         final Map< String, IMonkeyScriptFactory > factories = new HashMap< String, IMonkeyScriptFactory >();
@@ -255,7 +262,9 @@ public class RunMonkeyScript
         }
         return factories;
     }
-	private void error(Throwable x, String string) {
+	private void error( final Throwable x, 
+                        final String string ) 
+    {
         error( x.getClass().getName(), string, x.getCause() != null ? x.getCause() : x );
 	}
 	private void error( final String title, 

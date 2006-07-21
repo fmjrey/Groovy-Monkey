@@ -40,15 +40,13 @@ import org.eclipse.ui.IWorkbenchWindow;
 
 public class Utilities 
 {
+    public static final String SCRIPT_NAME = "scriptName";
 	private static final IDynamicState state = new DynamicState();
 
-	public static IDynamicState state() {
+	public static IDynamicState state() 
+    {
 		return state;
 	}
-
-
-	public static final String SCRIPT_NAME = "scriptName";
-    
     public static String contents( final IFile file ) 
     throws CoreException, IOException
     {
@@ -77,20 +75,6 @@ public class Utilities
         return isMonkeyScript( path.toString() );
     }
     public static boolean isMonkeyScript( final String fullPath )
-    {
-        if( isJavaScript( fullPath ) )
-            return true;
-        return false;
-    }
-    public static boolean isJavaScript( final IFile file )
-    {
-        return isJavaScript( file.getFullPath() );
-    }
-    public static boolean isJavaScript( final IPath path )
-    {
-        return isJavaScript( path.toString() );
-    }
-    public static boolean isJavaScript( final String fullPath )
     {
         return fullPath.endsWith( FILE_EXTENSION );
     }

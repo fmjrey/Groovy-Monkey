@@ -1,21 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
 package net.sf.groovyMonkey;
+import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
+import static org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.osgi.service.resolver.BundleDescription;
@@ -85,9 +75,9 @@ implements IStartup
     public void earlyStartup()
     {
         final UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
-        getWorkspace().addResourceChangeListener( listener, IResourceChangeEvent.POST_CHANGE );
+        getWorkspace().addResourceChangeListener( listener, POST_CHANGE );
         listener.rescanAllFiles();
-        UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu();
+        createTheMonkeyMenu();
     }
     public void addScript( final String name, 
                            final ScriptMetadata script )
@@ -142,8 +132,7 @@ implements IStartup
     }
     public static BundleDescription getBundleDescription( final long id )
     {
-        final PlatformAdmin admin = getPlatformAdmin();
-        return admin.getState().getBundle( id );
+        return platformAdmin().getState().getBundle( id );
     }
     public static BundleDescription bundleDescription( final long id )
     {
@@ -151,8 +140,7 @@ implements IStartup
     }
     public static BundleDescription getBundleDescription( final String name )
     {
-        final PlatformAdmin admin = getPlatformAdmin();
-        return admin.getState().getBundle( name, null );
+        return platformAdmin().getState().getBundle( name, null );
     }
     public static BundleDescription bundleDescription( final String name )
     {
