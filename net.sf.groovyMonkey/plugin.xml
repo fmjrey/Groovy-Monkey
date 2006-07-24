@@ -92,7 +92,7 @@
             class="net.sf.groovyMonkey.dom.runner.RunnerDOM"
             id="Monkey Runner"
             resource="net.sf.groovyMonkey.dom.runner.MonkeyRunner"
-            variableName="runner"/>
+            variableName="runnerDOM"/>
       <dom
             class="net.sf.groovyMonkey.dom.VarsDOM"
             id="Vars"
@@ -107,7 +107,7 @@
             class="net.sf.groovyMonkey.dom.bundle.BundleDOMFactory"
             id="Bundle"
             resource="net.sf.groovyMonkey.dom.bundle.BundleDOM"
-            variableName="bundle"/>
+            variableName="bundleDOM"/>
       <dom
             class="net.sf.groovyMonkey.dom.workspace.WorkspaceDOMFactory"
             id="Workspace"

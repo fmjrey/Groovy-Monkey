@@ -11,8 +11,8 @@ def bundleVersion = map.bundleVersion
 def deployDir = map.deployDir
 def plugin = 'net.sf.test.dom'
 map.plugin = plugin
-runner.runScript( window, "TestMonkeyProject/lib/uninstall.em", map )
+runnerDOM.runScript( window, "TestMonkeyProject/lib/uninstall.em", map )
 
-def context = bundle.context()
+def context = bundleDOM.context()
 def installedBundle = context.installBundle( "file:" + deployDir + "/" + plugin + "_" + bundleVersion + ".jar" )
 installedBundle.start()

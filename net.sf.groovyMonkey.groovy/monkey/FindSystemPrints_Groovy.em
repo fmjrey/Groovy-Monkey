@@ -2,7 +2,6 @@
  * Menu: Find System Prints - Groovy
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
- * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
  * Exec-Mode: Foreground
  */

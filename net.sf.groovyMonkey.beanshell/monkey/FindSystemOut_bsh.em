@@ -3,7 +3,6 @@
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Beanshell
- * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
 
 files = resources.filesMatching( ".*\\.java" );
@@ -24,4 +23,4 @@ final Runnable runnable = new Runnable()
 		window.getActivePage().showView( "org.eclipse.ui.views.TaskList" );
 	}
 };
-runner.asyncExec( runnable );
+runnerDOM.asyncExec( runnable );

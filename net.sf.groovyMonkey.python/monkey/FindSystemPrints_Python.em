@@ -4,7 +4,6 @@
  * License: EPL 1.0
  * LANG: Python
  * Job: UIJob
- * DOM: http://download.eclipse.org/technology/dash/update/org.eclipse.dash.doms
  */
 files = resources.filesMatching('.*\\.java').tolist()
 for file in files:

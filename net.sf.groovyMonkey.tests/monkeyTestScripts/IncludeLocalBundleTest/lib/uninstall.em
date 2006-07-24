@@ -7,7 +7,7 @@
 import net.sf.groovyMonkey.dom.Utilities
 
 def pluginToUninstall = map.plugin
-for( plugin in bundle.context().getBundles() )
+for( plugin in bundleDOM.context().getBundles() )
 {
 	if( plugin.getSymbolicName().equals( pluginToUninstall ) )
 		plugin.uninstall()
