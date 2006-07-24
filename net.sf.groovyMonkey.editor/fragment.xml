@@ -5,8 +5,8 @@
          point="org.eclipse.ui.popupMenus">
          <objectContribution
             adaptable="false"
-            id="net.sf.groovymonkey.emFileContextMenu"
-            nameFilter="*.em"
+            id="net.sf.groovymonkey.gmFileContextMenu"
+            nameFilter="*.gm"
             objectClass="org.eclipse.core.resources.IFile">
             	<action
                		class="net.sf.groovyMonkey.editor.actions.AddDOM"
@@ -32,8 +32,8 @@
             class="net.sf.groovyMonkey.editor.ScriptEditor"
             contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
             default="true"
-            extensions="em"
-            filenames="*.em"
+            extensions="gm"
+            filenames="*.gm"
             icon="icons/monkey.gif"
             id="net.sf.groovymonkey.editor.ScriptEditor"
             name="Monkey Script Editor"/>

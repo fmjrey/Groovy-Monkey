@@ -37,8 +37,8 @@
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             adaptable="false"
-            id="net.sf.groovymonkey.emFileContextMenu"
-            nameFilter="*.em"
+            id="net.sf.groovymonkey.gmFileContextMenu"
+            nameFilter="*.gm"
             objectClass="org.eclipse.core.resources.IFile">
          <action
                class="net.sf.groovyMonkey.actions.PublishScriptForBlogger"
