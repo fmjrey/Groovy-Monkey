@@ -80,28 +80,30 @@ implements IStartup
         listener.rescanAllFiles();
         createTheMonkeyMenu();
     }
-    public void addScript( final String name, 
-                           final ScriptMetadata script )
+    public static void addScript( final String name, 
+                                  final ScriptMetadata script )
     {
-        final Map< String, ScriptMetadata > store = getScriptStore();
+        final Map< String, ScriptMetadata > store = scriptStore();
         final ScriptMetadata oldScript = store.get( name );
         if( oldScript != null )
             oldScript.unsubscribe();
         store.put( name, script );
         script.subscribe();
     }
-    public void removeScript( final String name )
+    public static void removeScript( final String name )
     {
-        final Map< String, ScriptMetadata > store = getScriptStore();
+        final Map< String, ScriptMetadata > store = scriptStore();
         final ScriptMetadata oldScript = store.remove( name );
         if( oldScript == null )
             return;
         oldScript.unsubscribe();
     }
-    public void clearScripts()
+    public static void clearScripts()
     {
-        getScriptStore().clear();
-        // TODO unsubscribe
+        final Set< String > keys = new LinkedHashSet< String >( scriptStore().keySet() );
+        for( final String key : keys )
+            removeScript( key );
+        scriptStore().clear();
     }
     public static ImageRegistry registry()
     {

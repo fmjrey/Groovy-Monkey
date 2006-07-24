@@ -10,7 +10,9 @@
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
 package net.sf.groovyMonkey;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.addScript;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.clearScripts;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.removeScript;
 import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.contents;
@@ -131,19 +133,19 @@ implements IResourceChangeListener
             metadata.setFile( file );
             // log an error in the error log
         }
-        getDefault().addScript( name, metadata );
+        addScript( name, metadata );
         for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.changed( file );
     }
     private void processRemovedScript( final String name, final IFile file )
     {
-        getDefault().removeScript( name );
+        removeScript( name );
         for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.changed( file );
     }
     public void rescanAllFiles()
     {
-        getDefault().clearScripts();
+        clearScripts();
         for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
             factory.clearCachedScripts();
         final IWorkspace workspace = getWorkspace();

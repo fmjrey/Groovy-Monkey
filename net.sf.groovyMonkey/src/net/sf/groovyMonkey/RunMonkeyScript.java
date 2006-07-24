@@ -1,5 +1,6 @@
 package net.sf.groovyMonkey;
 import static java.util.Collections.synchronizedMap;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.addScript;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
@@ -94,6 +95,7 @@ public class RunMonkeyScript
         {
             metadata = getScriptMetadata( contents( file ) );
             metadata.setFile( file );
+            addScript( fileName, metadata );
             scriptStore().put( fileName, metadata );
         }
         catch( final IOException ioe )
