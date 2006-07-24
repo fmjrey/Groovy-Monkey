@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey;
+import static java.lang.reflect.Proxy.newProxyInstance;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
@@ -11,6 +12,7 @@ import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.Platform.getBundle;
 import static org.eclipse.jface.dialogs.MessageDialog.QUESTION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
@@ -21,7 +23,6 @@ import static org.osgi.framework.Bundle.UNINSTALLED;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,7 +36,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -504,7 +504,7 @@ class Subscription
     }
     public void subscribe()
     {
-        source = ResourcesPlugin.getWorkspace();
+        source = getWorkspace();
         try
         {
             subscribe( source, addMethodName );
@@ -553,22 +553,22 @@ class Subscription
         final Method addMethod = findAddMethod( foo, methodName );
         // TODO what if null is returned?
         final Class listenerType = addMethod.getParameterTypes()[ 0 ];
-        listenerProxy = Proxy.newProxyInstance( listenerType.getClassLoader(), new Class[]{ listenerType }, listener );
+        listenerProxy = newProxyInstance( listenerType.getClassLoader(), new Class[]{ listenerType }, listener );
         addMethod.invoke( foo, new Object[]{ listenerProxy } );
     }
     private Method findAddMethod( final Object source, 
                                   final String methodName )
     {
         final Method methods[] = source.getClass().getMethods();
-        for( final Method m : methods )
+        for( final Method method : methods )
         {
-            if( !m.getName().equals( methodName ) )
+            if( !method.getName().equals( methodName ) )
                 continue;
-            if( m.getParameterTypes().length != 1 )
+            if( method.getParameterTypes().length != 1 )
                 continue;
-            if( findRemoveMethod( source, methodName, m.getParameterTypes() ) == null )
+            if( findRemoveMethod( source, methodName, method.getParameterTypes() ) == null )
                 continue;
-            return m;
+            return method;
         }
         return null;
     }
