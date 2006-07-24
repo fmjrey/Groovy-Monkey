@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey;
+import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
 import static org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -31,7 +32,7 @@ implements IStartup
     public static final String MONKEY_DIR = "monkey";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;
-    private final Map< String, ScriptMetadata > scriptStore = new HashMap< String, ScriptMetadata >();
+    private final Map< String, ScriptMetadata > scriptStore = synchronizedMap( new HashMap< String, ScriptMetadata >() );
     private ServiceTracker tracker = null;
     
     public Map< String, ScriptMetadata > getScriptStore()

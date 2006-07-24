@@ -94,6 +94,7 @@ public class RunMonkeyScript
         {
             metadata = getScriptMetadata( contents( file ) );
             metadata.setFile( file );
+            scriptStore().put( fileName, metadata );
         }
         catch( final IOException ioe )
         {
