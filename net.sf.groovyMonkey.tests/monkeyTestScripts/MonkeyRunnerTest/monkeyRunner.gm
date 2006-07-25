@@ -5,5 +5,7 @@
  * LANG: Groovy
  * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
-testDom.callDOM( map.message )
-map.returnedValue.add( true )
+testDom.callDOM( message )
+def returnValue = [ : ]
+returnValue.message = message
+return returnValue

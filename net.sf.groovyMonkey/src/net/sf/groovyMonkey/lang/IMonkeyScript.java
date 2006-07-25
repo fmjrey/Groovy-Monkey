@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey.lang;
 import java.util.Map;
 import net.sf.groovyMonkey.ScriptMetadata;
+import org.apache.bsf.BSFException;
 import org.eclipse.core.resources.IFile;
 
 public interface IMonkeyScript
@@ -16,6 +17,6 @@ public interface IMonkeyScript
      * @param classLoaders
      * @param script
      */
-    public void run()
-    throws CompilationException;
+    public Object run()
+    throws BSFException;
 }

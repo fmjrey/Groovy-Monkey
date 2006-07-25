@@ -10,4 +10,6 @@ import org.apache.tools.ant.BuildLogger;
 
 Class.forName( "net.sf.groovymonkey.tests.fixtures.dom.TestDOM", true, Thread.currentThread().getContextClassLoader() );
 clase = Class.forName( "org.apache.tools.ant.BuildLogger", true, Thread.currentThread().getContextClassLoader() );
-new TestDOM().callDOM( "testIncludeInBundleBeanshell" );
+dom = new TestDOM();
+dom.callDOM( "testIncludeInBundleBeanshell" );
+dom.string();

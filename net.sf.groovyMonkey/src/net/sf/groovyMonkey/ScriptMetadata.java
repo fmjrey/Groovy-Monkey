@@ -374,7 +374,7 @@ public class ScriptMetadata
         pattern = compile( "Listener:", DOTALL );
         matcher = pattern.matcher( comment );
         while( matcher.find() )
-            metadata.subscriptions.add( new Subscription( "workspace", "addResourceChangeListener" ) );
+            metadata.subscriptions.add( new Subscription( "addResourceChangeListener" ) );
         
         pattern = compile( "LANG:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
@@ -493,18 +493,17 @@ public class ScriptMetadata
 class Subscription
 {
     private final String addMethodName;
+    private final Object source;
     private Object listenerProxy;
     private Method removeMethod;
-    private Object source;
 
-    public Subscription( final String source, 
-                         final String addMethodName )
+    public Subscription( final String addMethodName )
     {
         this.addMethodName = addMethodName;
+        this.source = getWorkspace();
     }
     public void subscribe()
     {
-        source = getWorkspace();
         try
         {
             subscribe( source, addMethodName );
@@ -545,16 +544,16 @@ class Subscription
             e.printStackTrace();
         }
     }
-    private void subscribe( final Object foo, 
+    private void subscribe( final Object source, 
                             final String methodName ) 
     throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         final InvocationHandler listener = new GenericListener();
-        final Method addMethod = findAddMethod( foo, methodName );
+        final Method addMethod = findAddMethod( source, methodName );
         // TODO what if null is returned?
         final Class listenerType = addMethod.getParameterTypes()[ 0 ];
         listenerProxy = newProxyInstance( listenerType.getClassLoader(), new Class[]{ listenerType }, listener );
-        addMethod.invoke( foo, new Object[]{ listenerProxy } );
+        addMethod.invoke( source, new Object[]{ listenerProxy } );
     }
     private Method findAddMethod( final Object source, 
                                   final String methodName )

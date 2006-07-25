@@ -1,5 +1,4 @@
 package net.sf.groovymonkey.tests.fixtures.projects;
-import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
@@ -16,16 +15,16 @@ extends TestProject
     public static String MONKEY_PATH = MONKEY_DIR + "/";
     public static String MONKEY_EXT = FILE_EXTENSION;
 
-    public static void runMonkeyScript( final IFile script )
+    public static Object runMonkeyScript( final IFile script )
     {
         final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), true );
-        monkeyScript.runScript( null );
+        return monkeyScript.runScript( null );
     }
-    public static void runMonkeyScript( final IFile script,
-                                        final Map< String, Object > map )
+    public static Object runMonkeyScript( final IFile script,
+                                          final Map< String, Object > map )
     {
-        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), synchronizedMap( map ), true );
-        monkeyScript.runScript( null );
+        final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), map, true );
+        return monkeyScript.runScript( null );
     }
     public TestMonkeyProject( final String name ) 
     throws CoreException

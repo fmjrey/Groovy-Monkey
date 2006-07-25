@@ -5,14 +5,13 @@
  */
 import java.util.jar.Manifest
 
-def file = workspace.getRoot().getProject( map.plugin ).getFile( 'META-INF/MANIFEST.MF' )
+def file = workspace.getRoot().getProject( plugin ).getFile( 'META-INF/MANIFEST.MF' )
 def input = file.getContents()
 try
 {
 	def manifest = new Manifest( input )
 	def attributes = manifest.getMainAttributes()
-	def bundleVersion = attributes.getValue( 'Bundle-Version' )
-	map.bundleVersion = bundleVersion
+	return attributes.getValue( 'Bundle-Version' )
 }
 finally
 {

@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey;
-import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.addScript;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
@@ -15,8 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.dom.Utilities;
-import net.sf.groovyMonkey.lang.CompilationException;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
+import org.apache.bsf.BSFException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +39,7 @@ public class RunMonkeyScript
 	private final IWorkbenchWindow window;
 	private final IFile file;
     private final boolean throwError;    
-    private volatile Map< String, Object > map = synchronizedMap( new HashMap< String, Object >() );
+    private final Map< String, Object > map = new HashMap< String, Object >();
     private ScriptMetadata metadata = null;
     private boolean synchronous = true;
     
@@ -63,27 +62,22 @@ public class RunMonkeyScript
         this.window = window;
         this.file = file;
         this.throwError = throwError;
-        this.map = map != null ? map : this.map;
+        if( map != null )
+            this.map.putAll( map );
     }
     public void run( final boolean synchronous )
     {
         this.synchronous = synchronous;
         run();
     }
-	public void run()
+	public Object run()
     {
         setMetadata();
         if( metadata.getJobMode() == JobModes.UIJob )
-        {
-            runUIJob();
-            return;
-        }
+            return runUIJob();
         if( metadata.getJobMode() == JobModes.WorkspaceJob )
-        {
-            runWorkspaceJob();
-            return;
-        }
-        runJob();
+            return runWorkspaceJob();
+        return runJob();
 	}
     private void setMetadata()
     {
@@ -107,51 +101,57 @@ public class RunMonkeyScript
             throw new RuntimeException( "Could not load script: " + fileName + ". " + e, e );
         }
     }
-    private void runUIJob()
+    private Object runUIJob()
     {
+        final Object[] returnValue = new Object[ 1 ];
         final UIJob job = new UIJob( "Script: " + file.getName() )
         {
             @Override
             public IStatus runInUIThread( final IProgressMonitor monitor )
             {
-                runScript( monitor );
+                returnValue[ 0 ] = runScript( monitor );
                 monitor.worked( 1 );
                 monitor.done();
                 return Status.OK_STATUS;
             }
         };
         exec( job );
+        return returnValue[ 0 ];
     }
-    private void runWorkspaceJob()
+    private Object runWorkspaceJob()
     {
+        final Object[] returnValue = new Object[ 1 ];
         final WorkspaceJob job = new WorkspaceJob( "Script: " + file.getName() )
         {
             @Override
             public IStatus runInWorkspace( final IProgressMonitor monitor )
             throws CoreException
             {
-                runScript( monitor );
+                returnValue[ 0 ] = runScript( monitor );
                 monitor.worked( 1 );
                 monitor.done();
                 return Status.OK_STATUS;
             }
         };
         exec( job );
+        return returnValue[ 0 ];
     }
-    private void runJob()
+    private Object runJob()
     {
+        final Object[] returnValue = new Object[ 1 ];
         final Job job = new Job( "Script: " + file.getName() )
         {
             @Override
             public IStatus run( final IProgressMonitor monitor )
             {
-                runScript( monitor );
+                returnValue[ 0 ] = runScript( monitor );
                 monitor.worked( 1 );
                 monitor.done();
                 return Status.OK_STATUS;
             }
         };
         exec( job );
+        return returnValue[ 0 ];
     }
     private void exec( final Job job )
     {
@@ -172,7 +172,7 @@ public class RunMonkeyScript
         }
         catch( final InterruptedException e ) {}
     }
-    public void runScript( final IProgressMonitor progressMonitor )
+    public Object runScript( final IProgressMonitor progressMonitor )
     {
         final IProgressMonitor monitor = progressMonitor != null ? progressMonitor : new NullProgressMonitor();
         monitor.beginTask( file.getName(), 1 );
@@ -180,7 +180,7 @@ public class RunMonkeyScript
         try
         {
             setMetadata();
-            runScript();
+            return runScript();
         }
         catch( final Throwable x )
         {
@@ -190,14 +190,15 @@ public class RunMonkeyScript
         {
             monitor.done();
         }
+        return null;
     }
-    private void runScript()
+    private Object runScript()
     {
         try
         {
             defineDynamicVariables( file );
             if( !metadata.ensureDomsAreLoaded( window ) )
-                return;
+                return null;
             final String scriptLang = metadata.getLang();
             final Map< String, IMonkeyScriptFactory > factories = getScriptFactories();
             boolean found = false;
@@ -207,16 +208,16 @@ public class RunMonkeyScript
                 if( !factory.isLang( scriptLang ) )
                     continue;
                 found = true;
-                factory.runner( metadata, map ).run();
+                return factory.runner( metadata, map ).run();
             }
             if( !found )
                 error( "No factory for language: " + scriptLang,
                        scriptLang + " not found. Available are: " + factories.keySet(),
                        new Exception() );
         }
-        catch( final CompilationException x )
+        catch( final BSFException x )
         {
-            error( x, x.getMessage() );
+            error( x.getTargetException() != null ? x.getTargetException() : x, x.getMessage() );
         }
         finally
         {
@@ -224,6 +225,7 @@ public class RunMonkeyScript
             createTheMonkeyMenu();
             undefineDynamicVariables( file );
         }
+        return null;
     }
     
 	private void defineDynamicVariables( final IFile file ) 

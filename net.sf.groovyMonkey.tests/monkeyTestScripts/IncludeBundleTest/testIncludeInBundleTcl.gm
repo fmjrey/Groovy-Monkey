@@ -10,3 +10,4 @@ package require java
 set antMain [java::new org.apache.tools.ant.Main]
 set testDOMVar [java::new net.sf.groovymonkey.tests.fixtures.dom.TestDOM]
 $testDOMVar callDOM "testIncludeInBundleTcl"
+$testDOMVar getString

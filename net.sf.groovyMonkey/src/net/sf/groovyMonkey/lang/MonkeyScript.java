@@ -1,10 +1,11 @@
 package net.sf.groovyMonkey.lang;
 import static java.lang.Thread.currentThread;
-import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.getExtensionGlobalVariables;
+import static org.apache.bsf.BSFException.REASON_IO_ERROR;
+import static org.apache.bsf.BSFException.REASON_OTHER_ERROR;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
@@ -42,7 +43,7 @@ implements IMonkeyScript
     protected final String fileNameExtension;
     protected final IFile scriptFile;
     protected final boolean stripMetadata;
-    protected volatile Map< String, Object > map = synchronizedMap( new HashMap< String, Object >() );
+    protected final Map< String, Object > map = new HashMap< String, Object >();
     private String toString;
     
     public MonkeyScript( final String languageName,
@@ -78,7 +79,9 @@ implements IMonkeyScript
     {
         notNull( metadata );
         this.metadata = metadata;
-        this.map = map != null ? map : this.map;
+        this.map.clear();
+        if( map != null )
+            this.map.putAll( map );
         setBinding();
         return this;
     }
@@ -94,7 +97,6 @@ implements IMonkeyScript
                 loader.add( object.getClass().getClassLoader() );
         addIncludes( loader, metadata );
         binding.put( "vars", vars );
-        binding.put( "map", map );
         return;
     }
     public static void addIncludes( final MonkeyClassLoader loader, 
@@ -160,8 +162,8 @@ implements IMonkeyScript
         final String workspaceURI = getWorkspace().getRoot().getLocationURI().toString();
         return removeEnd( workspaceURI, "/" );
     }
-    public void run() 
-    throws CompilationException
+    public Object run() 
+    throws BSFException
     {
         notNull( metadata );
         final ClassLoader oldLoader = currentThread().getContextClassLoader();
@@ -175,21 +177,15 @@ implements IMonkeyScript
                 manager.declareBean( varName, binding.get( varName ), binding.get( varName ).getClass() );
             final String script = stripMetadata ? stripMetadata( getContents( scriptFile ) ) : getContents( scriptFile );
             final String scriptName = substringBeforeLast( scriptFile.getName(), "." ) + "." + fileNameExtension;
-            manager.exec( languageName, scriptName, 1, 1, script );
+            return manager.eval( languageName, scriptName, 1, 1, script );
         }
         catch( final CoreException e )
         {
-            throw new CompilationException( e );
+            throw new BSFException( REASON_OTHER_ERROR, e.getMessage(), e );
         }
         catch( final IOException e )
         {
-            throw new CompilationException( e );
-        }
-        catch( final BSFException e )
-        {
-            if( e.getTargetException() != null )
-                throw new CompilationException( "" + e + ": " + e.getTargetException(), e.getTargetException() );
-            throw new CompilationException( e );
+            throw new BSFException( REASON_IO_ERROR, e.getMessage(), e );
         }
         finally
         {

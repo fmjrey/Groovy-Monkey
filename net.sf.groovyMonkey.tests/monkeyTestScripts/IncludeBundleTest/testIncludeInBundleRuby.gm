@@ -12,3 +12,4 @@ antMain = Main.new
 include_class 'net.sf.groovymonkey.tests.fixtures.dom.TestDOM'
 testInclude = TestDOM.new
 testInclude.callDOM( 'testIncludeInBundleRuby' )
+testInclude.getString()

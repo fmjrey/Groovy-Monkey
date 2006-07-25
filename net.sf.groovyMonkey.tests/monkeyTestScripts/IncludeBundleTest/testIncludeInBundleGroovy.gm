@@ -9,4 +9,6 @@ import net.sf.groovymonkey.tests.fixtures.dom.TestDOM
 def ant = new AntBuilder()
 ant.echo( "Hello there from AntBuilder" )
 
-new TestDOM().callDOM( 'testIncludeInBundleGroovy' )
+def dom = new TestDOM()
+dom.callDOM( 'testIncludeInBundleGroovy' )
+dom.string()

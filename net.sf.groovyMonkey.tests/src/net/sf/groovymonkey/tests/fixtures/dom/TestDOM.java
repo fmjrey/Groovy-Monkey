@@ -16,4 +16,8 @@ public class TestDOM
     {
         return string;
     }
+    public String getString()
+    {
+        return string();
+    }
 }

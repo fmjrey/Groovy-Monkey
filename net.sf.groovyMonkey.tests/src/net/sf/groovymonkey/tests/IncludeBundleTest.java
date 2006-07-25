@@ -39,31 +39,31 @@ extends TestCaseAbstract
     public void testIncludeInBundleBeanshell()
     throws Exception
     {
-        runMonkeyScript( script );
+        assertEquals( getName(), runMonkeyScript( script ) );
         assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleDefault()
     throws Exception
     {
-        runMonkeyScript( script );
+        assertEquals( getName(), runMonkeyScript( script ) );
         assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleGroovy()
     throws Exception
     {
-        runMonkeyScript( script );
+        assertEquals( getName(), runMonkeyScript( script ) );
         assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleRuby()
     throws Exception
     {
-        runMonkeyScript( script );
+        assertEquals( getName(), runMonkeyScript( script ) );
         assertEquals( getName(), TestDOM.string() );
     }
     public void testIncludeInBundleTcl()
     throws Exception
     {
-        runMonkeyScript( script );
+        assertEquals( getName(), runMonkeyScript( script ) );
         assertEquals( getName(), TestDOM.string() );
     }
 }

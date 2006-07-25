@@ -89,9 +89,9 @@
             resource="org.eclipse.ui.IWorkbenchWindow"
             variableName="window"/>
       <dom
-            class="net.sf.groovyMonkey.dom.runner.RunnerDOM"
+            class="net.sf.groovyMonkey.dom.runner.RunnerDOMFactory"
             id="Monkey Runner"
-            resource="net.sf.groovyMonkey.dom.runner.MonkeyRunner"
+            resource="net.sf.groovyMonkey.dom.runner.RunnerDOM"
             variableName="runnerDOM"/>
       <dom
             class="net.sf.groovyMonkey.dom.VarsDOM"

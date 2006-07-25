@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey.dom;
-import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static org.apache.commons.io.IOUtils.closeQuietly;
@@ -10,8 +9,9 @@ import static org.eclipse.core.runtime.IStatus.INFO;
 import static org.eclipse.core.runtime.IStatus.OK;
 import static org.eclipse.core.runtime.IStatus.WARNING;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
+import static org.eclipse.swt.widgets.Display.getCurrent;
+import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -21,7 +21,6 @@ import java.util.Set;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.internal.DynamicState;
-
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -33,7 +32,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -85,10 +83,10 @@ public class Utilities
     public static Map< String, Object > getExtensionGlobalVariables( final ScriptMetadata metadata ) 
     {
         final IExtensionPoint point = getDOMExtensionPoint();
-        final Map< String, Object > vars = synchronizedMap( new LinkedHashMap< String, Object >() );
+        final Map< String, Object > vars = new LinkedHashMap< String, Object >();
         if( point == null )
             return vars;
-        if( Display.getCurrent() == null )
+        if( getCurrent() == null )
         {
             final Runnable runnable = new Runnable()
             {
@@ -97,7 +95,7 @@ public class Utilities
                     getExtensionGlobalVariables( metadata, point, vars );
                 }
             };
-            Display.getDefault().syncExec( runnable );
+            getDefault().syncExec( runnable );
             return vars;
         }
         getExtensionGlobalVariables( metadata, point, vars );
@@ -291,7 +289,7 @@ public class Utilities
                                     final Throwable exception,
                                     final int type )
     {
-        if( Display.getCurrent() == null )
+        if( getCurrent() == null )
         {
             final Runnable runnable = new Runnable()
             {
@@ -300,7 +298,7 @@ public class Utilities
                     error( title, message, exception );
                 }
             };
-            Display.getDefault().syncExec( runnable );
+            getDefault().syncExec( runnable );
             return;
         }
         final ErrorDialog dialog = new ErrorDialog( getWorkbench().getActiveWorkbenchWindow().getShell(), 

@@ -4,8 +4,8 @@
  * License: EPL 1.0
  * LANG: Groovy
  */
+def map = [ : ]
 map.message = 'testMonkeyRunnerJob'
-map.returnedValue = []
-runnerDOM.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.gm', map )
-if( map.returnedValue[0] != true )
+def returned = runnerDOM.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.gm', map )
+if( returned.message != map.message )
 	throw new RuntimeException( "Error no returned value: " + map.returnedValue )
