@@ -96,7 +96,6 @@ implements IMonkeyScript
             if( object != null && object.getClass().getClassLoader() != null )
                 loader.add( object.getClass().getClassLoader() );
         addIncludes( loader, metadata );
-        binding.put( "vars", vars );
         return;
     }
     public static void addIncludes( final MonkeyClassLoader loader, 

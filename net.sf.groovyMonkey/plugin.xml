@@ -94,10 +94,10 @@
             resource="net.sf.groovyMonkey.dom.runner.RunnerDOM"
             variableName="runnerDOM"/>
       <dom
-            class="net.sf.groovyMonkey.dom.VarsDOM"
-            id="Vars"
-            resource="java.util.Map"
-            variableName="vars"/>
+            class="net.sf.groovyMonkey.dom.BSFFunctionsDOM"
+            id="BSFFunctions"
+            resource="org.apache.bsf.util.BSFFunctions"
+            variableName="bsf"/>
       <dom
             class="net.sf.groovyMonkey.dom.MonitorDOM"
             id="Progress Monitor"

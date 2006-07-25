@@ -1,19 +1,18 @@
 package net.sf.groovyMonkey.dom;
-import static java.util.Collections.synchronizedMap;
-import java.util.LinkedHashMap;
+import org.apache.bsf.util.BSFFunctions;
 
 /**
  * This dom is just a placeholder to add the vars binding to the outline view.
  * It does not actually provide the object that is put in the binding.  The 
  * setBinding() method in MonkeyScript actually does that.
  */
-public class VarsDOM 
+public class BSFFunctionsDOM 
 implements IMonkeyDOMFactory
 {
-    public VarsDOM() {}
+    public BSFFunctionsDOM() {}
 
     public Object getDOMroot()
     {
-        return synchronizedMap( new LinkedHashMap< String, Object >() );
+        return new BSFFunctions( null, null );
     }
 }

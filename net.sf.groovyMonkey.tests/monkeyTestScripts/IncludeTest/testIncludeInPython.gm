@@ -5,5 +5,5 @@
  * LANG: Python
  * Include: TestJavaProject/bin
  */
-from net.sf.groovymonkey.tests import *
-TestInclude().callDOM( 'testIncludeInPython' )
+dom = net.sf.groovymonkey.tests.TestInclude()
+dom.callDOM( 'testIncludeInPython' )
