@@ -173,7 +173,13 @@ implements IMonkeyScript
             manager.setClassLoader( loader );
             manager.loadScriptingEngine( languageName );
             for( final String varName : binding.keySet() )
+            {
+                if( varName.equals( "bsf" ) )
+                    continue;
+                if( binding.get( varName ) == null )
+                    continue;
                 manager.declareBean( varName, binding.get( varName ), binding.get( varName ).getClass() );
+            }
             final String script = stripMetadata ? stripMetadata( getContents( scriptFile ) ) : getContents( scriptFile );
             final String scriptName = substringBeforeLast( scriptFile.getName(), "." ) + "." + fileNameExtension;
             return manager.eval( languageName, scriptName, 1, 1, script );

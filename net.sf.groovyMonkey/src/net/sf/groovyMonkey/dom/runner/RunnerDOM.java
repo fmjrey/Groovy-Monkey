@@ -32,6 +32,21 @@ public class RunnerDOM
         final RunMonkeyScript script = new RunMonkeyScript( file, window, map, true );
         return script.runScript( monitor );
     }
+    public Object runScript( final String scriptPath, 
+                             final Map< String, Object > map,
+                             final IProgressMonitor monitor )
+    {
+        final IFile file = file( scriptPath );
+        final RunMonkeyScript script = new RunMonkeyScript( file, map, true );
+        return script.runScript( monitor );
+    }
+    public Object runScript( final String scriptPath, 
+                             final Map< String, Object > map )
+    {
+        final IFile file = file( scriptPath );
+        final RunMonkeyScript script = new RunMonkeyScript( file, map, true );
+        return script.run();
+    }
     public Object runScript( final IWorkbenchWindow window,
                              final String scriptPath, 
                              final Map< String, Object > map )
@@ -40,8 +55,12 @@ public class RunnerDOM
         final RunMonkeyScript script = new RunMonkeyScript( file, window, map, true );
         return script.run();
     }
+    public Object runScript( final String scriptPath )
+    {
+        return runScript( scriptPath, null );
+    }
     public Object runScript( final IWorkbenchWindow window,
-                           final String scriptPath )
+                             final String scriptPath )
     {
         return runScript( window, scriptPath, null );
     }

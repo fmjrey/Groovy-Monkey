@@ -4,6 +4,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
 import static net.sf.groovyMonkey.dom.Utilities.SCRIPT_NAME;
+import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
 import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.key;
 import static net.sf.groovyMonkey.dom.Utilities.state;
@@ -43,16 +44,31 @@ public class RunMonkeyScript
     private ScriptMetadata metadata = null;
     private boolean synchronous = true;
     
+    public RunMonkeyScript( final IFile file )
+    {
+        this( file, activeWindow(), false );
+    }
 	public RunMonkeyScript( final IFile file, 
                             final IWorkbenchWindow window ) 
     {
 	    this( file, window, false );
 	}
     public RunMonkeyScript( final IFile file, 
+                            final boolean throwError ) 
+    {
+        this( file, activeWindow(), null, throwError );
+    }
+    public RunMonkeyScript( final IFile file, 
                             final IWorkbenchWindow window, 
                             final boolean throwError ) 
     {
         this( file, window, null, throwError );
+    }
+    public RunMonkeyScript( final IFile file, 
+                            final Map< String, Object > map,
+                            final boolean throwError ) 
+    {
+        this( file, activeWindow(), map, throwError );
     }
     public RunMonkeyScript( final IFile file, 
                             final IWorkbenchWindow window,
@@ -65,10 +81,10 @@ public class RunMonkeyScript
         if( map != null )
             this.map.putAll( map );
     }
-    public void run( final boolean synchronous )
+    public Object run( final boolean synchronous )
     {
         this.synchronous = synchronous;
-        run();
+        return run();
     }
 	public Object run()
     {
@@ -201,19 +217,16 @@ public class RunMonkeyScript
                 return null;
             final String scriptLang = metadata.getLang();
             final Map< String, IMonkeyScriptFactory > factories = getScriptFactories();
-            boolean found = false;
             for( final String language : factories.keySet() )
             {
                 final IMonkeyScriptFactory factory = factories.get( language );
                 if( !factory.isLang( scriptLang ) )
                     continue;
-                found = true;
                 return factory.runner( metadata, map ).run();
             }
-            if( !found )
-                error( "No factory for language: " + scriptLang,
-                       scriptLang + " not found. Available are: " + factories.keySet(),
-                       new Exception() );
+            error( "No factory for language: " + scriptLang,
+                   scriptLang + " not found. Available are: " + factories.keySet(),
+                   new Exception() );
         }
         catch( final BSFException x )
         {

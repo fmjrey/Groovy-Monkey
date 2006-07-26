@@ -1,11 +1,14 @@
 package net.sf.groovyMonkey;
-import static java.lang.reflect.Proxy.newProxyInstance;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
+import static net.sf.groovyMonkey.dom.Utilities.error;
+import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.apache.commons.lang.StringUtils.split;
@@ -16,13 +19,12 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.Platform.getBundle;
 import static org.eclipse.jface.dialogs.MessageDialog.QUESTION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
+import static org.eclipse.swt.widgets.Display.getCurrent;
+import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import static org.osgi.framework.Bundle.UNINSTALLED;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -36,8 +38,14 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
@@ -254,7 +262,7 @@ public class ScriptMetadata
     }
 	private void launchUpdateInstaller( final URLtoPluginMap missingUrls ) 
     {
-        if( Display.getCurrent() == null )
+        if( getCurrent() == null )
         {
             final Runnable runnable = new Runnable()
             {
@@ -263,13 +271,12 @@ public class ScriptMetadata
                     launchUpdateInstaller( missingUrls );
                 }
             };
-            Display.getDefault().syncExec( runnable );
+            getDefault().syncExec( runnable );
             return;
         }
 		final UpdateSearchScope scope = new UpdateSearchScope();
         for( final String url : missingUrls.map.keySet() )
         {
-            System.out.println( "ScriptMetadata.launchUpdateInstaller(): url: " + url );
             final String id = missingUrls.getPluginNames( url );
             final String plural = id.indexOf( "," ) >= 0 ? "s" : "";
             final String description = "Site providing DOM" + plural + " ( " + id + " )";
@@ -286,7 +293,7 @@ public class ScriptMetadata
 	}
 	private String notifyMissingDOMs( final String missingPlugins )
     {
-        if( Display.getCurrent() == null )
+        if( getCurrent() == null )
         {
             final String[] returnValue = new String[ 1 ];
             final Runnable runnable = new Runnable()
@@ -296,7 +303,7 @@ public class ScriptMetadata
                     returnValue[ 0 ] = notifyMissingDOMs( missingPlugins );
                 }
             };
-            Display.getDefault().syncExec( runnable );
+            getDefault().syncExec( runnable );
             return returnValue[ 0 ];
         }
         final String plural = missingPlugins.indexOf( "\n" ) >= 0 ? "s" : "";
@@ -371,10 +378,10 @@ public class ScriptMetadata
         while( matcher.find() )
             metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
         
-        pattern = compile( "Listener:", DOTALL );
+        pattern = compile( "Listener:\\s*((\\p{Graph}| )+)" );
         matcher = pattern.matcher( comment );
-        while( matcher.find() )
-            metadata.subscriptions.add( new Subscription( "addResourceChangeListener" ) );
+        if( matcher.find() )
+            metadata.subscriptions.add( new Subscription( metadata, matcher.group( 1 ) ) );
         
         pattern = compile( "LANG:\\s*((\\p{Graph}| )+)", DOTALL );
         matcher = pattern.matcher( comment );
@@ -492,110 +499,88 @@ public class ScriptMetadata
 }
 class Subscription
 {
-    private final String addMethodName;
-    private final Object source;
-    private Object listenerProxy;
-    private Method removeMethod;
+    private final ScriptMetadata metadata;
+    private final String filter;
+    private final IWorkspace source;
+    private IResourceChangeListener listener;
 
-    public Subscription( final String addMethodName )
+    public Subscription( final ScriptMetadata metadata,
+                         final String filter )
     {
-        this.addMethodName = addMethodName;
+        this.metadata = metadata;
+        this.filter = defaultString( filter );
         this.source = getWorkspace();
     }
     public void subscribe()
     {
-        try
-        {
-            subscribe( source, addMethodName );
-        }
-        catch( final InstantiationException e )
-        {
-            e.printStackTrace();
-        }
-        catch( final IllegalAccessException e )
-        {
-            e.printStackTrace();
-        }
-        catch( final InvocationTargetException e )
-        {
-            e.printStackTrace();
-        }
-        catch( final NoSuchMethodException e )
-        {
-            e.printStackTrace();
-        }
+        this.listener = new ResourceChangeListener( metadata, filter );
+        source.addResourceChangeListener( listener );
     }
     public void unsubscribe()
     {
-        try
-        {
-            removeMethod.invoke( source, new Object[]{ listenerProxy } );
-        }
-        catch( final IllegalArgumentException e )
-        {
-            e.printStackTrace();
-        }
-        catch( final IllegalAccessException e )
-        {
-            e.printStackTrace();
-        }
-        catch( final InvocationTargetException e )
-        {
-            e.printStackTrace();
-        }
+        source.removeResourceChangeListener( listener );
     }
-    private void subscribe( final Object source, 
-                            final String methodName ) 
-    throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    class ResourceChangeListener
+    implements IResourceChangeListener
     {
-        final InvocationHandler listener = new GenericListener();
-        final Method addMethod = findAddMethod( source, methodName );
-        // TODO what if null is returned?
-        final Class listenerType = addMethod.getParameterTypes()[ 0 ];
-        listenerProxy = newProxyInstance( listenerType.getClassLoader(), new Class[]{ listenerType }, listener );
-        addMethod.invoke( source, new Object[]{ listenerProxy } );
-    }
-    private Method findAddMethod( final Object source, 
-                                  final String methodName )
-    {
-        final Method methods[] = source.getClass().getMethods();
-        for( final Method method : methods )
+        private final ScriptMetadata metadata;
+        private final String filter;
+        
+        public ResourceChangeListener( final ScriptMetadata metadata,
+                                final String filter )
         {
-            if( !method.getName().equals( methodName ) )
-                continue;
-            if( method.getParameterTypes().length != 1 )
-                continue;
-            if( findRemoveMethod( source, methodName, method.getParameterTypes() ) == null )
-                continue;
-            return method;
+            this.metadata = metadata;
+            this.filter = filter;
         }
-        return null;
-    }
-    private Method findRemoveMethod( final Object source, 
-                                     final String methodName, 
-                                     final Class[] parameterTypes )
-    {
-        final String removeMethodName = "remove" + methodName.substring( 3 );
-        try
+        public boolean checkFilter( final IResourceChangeEvent event )
         {
-            removeMethod = source.getClass().getMethod( removeMethodName, parameterTypes );
-            return removeMethod;
+            if( isBlank( filter ) )
+                return true;
+            System.out.println( "ResourceChangeListener.checkFilter(): " + filter );
+            final Pattern pattern = compile( filter, DOTALL );
+            if( event.getResource() != null )
+            {
+                final IResource resource = event.getResource();
+                final Matcher matcher = pattern.matcher( resource.getFullPath().toOSString() );
+                return matcher.find();
+            }
+            if( event.getDelta() != null )
+            {
+                final Boolean[] found = { false };
+                final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
+                {
+                    public boolean visit( final IResourceDelta delta ) 
+                    throws CoreException
+                    {
+                        if( found[ 0 ] )
+                            return false;
+                        final Matcher matcher = pattern.matcher( delta.getFullPath().toOSString() );
+                        found[ 0 ] = matcher.find();
+                        return true;
+                    }
+                };
+                try
+                {
+                    event.getDelta().accept( visitor );
+                }
+                catch( final CoreException e )
+                {
+                    error( "Error filtering ResourceChangeEvent", "" + event, e );
+                }
+                return found[ 0 ];
+            }
+            return true;
         }
-        catch( final Exception e )
+        public void resourceChanged( final IResourceChangeEvent event )
         {
-            return null;
-        }
-    }
-    class GenericListener 
-    implements InvocationHandler
-    {
-        public Object invoke( final Object proxy, 
-                              final Method method, 
-                              final Object[] args ) 
-        throws Throwable
-        {
-            System.out.println( method.getName() + " did it " + args[ 0 ] );
-            return null;
+            if( event == null )
+                return;
+            if( !checkFilter( event ) )
+                return;
+            final Map< String, Object > map = new HashMap< String, Object >();
+            map.put( "event", event );
+            final RunMonkeyScript script = new RunMonkeyScript( metadata.getFile(), activeWindow(), map, true );
+            script.run();
         }
     }
 }
