@@ -5,5 +5,5 @@
  * LANG: Python
  * Include: TestJavaProject/bin
  */
-dom = net.sf.groovymonkey.tests.TestInclude()
+dom = Class.forName( 'net.sf.groovymonkey.tests.TestInclude' ).newInstance()
 dom.callDOM( 'testIncludeInPython' )
