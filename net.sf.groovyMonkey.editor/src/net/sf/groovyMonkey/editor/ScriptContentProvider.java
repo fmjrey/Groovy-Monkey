@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
+import net.sf.groovyMonkey.Subscription;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import org.apache.commons.lang.ObjectUtils;
@@ -49,6 +50,20 @@ implements ITreeContentProvider
         public int hashCode()
         {
             return reflectionHashCode( this );
+        }
+    }
+    public static class ListenerDescriptor
+    extends Descriptor
+    {
+        public String filter;
+        public ListenerDescriptor( final String filter )
+        {
+            this.filter = filter;
+        }
+        @Override
+        public String toString()
+        {
+            return "Listener: " + filter;
         }
     }
     public static class LangDescriptor
@@ -247,6 +262,7 @@ implements ITreeContentProvider
     private final JobDescriptor job = new JobDescriptor( DEFAULT_JOB );
     private final ExecDescriptor exec = new ExecDescriptor( DEFAULT_MODE );
     private final MenuDescriptor menu = new MenuDescriptor( "" );
+    private final List< ListenerDescriptor > listeners = new ArrayList< ListenerDescriptor >();
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
     private final Set< BundleDescriptor > bundles = new TreeSet< BundleDescriptor >();
@@ -338,6 +354,7 @@ implements ITreeContentProvider
         elements.add( lang );
         elements.add( job );
         elements.add( exec );
+        elements.addAll( listeners );
         elements.addAll( doms );
         elements.addAll( includes );
         elements.addAll( bundles );
@@ -362,6 +379,9 @@ implements ITreeContentProvider
             lang.lang = data.getLang();
             job.mode = data.getJobMode();
             exec.mode = data.getExecMode();
+            listeners.clear();
+            for( final Subscription subscription : data.getSubscriptions() )
+                listeners.add( new ListenerDescriptor( subscription.getFilter() ) );
             doms.clear();
             doms.addAll( data.getDOMs() );
             includes.clear();

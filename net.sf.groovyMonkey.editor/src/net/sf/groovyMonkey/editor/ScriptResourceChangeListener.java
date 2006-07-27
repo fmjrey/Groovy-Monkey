@@ -5,6 +5,8 @@ import static net.sf.groovyMonkey.dom.Utilities.isMonkeyScript;
 import static org.eclipse.core.resources.IResourceDelta.ADDED;
 import static org.eclipse.core.resources.IResourceDelta.CHANGED;
 import static org.eclipse.core.resources.IResourceDelta.REMOVED;
+import static org.eclipse.swt.widgets.Display.getCurrent;
+import static org.eclipse.swt.widgets.Display.getDefault;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
@@ -12,7 +14,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.swt.widgets.Display;
 
 public class ScriptResourceChangeListener 
 implements IResourceChangeListener
@@ -77,7 +78,7 @@ implements IResourceChangeListener
     }
     private void updateViewer()
     {
-        if( Display.getCurrent() == null )
+        if( getCurrent() == null )
         {
             final Runnable runnable = new Runnable()
             {
@@ -86,7 +87,7 @@ implements IResourceChangeListener
                     updateViewer();
                 }
             };
-            Display.getDefault().asyncExec( runnable );
+            getDefault().asyncExec( runnable );
             return;
         }
         // This is how I get it to bloody well redraw, it is an ugly hack aint it?        

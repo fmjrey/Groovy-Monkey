@@ -3,19 +3,17 @@ import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
-import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
-import static net.sf.groovyMonkey.dom.Utilities.error;
-import static org.apache.commons.lang.StringUtils.defaultString;
+import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
-import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
+import static org.apache.commons.lang.StringUtils.removeEnd;
+import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
-import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.Platform.getBundle;
 import static org.eclipse.jface.dialogs.MessageDialog.QUESTION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
@@ -30,7 +28,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +35,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.IResourceDelta;
-import org.eclipse.core.resources.IResourceDeltaVisitor;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -184,24 +174,23 @@ public class ScriptMetadata
     }
 	public boolean ensureDomsAreLoaded( final IWorkbenchWindow window )
     {
-        String missingPlugins = "";
+        final StringBuffer missingPlugins = new StringBuffer();
         final URLtoPluginMap missingUrls = new URLtoPluginMap();
-        for( final Object element0 : doms )
+        for( final DOMDescriptor dom : doms )
         {
-            final DOMDescriptor element = ( DOMDescriptor )element0;
-            Bundle b = getBundle( element.pluginName );
-            if( b == null )
+            final Bundle bundle = getBundle( dom.pluginName );
+            if( bundle == null )
             {
-                missingPlugins += "     " + element.pluginName + "\n";
-                missingUrls.add( element );
+                missingPlugins.append( "     " ).append( dom.pluginName ).append( "\n" );
+                missingUrls.add( dom );
+                continue;
             }
-            else if( b.getState() == UNINSTALLED )
-                missingPlugins += "     " + element.pluginName + "\n";
+            if( bundle.getState() == UNINSTALLED )
+                missingPlugins.append( "     "  ).append( dom.pluginName ).append( "\n" );
         }
         if( missingPlugins.length() > 0 )
         {
-            missingPlugins = missingPlugins.substring( 0, missingPlugins.length() - 1 );
-            final String choice = notifyMissingDOMs( missingPlugins );
+            final String choice = notifyMissingDOMs( chomp( missingPlugins.toString() ) );
             if( choice.startsWith( "Install" ) )
                 launchUpdateInstaller( missingUrls );
             if( choice.startsWith( "Edit" ) )
@@ -210,7 +199,11 @@ public class ScriptMetadata
         }
         return true;
     }
-	@Override
+	public List< Subscription > getSubscriptions()
+    {
+        return subscriptions;
+    }
+    @Override
     public boolean equals( final Object obj )
     {
 	    return reflectionEquals( this, obj );
@@ -226,23 +219,17 @@ public class ScriptMetadata
 
         String getPluginNames( final String url )
         {
-            final Set ids = map.get( url );
-            String idstr = "";
-            for( final Iterator iterator = ids.iterator(); iterator.hasNext(); )
-            {
-                final String id = ( String )iterator.next();
-                idstr += id + ", ";
-            }
-            idstr = idstr.substring( 0, idstr.length() - 2 );
-            return idstr;
+            final StringBuffer buffer = new StringBuffer();
+            for( final String id : map.get( url ) )
+                buffer.append( id ).append( ", " );
+            return removeEnd( buffer.toString(), ", " );
         }
         void add( final DOMDescriptor domdesc )
         {
-            Set< String > ids = map.get( domdesc.url );
-            if( ids == null )
-                ids = new HashSet< String >();
+            if( map.get( domdesc.url ) == null )
+                map.put( domdesc.url, new HashSet< String >() );
+            final Set< String > ids = map.get( domdesc.url );
             ids.add( domdesc.pluginName );
-            map.put( domdesc.url, ids );
         }
     }
 	private void openEditor()
@@ -356,58 +343,63 @@ public class ScriptMetadata
         Matcher matcher = pattern.matcher( contents );
         if( !matcher.find() )
             return metadata; // no meta-data comment - do nothing
-
-        final String comment = matcher.group();
-        pattern = compile( "Menu:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setMenuName( matcher.group( 1 ) );
-        
-        pattern = compile( "Kudos:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setKudos( matcher.group( 1 ) );
-        
-        pattern = compile( "License:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setLicense( matcher.group( 1 ) );
-        
-        pattern = compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        while( matcher.find() )
-            metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
-        
-        pattern = compile( "Listener:\\s*((\\p{Graph}| )+)" );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.subscriptions.add( new Subscription( metadata, matcher.group( 1 ) ) );
-        
-        pattern = compile( "LANG:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setLang( matcher.group( 1 ) );
-        
-        pattern = compile( "Include:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.addInclude( matcher.group( 1 ) );
-
-        pattern = compile( "Include-Bundle:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.addIncludedBundle( matcher.group( 1 ) );
-        
-        pattern = compile( "Job:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setJobMode( matcher.group( 1 ) );
-        
-        pattern = compile( "Exec-Mode:\\s*((\\p{Graph}| )+)", DOTALL );
-        matcher = pattern.matcher( comment );
-        if( matcher.find() )
-            metadata.setExecMode( matcher.group( 1 ) );
-        
+        for( final String lineString : split( matcher.group(), "\r\n" ) )
+        {
+            final String line = removeStart( lineString.trim(), "*" ).trim();
+            if( line.startsWith( "Menu:" ) )
+            {
+                metadata.setMenuName( removeStart( line, "Menu:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Kudos:" ) )
+            {
+                metadata.setKudos( removeStart( line, "Kudos:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "License:" ) )
+            {
+                metadata.setLicense( removeStart( line, "License:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "DOM:" ) )
+            {
+                pattern = compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
+                matcher = pattern.matcher( line );
+                if( matcher.find() )
+                    metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
+                continue;
+            }
+            if( line.startsWith( "Listener:" ) )
+            {
+                metadata.subscriptions.add( new Subscription( metadata, removeStart( line, "Listener:" ).trim() ) );
+                continue;
+            }
+            if( line.startsWith( "LANG:" ) )
+            {
+                metadata.setLang( removeStart( line, "LANG:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Include:" ) )
+            {
+                metadata.addInclude( removeStart( line, "Include:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Include-Bundle:" ) )
+            {
+                metadata.addIncludedBundle( removeStart( line, "Include-Bundle:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Job:" ) )
+            {
+                metadata.setJobMode( removeStart( line, "Job:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Exec-Mode:" ) )
+            {
+                metadata.setExecMode( removeStart( line, "Exec-Mode:" ).trim() );
+                continue;
+            }
+        }
         return metadata;
 	}
     public static List< String > getMetadataLines( final String contents )
@@ -495,92 +487,5 @@ public class ScriptMetadata
     public void setLicense( final String license )
     {
         this.license = license;
-    }
-}
-class Subscription
-{
-    private final ScriptMetadata metadata;
-    private final String filter;
-    private final IWorkspace source;
-    private IResourceChangeListener listener;
-
-    public Subscription( final ScriptMetadata metadata,
-                         final String filter )
-    {
-        this.metadata = metadata;
-        this.filter = defaultString( filter );
-        this.source = getWorkspace();
-    }
-    public void subscribe()
-    {
-        this.listener = new ResourceChangeListener( metadata, filter );
-        source.addResourceChangeListener( listener );
-    }
-    public void unsubscribe()
-    {
-        source.removeResourceChangeListener( listener );
-    }
-    class ResourceChangeListener
-    implements IResourceChangeListener
-    {
-        private final ScriptMetadata metadata;
-        private final String filter;
-        
-        public ResourceChangeListener( final ScriptMetadata metadata,
-                                final String filter )
-        {
-            this.metadata = metadata;
-            this.filter = filter;
-        }
-        public boolean checkFilter( final IResourceChangeEvent event )
-        {
-            if( isBlank( filter ) )
-                return true;
-            System.out.println( "ResourceChangeListener.checkFilter(): " + filter );
-            final Pattern pattern = compile( filter, DOTALL );
-            if( event.getResource() != null )
-            {
-                final IResource resource = event.getResource();
-                final Matcher matcher = pattern.matcher( resource.getFullPath().toOSString() );
-                return matcher.find();
-            }
-            if( event.getDelta() != null )
-            {
-                final Boolean[] found = { false };
-                final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
-                {
-                    public boolean visit( final IResourceDelta delta ) 
-                    throws CoreException
-                    {
-                        if( found[ 0 ] )
-                            return false;
-                        final Matcher matcher = pattern.matcher( delta.getFullPath().toOSString() );
-                        found[ 0 ] = matcher.find();
-                        return true;
-                    }
-                };
-                try
-                {
-                    event.getDelta().accept( visitor );
-                }
-                catch( final CoreException e )
-                {
-                    error( "Error filtering ResourceChangeEvent", "" + event, e );
-                }
-                return found[ 0 ];
-            }
-            return true;
-        }
-        public void resourceChanged( final IResourceChangeEvent event )
-        {
-            if( event == null )
-                return;
-            if( !checkFilter( event ) )
-                return;
-            final Map< String, Object > map = new HashMap< String, Object >();
-            map.put( "event", event );
-            final RunMonkeyScript script = new RunMonkeyScript( metadata.getFile(), activeWindow(), map, true );
-            script.run();
-        }
     }
 }

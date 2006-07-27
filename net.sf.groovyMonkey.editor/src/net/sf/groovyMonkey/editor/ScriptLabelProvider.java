@@ -8,6 +8,7 @@ import net.sf.groovyMonkey.editor.ScriptContentProvider.ExecDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.JobDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.LangDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.ListenerDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MenuDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.PackageDescriptor;
@@ -53,6 +54,8 @@ extends LabelProvider
             return icon( "plugin_obj.gif" );
         if( element instanceof PackageDescriptor )
             return icon( "package_obj.gif" );
+        if( element instanceof ListenerDescriptor )
+            return icon( "annotation_obj.gif" );
         return super.getImage( element );
     } 
 }

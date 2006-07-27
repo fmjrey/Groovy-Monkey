@@ -1,7 +1,9 @@
 package net.sf.groovyMonkey.editor;
 import static net.sf.groovyMonkey.dom.Utilities.error;
+import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jdt.core.JavaCore.create;
+import static org.eclipse.jdt.core.Signature.getSignatureSimpleName;
 import static org.eclipse.jdt.ui.JavaUI.openInEditor;
 import static org.eclipse.jdt.ui.JavaUI.revealInEditor;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
@@ -13,7 +15,6 @@ import net.sf.groovyMonkey.editor.ScriptContentProvider.ClassDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.FieldDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.VarDescriptor;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaModel;
@@ -21,7 +22,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.Signature;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -140,8 +140,8 @@ implements IDoubleClickListener
                                 {
                                     final List< String > types = new ArrayList< String >();
                                     for( final String type : method.getParameterTypes() )
-                                        types.add( Signature.getSignatureSimpleName( type ) );
-                                    return method.getElementName() + "( " + StringUtils.join( types.toArray(), ", " ) + " ): " + Signature.getSignatureSimpleName( method.getReturnType() );
+                                        types.add( getSignatureSimpleName( type ) );
+                                    return method.getElementName() + "( " + join( types.toArray(), ", " ) + " ): " + getSignatureSimpleName( method.getReturnType() );
                                 }
                                 catch( final JavaModelException e )
                                 {
