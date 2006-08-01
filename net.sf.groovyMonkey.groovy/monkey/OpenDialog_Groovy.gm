@@ -1,0 +1,11 @@
+/*
+ * Menu: Open Dialog > Groovy
+ * Kudos: ervinja
+ * License: EPL 1.0
+ * Job: UIJob
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ */
+out.println( 'hello world from Groovy' )
+org.eclipse.jface.dialogs.MessageDialog.openInformation( window.getShell(), 
+														 'Monkey Dialog', 
+														 'Hello World from Groovy' )

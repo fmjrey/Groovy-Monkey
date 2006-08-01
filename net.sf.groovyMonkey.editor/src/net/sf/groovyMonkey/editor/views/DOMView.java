@@ -3,6 +3,7 @@ import static net.sf.groovyMonkey.dom.Utilities.getDOMExtensionPoint;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
 import static net.sf.groovyMonkey.dom.Utilities.imageDescriptor;
+import static org.apache.commons.lang.StringUtils.remove;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import static org.eclipse.swt.SWT.H_SCROLL;
@@ -87,7 +88,7 @@ implements IRegistryChangeListener
                 final Set< String > list = getDOMPlugins();
                 final Set< DOMDescriptor > doms = new LinkedHashSet< DOMDescriptor >();
                 for( final String pluginID : list )
-                    doms.add( new DOMDescriptor( getUpdateSiteForDOMPlugin( pluginID ), pluginID ) );
+                    doms.add( new DOMDescriptor( remove( getUpdateSiteForDOMPlugin( pluginID ), pluginID ), pluginID ) );
                 return doms.toArray( new DOMDescriptor[ 0 ] );
             }
             @Override
