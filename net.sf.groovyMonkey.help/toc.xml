@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?NLS TYPE="org.eclipse.help.toc"?>
 
-<toc label="Groovy Monkey" >
+<toc label="Groovy Monkey" href="html/introduction.html">
 	<topic label="Installing Groovy Monkey"  href="html/installing.html"> 
 	</topic>
 	<topic label="Running Scripts"  href="html/running.html"> 
