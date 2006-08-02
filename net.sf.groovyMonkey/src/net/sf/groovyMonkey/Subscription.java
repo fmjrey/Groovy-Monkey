@@ -62,7 +62,6 @@ public class Subscription
         {
             if( isBlank( filter ) )
                 return true;
-            System.out.println( "ResourceChangeListener.checkFilter(): " + filter );
             final Pattern pattern = compile( filter, DOTALL );
             if( event.getResource() != null )
             {

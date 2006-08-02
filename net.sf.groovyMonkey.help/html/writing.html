@@ -348,5 +348,17 @@ with this feature using Groovy, Beanshell and, after a quick hack of the source 
 JRuby.  I have yet to get this to run using Jython or Jacl.
 </p>
 
+<h3>Listener: metadata tag</h3>
+<p>
+There is more than one way to get Groovy Monkey to run your desired script.  The
+<b>Listener:</b> metadata tag allows you to register your script to be triggered
+if there is a ResourceChangedEvent in the workspace.  Since it is probably not
+the best thing in the world that your script is interpreted and run everytime
+anything in the workspace changes there is provision for an optional ( but highly
+highly recommended ) filter string.  After the <b>Listener:</b> tag you have the
+ability to type in a regular expression string that will be tested against the 
+Resource Delta's and any children files' full paths.  If you leave the string blank
+it is interpreted as a true and therefore you will get every change to the workspace.
+</p>
 </body>
 </html>
