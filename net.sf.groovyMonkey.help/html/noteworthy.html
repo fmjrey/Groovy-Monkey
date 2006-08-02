@@ -8,10 +8,16 @@
 <body>
 <h2>New & Noteworthy</h2>
 
-<h3>Version 0.1.5 - March 3, 2006</h3>
+<h3>Version 0.2.0 - August 2, 2006</h3>
 <ul>
-<li>Renamed org.eclipse.eclipsemonkey.standarddoms to org.eclipse.dash.doms
-<li>Added accelerator control-alt-M to re-run last run script.
+<li>Now using the <a href="http://bsf.apache.org">Bean Scripting Framework (BSF)</a> to simplify adding JVM scripting languages to Groovy Monkey.</li>
+<li>Added Job and Exec-Mode metatags that show that all monkey scripts run from within an Eclipse Job.</li>
+<li>Added Groovy Monkey Editor that contains a content outline, run script action, and add dom action.</li>
+<li>Added outline view that shows the metadata that the Groovy Monkey runtime will see and the types available in the binding.</li>
+<li>Enabled direct navigation via double click from the outline view.</li>
+<li>Added Installed DOMs view to list the DOMs that are currently installed in the workbench.</li>
+<li>Added the Listener metadata tag to enable scripts to be able to respond to ResourceChangeEvent(s) in the current workspace.</li>
+<li>Added the Runner DOM to allow monkey scripts to invoke other monkey scripts.</li>
 </ul>
 
 
