@@ -7,23 +7,85 @@
 </head>
 <body>
 
-<h2>Writing your own DOM</h2>
+<h2>Writing your own DOM ( Domain Object Model )</h2>
 
 <p>
-While the Eclipse APIs are powerful, they can also be a bit overwhelming for typical scripts, thus Groovy Monkey is designed for users to provide their own DOMs (or to use other's DOMs) in addition to the straight Eclipse APIs.
+While the Eclipse APIs are powerful, they can also be a bit overwhelming for 
+typical scripts ( a bit of an understatement, no? ), thus Groovy Monkey is designed 
+for users to provide their own DOMs (or to use other's DOMs) in addition to the provided
+<b>Include:</b> and <b>Include-Bundle:</b> metadata tags.
 </p>
 <p>
-To provide a new DOM, create a new plug-in that extends the <code>org.eclipse.eclipsemonkey.dom</code> extension point. This extension requires two things:
+A DOM is first and foremost an Eclipse plugin, so to provide a new DOM, create a 
+new plug-in that extends the <code>net.sf.groovyMonkey.dom</code> extension point. 
+This extension requires three things:
 <ul>
+<li>A URI for the update site location.</li>
 <li>An implementation of <code>IMonkeyDOMFactory</code></li>
 <li>The name of the global script variable for the root DOM object</li>
 </ul>
-<p>Each script is run in a separate instance of the script engine and the DOM factories are called to create their root objects for each of those instances. The DOM factory returns the root DOM object which can be either a Java object or a <code>org.mozilla.javascript.Scriptable object</code>.
+<p>
+Each script is run in a separate instance of the script engine ( org.apache.bsf.BSFEngine )
+and the DOM factories are called to create their root objects for each of those instances. 
+The DOM factory returns the root DOM object which is a Java object.  
 </p>
-<p>The key to writing a good DOM is to design just the right simple abstractions. It is always tempting to provide everything possible under the sun in one's DOM, but such DOMs turn out to be counter-productive - they are too complex to be easily usable in scripts. We solve the tension between simplicity and features by providing access through our DOMs to the underlying Eclipse API objects; thus when an author finds that our DOM is insufficient, she can reach through to the "real" objects and manipulate the APIs directly.
+<p>
+The Groovy Monkey Editor Content Outline page will use the resource tag to provide 
+the type information to the outline view if it is available, if not it will try 
+and provide it via Java Reflection by calling the DOM factory and reflecting on 
+the provided object.  So unless your goal is to confuse future users of your DOM,
+it is best that either you give a good type name for the resource tag or that you 
+have your DOM factory return only one class type of object.
 </p>
-<p>The "Groovy Monkey Standard DOMs" plug-in contains a couple illustrative DOM and DOM factory examples.</p>
 
+<p>
+The key to writing a good DOM is to design just the right simple abstractions, 
+therefore prepare to go through a fair number of iterations to get it right.  This
+is afterall an exercise in writing a public API.  It is always tempting to provide 
+everything possible under the sun in one's DOM, but such DOMs turn out to be 
+counter-productive - they are too complex to be easily usable in scripts or by
+anybody else for that matter. Try to balance the tension between simplicity and features 
+by providing access through the DOM to the underlying Eclipse API object.  Then 
+when an end user finds that the DOM is insufficient, they can reach through 
+to the "real" objects and manipulate the APIs directly. In other words the principle
+to remember is, make the simple easy and the hard possible.  Try to think of a 
+DOM as a simplified wrapper to the Eclipse API world, in fact it could be viewed 
+as a testing ground for future APIs.  Since it will take a few tries to get it right, 
+there is support for allowing you to have a DOM in your workspace and be able to 
+hot swap it into your current workspace as is described below in the 
+net.sf.groovyMonkey.tests plugin.  
+</p>
+
+<p>
+One design note: it is a good idea to not store much if anything in the way of state 
+in the DOM plugin.  It can be very convienent to be able to hotswap in and out a 
+new version of the DOM, particularly if you are developing it in your current workspace.
+If the plugin does not store state and there are no references hanging to it, OSGi
+will have no trouble loading in an updated version of the DOM plugin.  
+</p>
+
+<p>
+There is an example of this in the net.sf.groovyMonkey.tests plugin in the 
+monkeyTestScripts/IncludeLocalBundleTest folder.  These resources under that folder 
+support the IncludeLocalBundleTest Unit Test that takes one version of the test plugin 
+net.sf.test.dom (v 1.0.0) and loads it dynamically ( without restarting the workbench ), 
+checks for its existence ( and uninstalls it if it does ) and then replaces it with
+version 1.0.1.  The Groovy Monkey script uninstall.gm will unload a given plugin by
+calling the underlying OSGi Bundle object itself.  The installTestDOM.gm script takes
+a bundleVersion and deployDir args to call uninstall.gm to uninstall the given plugin and
+to install the desired version.
+</p>
+
+<p>
+In the future it should be possible and desirable to be able to have a Groovy Monkey
+DOM Plugin project that Groovy Monkey can monitor and give you the option to install/update
+that plugin in the current workbench.
+</p>
+
+<p>
+The net.sf.groovyMonkey.dom and net.sf.groovyMonkey plug-ins contain a few illustrative 
+DOM and DOM factory examples.
+</p>
 
 </body>
 </html>
