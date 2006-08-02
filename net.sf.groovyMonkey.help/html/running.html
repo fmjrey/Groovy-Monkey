@@ -9,10 +9,14 @@
 <h2>Running a script</h2>
 
 <p>
-Scripts are run by selecting a script from the <em>Groovy Monkey</em> menu.
+Scripts can run by either selecting a script from the <em>Groovy Monkey</em> menu:
 </p>
 
 <center><img src="images/run-script.png"></center>
+
+or by the right click popup menu from within the Groovy Monkey Editor itself:
+
+<center><img src="images/run-script-rt-click.png"></center>
 
 <p>
 Here is what the results more or less should be:
@@ -20,14 +24,89 @@ Here is what the results more or less should be:
 
 <center><img src="images/good-run-script.png"></center>
 <p>
-If there is a problem, an error dialog shows you it with some detailed information.
+If there is a problem, an error dialog shows you it with some detailed information
+including a stack trace. Depending on the BSFEngine implementation of the given 
+language, the stack trace can actually point you to the line number of the script
+where the failure has occured.  A future enhancement would allow direct navigation
+from the stack trace to the problem script.
 </p>
 
 <center><img src="images/bad-run-script.png"></center>
 
+<h2>Listener: metadata tag</h2>
+
 <p>
 Groovy Monkey will listen to changes in the workspace with use of the <b>Listener:</b> 
-metadata tag as is outlined in the help section on writing scripts.
+metadata tag as is outlined in the help section on <a href="writing.html">"Writing Scripts"</a>.
 </p>
+
+<h2>Runner DOM</h2>
+
+<p>
+There is a DOM that is added to the default binding of every Groovy Monkey Script that
+is bound to the variable name runnerDOM.  As can be seen below from a screenshot of
+the Groovy Monkey Editor Content Outline, it is an instance of the class RunnerDOM.
+This DOM allows you to run other monkey scripts from within the context of your 
+current script ( See Note: below about the use of UIJob and this DOM ) and is therefore
+another way to invoke Groovy Monkey Scripts.  In particular, this DOM was created
+by me in order to allow me to write monkey scripts that can be used as library 
+routines.
+</p>
+
+<center><img src="images/runnerDOMInOutlineView.png"></center>
+
+<p>
+You can use the outline view to directly view the source of the class if you have 
+added the project "External Plug-in Libraries" into your workspace 
+( see <a href="http://wiki.eclipse.org/index.php/FAQ_How_do_I_find_a_particular_class_from_an_Eclipse_plug-in%3F">Eclipse Wiki FAQ</a> ) 
+by double clicking the RunnerDOM class node in the tree.  Try it, you'll like it.
+</p>
+
+<p>
+The API of this class can be a bit daunting (my bad...), so just focus on the 
+simplest and functional runScript() method which takes two arguments. The arguments are 
+the workspace path to the script to be executed a Map&lt String, Object &gt instance 
+that will be used to augment and override the binding of the script to be executed.  
+Think of the map instance as arguments to the other script.  Since the Bean Scripting 
+Framework (BSF) allows scripts to be evaluated and return a value, this is what 
+is returned as an Object instance from the runScript method.  This is done synchronously
+from the context of the current script and so will block the Job context of the current
+script until the other script completes ( see Note: below ). So you can invoke a
+script as a function and get its return value.  The other method signature of note allows
+you to invoke a script and pass it a progress monitor.  This runScript method will force
+the target script to be invoked from within the current Job ( Thread ) context as the
+current script and therefore will override the Job mode specified for the target script.
+The use of runScript() with the progress monitor is therefore not encouraged.  
+The rest of the methods in the class are convenience methods like file(), sync() 
+and asyncExec().
+</p>
+
+<h3>Note: UIJob mode and Runner DOM</h3>
+
+<p>
+There is an issue here with running the script from within the SWT UI Thread
+either from using async/syncExec() or the use of the UIJob mode.  Since every script
+that is invoked is started with its own Eclipse Job context and there can be only one
+UI Thread, there is a problem with scripts that are running as UIJobs attempting to
+run other scripts that are marked as UIJobs or try to invoke async/syncExec internally.
+If a script running in UIMode or from within a block invoked from within async/syncExec
+tries to call a script that is set to run in UIJob mode, it will be invoked asynchronously
+and the return value from runScript() will be meaningless.  Worse yet is if the
+target script attempts to syncExec() a block internally, in which case a real nice
+deadlock can occur.
+</p>
+
+<p>
+There are two resolutions to the issue above: a bad one and the good one.  The bad
+solution involves use of the runScript() method that takes a progress monitor.  This
+forces the target script to run in the Job context of the current script regardless
+of what it says the Job mode should be.  For obvious reasons this is a solution that
+is a bit dicey, but on rare occasions can be useful.  The good solution is to avoid
+the use of the UIJob mode all together and run your script in the normal Job mode,
+using RunnerDOM's syncExec and asyncExec methods only on those specific parts that
+are needed to access UI elements.  If a script is obviously just a GUI script, then
+try and make sure that the script that invokes it is in regular Job mode.
+</p>
+
 </body>
 </html>
