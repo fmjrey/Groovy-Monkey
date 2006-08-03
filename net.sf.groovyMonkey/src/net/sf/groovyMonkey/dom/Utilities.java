@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Set;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
-import net.sf.groovyMonkey.internal.DynamicState;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -39,12 +38,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 public class Utilities 
 {
     public static final String SCRIPT_NAME = "scriptName";
-	private static final IDynamicState state = new DynamicState();
-
-	public static IDynamicState state() 
-    {
-		return state;
-	}
+	
     public static String contents( final IFile file ) 
     throws CoreException, IOException
     {

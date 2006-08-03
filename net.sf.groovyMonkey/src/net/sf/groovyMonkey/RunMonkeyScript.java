@@ -3,11 +3,9 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.addScript;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
-import static net.sf.groovyMonkey.dom.Utilities.SCRIPT_NAME;
 import static net.sf.groovyMonkey.dom.Utilities.activeWindow;
 import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.key;
-import static net.sf.groovyMonkey.dom.Utilities.state;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.core.runtime.SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK;
 import java.io.IOException;
@@ -212,7 +210,6 @@ public class RunMonkeyScript
     {
         try
         {
-            defineDynamicVariables( file );
             if( !metadata.ensureDomsAreLoaded( window ) )
                 return null;
             final String scriptLang = metadata.getLang();
@@ -236,20 +233,10 @@ public class RunMonkeyScript
         {
             last_run = metadata;
             createTheMonkeyMenu();
-            undefineDynamicVariables( file );
         }
         return null;
     }
     
-	private void defineDynamicVariables( final IFile file ) 
-    {
-		state().begin( file );
-		state().set( SCRIPT_NAME, file.getFullPath().toPortableString() );
-	}
-	private void undefineDynamicVariables( final IFile file ) 
-    {
-		state().end( file );
-	}
     public static Map< String, IMonkeyScriptFactory > getScriptFactories()
     {
         final Map< String, IMonkeyScriptFactory > factories = new HashMap< String, IMonkeyScriptFactory >();

@@ -28,11 +28,12 @@ public class Line
     {
         return lineNumber;
     }
-    public void addMyTask( final String message ) 
+    public void addMyTask( final String scriptID,
+                           final String message ) 
     throws CoreException
     {
         final IMarker marker = file.getEclipseObject().createMarker( TASK );
-        marker.setAttribute( standardMarkerName, file.getMarkerKey() );
+        marker.setAttribute( standardMarkerName, scriptID );
         marker.setAttribute( MESSAGE, message );
         marker.setAttribute( LINE_NUMBER, lineNumber );
     }

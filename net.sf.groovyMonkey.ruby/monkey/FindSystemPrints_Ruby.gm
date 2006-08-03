@@ -1,5 +1,5 @@
 /*
- * Menu: Find System Prints - Ruby
+ * Menu: Find System Prints > Ruby
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Ruby
@@ -7,9 +7,9 @@
  */
  files = $resources.filesMatching( ".*\\.java" )
  for file in files
-	file.removeMyTasks()
+	file.removeMyTasks( $metadata.path() )
 	for line in file.getLines()
-		line.addMyTask( line.getString().to_s().strip() ) if line.getString().to_s() =~ /System\.out\.print(ln)? *\(.*\)/
+		line.addMyTask( $metadata.path(), line.getString().to_s().strip() ) if line.getString().to_s() =~ /System\.out\.print(ln)? *\(.*\)/
 	end
  end
  

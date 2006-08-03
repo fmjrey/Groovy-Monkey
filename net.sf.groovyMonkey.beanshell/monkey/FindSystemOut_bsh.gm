@@ -1,5 +1,5 @@
 /*
- * Menu: Find System Prints - Beanshell
+ * Menu: Find System Prints > Beanshell
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Beanshell
@@ -8,12 +8,12 @@
 files = resources.filesMatching( ".*\\.java" );
 for( i = 0; i < files.length; i++ )
 {
-  files[i].removeMyTasks();
+  files[i].removeMyTasks( metadata.path() );
   lines = files[i].lines;
-  for( j = 0; j < lines.length; j++ ) 
+  for( j = 0; j < lines.size(); j++ ) 
   {
-    if( lines[j].string.contains( "System.out.print" ) )
-       lines[j].addMyTask( lines[j].string.trim() );
+    if( lines.get( j ).string.contains( "System.out.print" ) )
+       lines.get( j ).addMyTask( metadata.path(), lines.get( j ).string.trim() );
   }
 }
 final Runnable runnable = new Runnable()

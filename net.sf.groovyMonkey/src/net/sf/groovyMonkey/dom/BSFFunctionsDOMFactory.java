@@ -2,14 +2,14 @@ package net.sf.groovyMonkey.dom;
 import org.apache.bsf.util.BSFFunctions;
 
 /**
- * This dom is just a placeholder to add the vars binding to the outline view.
+ * This dom is just a placeholder to add the bsf binding to the outline view.
  * It does not actually provide the object that is put in the binding.  The 
- * setBinding() method in MonkeyScript actually does that.
+ * BSF Engine implementation actually does that.
  */
-public class BSFFunctionsDOM 
+public class BSFFunctionsDOMFactory 
 implements IMonkeyDOMFactory
 {
-    public BSFFunctionsDOM() {}
+    public BSFFunctionsDOMFactory() {}
 
     public Object getDOMroot()
     {

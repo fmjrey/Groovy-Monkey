@@ -174,8 +174,16 @@ implements IMonkeyScript
             manager.loadScriptingEngine( languageName );
             for( final String varName : binding.keySet() )
             {
+                // bsf binding provided by BSF Engine implementation
                 if( varName.equals( "bsf" ) )
                     continue;
+                // metadata binding is provided by this object and not
+                //  by DOM Factory.
+                if( varName.equals( "metadata" ) )
+                {
+                    manager.declareBean( varName, metadata, ScriptMetadata.class );
+                    continue;
+                }
                 if( binding.get( varName ) == null )
                     continue;
                 manager.declareBean( varName, binding.get( varName ), binding.get( varName ).getClass() );

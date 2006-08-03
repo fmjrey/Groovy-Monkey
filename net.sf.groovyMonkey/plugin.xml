@@ -94,10 +94,15 @@
             resource="net.sf.groovyMonkey.dom.runner.RunnerDOM"
             variableName="runnerDOM"/>
       <dom
-            class="net.sf.groovyMonkey.dom.BSFFunctionsDOM"
+            class="net.sf.groovyMonkey.dom.BSFFunctionsDOMFactory"
             id="BSFFunctions"
             resource="org.apache.bsf.util.BSFFunctions"
             variableName="bsf"/>
+      <dom
+            class="net.sf.groovyMonkey.dom.MetadataDOMFactory"
+            id="ScriptMetadata"
+            resource="net.sf.groovyMonkey.ScriptMetadata"
+            variableName="metadata"/>
       <dom
             class="net.sf.groovyMonkey.dom.MonitorDOM"
             id="Progress Monitor"

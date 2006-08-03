@@ -1,6 +1,4 @@
 package net.sf.groovyMonkey.dom.resources;
-import static net.sf.groovyMonkey.dom.Utilities.SCRIPT_NAME;
-import static net.sf.groovyMonkey.dom.Utilities.state;
 import static net.sf.groovyMonkey.dom.resources.Resources.standardMarkerName;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.readLines;
@@ -56,22 +54,12 @@ public class File
             closeQuietly( input );
         }
     }
-    public void removeMyTasks() 
-    throws CoreException
-    {
-        final String key = this.getMarkerKey();
-        removeMyTasks( key );
-    }
-    public void removeMyTasks( final String key ) 
+    public void removeMyTasks( final String scriptID ) 
     throws CoreException
     {
         final IMarker[] markers = file.findMarkers( TASK, false, 0 );
         for( IMarker marker : markers )
-            if( key.equals( marker.getAttribute( standardMarkerName ) ) )
+            if( scriptID.equals( marker.getAttribute( standardMarkerName ) ) )
                 marker.delete();
-    }
-    public String getMarkerKey()
-    {
-        return ( String )state().get( SCRIPT_NAME );
     }
 }

@@ -137,6 +137,20 @@ public class ScriptMetadata
     {
         return file;
     }
+    public IFile file()
+    {
+        return getFile();
+    }
+    public String path()
+    {
+        return getPath();
+    }
+    private String getPath()
+    {
+        if( file() != null )
+            return file().getFullPath().toPortableString();
+        return getReasonableFilename();
+    }
     public String getMenuName()
     {
         return menuName;
