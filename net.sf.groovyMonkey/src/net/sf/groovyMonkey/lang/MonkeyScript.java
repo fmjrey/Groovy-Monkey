@@ -158,7 +158,7 @@ implements IMonkeyScript
     }
     public static String workspaceURI()
     {
-        final String workspaceURI = getWorkspace().getRoot().getLocationURI().toString();
+        final String workspaceURI = getWorkspace().getRoot().getRawLocation().toFile().toURI().toString();
         return removeEnd( workspaceURI, "/" );
     }
     public Object run() 

@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.junit,
  org.eclipse.update.core,
  org.eclipse.update.ui
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
 Export-Package: net.sf.groovyMonkey,
  net.sf.groovyMonkey.dom,
  net.sf.groovyMonkey.dom.bundle,
