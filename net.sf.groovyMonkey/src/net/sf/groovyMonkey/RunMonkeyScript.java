@@ -34,7 +34,7 @@ import org.eclipse.ui.progress.UIJob;
 
 public class RunMonkeyScript 
 {
-    public static ScriptMetadata last_run = null;
+    public static ScriptMetadata LAST_RUN = null;
 	private final IWorkbenchWindow window;
 	private final IFile file;
     private final boolean throwError;    
@@ -231,7 +231,7 @@ public class RunMonkeyScript
         }
         finally
         {
-            last_run = metadata;
+            LAST_RUN = metadata;
             createTheMonkeyMenu();
         }
         return null;

@@ -9,13 +9,14 @@
  *     Bjorn Freeman-Benson - initial implementation
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
-
 package net.sf.groovyMonkey.actions;
 
-
-public class PublishScriptForBlogger extends PublishScript {
-	protected String decorateText(String contents) {
-		return "<pre>\n" + super.decorateText(contents)
-				+ "\n</pre>\n";
-	}
+public class PublishScriptForBlogger 
+extends PublishScript
+{
+    @Override
+    protected String decorateText( final String contents )
+    {
+        return "<pre>\n" + super.decorateText( contents ) + "\n</pre>\n";
+    }
 }

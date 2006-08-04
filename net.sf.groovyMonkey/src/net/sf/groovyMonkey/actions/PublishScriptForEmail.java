@@ -9,23 +9,25 @@
  *     Bjorn Freeman-Benson - initial implementation
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
-
 package net.sf.groovyMonkey.actions;
-
+import static java.util.regex.Pattern.compile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-public class PublishScriptForEmail extends PublishScript {
-	protected String decorateText(String contents) {
-		String munged = breakIntoShorterLines(contents);
-		return super.decorateText(munged);
-	}
-
-	String breakIntoShorterLines(String contents) {
-		Pattern pattern = Pattern.compile("([^\n\r]{50})(?![\n\r])");
-		Matcher matcher = pattern.matcher(contents);
-		String munged = matcher.replaceAll("$1\\\\\n");
-		return munged;
-	}
+public class PublishScriptForEmail 
+extends PublishScript
+{
+    @Override
+    protected String decorateText( final String contents )
+    {
+        final String munged = breakIntoShorterLines( contents );
+        return super.decorateText( munged );
+    }
+    public String breakIntoShorterLines( final String contents )
+    {
+        final Pattern pattern = compile( "([^\n\r]{50})(?![\n\r])" );
+        final Matcher matcher = pattern.matcher( contents );
+        final String munged = matcher.replaceAll( "$1\\\\\n" );
+        return munged;
+    }
 }

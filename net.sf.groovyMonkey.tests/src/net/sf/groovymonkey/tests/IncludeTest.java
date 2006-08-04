@@ -52,22 +52,22 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string() );
     }
-    public void testIncludeInPython()
-    throws Exception
-    {
-        runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
-    }
+//    public void testIncludeInPython()
+//    throws Exception
+//    {
+//        runMonkeyScript( script );
+//        assertEquals( getName(), TestDOM.string() );
+//    }
     public void testIncludeInRuby()
     throws Exception
     {
         runMonkeyScript( script );
         assertEquals( getName(), TestDOM.string() );
     }
-    public void testIncludeInTcl()
-    throws Exception
-    {
-        runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
-    }
+//    public void testIncludeInTcl()
+//    throws Exception
+//    {
+//        runMonkeyScript( script );
+//        assertEquals( getName(), TestDOM.string() );
+//    }
 }

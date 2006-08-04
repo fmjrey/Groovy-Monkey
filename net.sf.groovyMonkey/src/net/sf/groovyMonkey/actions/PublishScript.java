@@ -9,17 +9,17 @@
  *     Bjorn Freeman-Benson - initial implementation
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
-
 package net.sf.groovyMonkey.actions;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
@@ -31,67 +31,67 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class PublishScript implements IWorkbenchWindowActionDelegate,
-		IObjectActionDelegate {
+public class PublishScript 
+implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
+{
+    private Shell shell;
+    public PublishScript() {}
 
-	public PublishScript() {
-	}
+    public void run( final IAction action )
+    {
+        String result = "";
+        final IStructuredSelection sel = ( IStructuredSelection )selection;
+        final List selectedObjects = sel.toList();
+        for( final Iterator iter = selectedObjects.iterator(); iter.hasNext(); )
+        {
+            final IFile element = ( IFile )iter.next();
+            try
+            {
+                final String contents = getContents( element );
+                result += decorateText( contents );
+            }
+            catch( final IOException x )
+            {
+                openInformation( shell, "Groovy Monkey", x.toString() + " while trying to copy script for publication" );
+            }
+            catch( final CoreException x )
+            {
+                openInformation( shell, "Groovy Monkey", x.toString() + " while trying to copy script for publication" );
+            }
+        }
+        final Clipboard clipboard = new Clipboard( shell.getDisplay() );
+        try
+        {
+            final TextTransfer textTransfer = TextTransfer.getInstance();
+            clipboard.setContents( new Object[]{ result }, new Transfer[]{ textTransfer } );
+        }
+        finally
+        {
+            clipboard.dispose();
+        }
+    }
+    protected String decorateText( final String contents )
+    {
+        return PUBLISH_BEFORE_MARKER + "\n" + contents + "\n" + PUBLISH_AFTER_MARKER;
+    }
 
-	public void run(IAction action) {
-		String result = "";
+    private ISelection selection;
 
-		IStructuredSelection sel = (IStructuredSelection) this.selection;
-		List selectedObjects = sel.toList();
-		for (Iterator iter = selectedObjects.iterator(); iter.hasNext();) {
-			IFile element = (IFile) iter.next();
-
-			try {
-				String contents = getContents(element);
-
-				result += decorateText(contents);
-			} catch (IOException x) {
-				MessageDialog.openInformation(shell, "Groovy Monkey", x
-						.toString()
-						+ " while trying to copy script for publication");
-			} catch (CoreException x) {
-				MessageDialog.openInformation(shell, "Groovy Monkey", x
-						.toString()
-						+ " while trying to copy script for publication");
-			}
-		}
-
-		Clipboard clipboard = new Clipboard(shell.getDisplay());
-		try {
-			TextTransfer textTransfer = TextTransfer.getInstance();
-			clipboard.setContents(new Object[] { result },
-					new Transfer[] { textTransfer });
-		} finally {
-			clipboard.dispose();
-		}
-	}
-
-	protected String decorateText(String contents) {
-		return GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER
-		+ "\n" + contents + "\n"
-		+ GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
-	}
-
-	private ISelection selection;
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		this.selection = selection;
-	}
-
-	public void dispose() {
-	}
-
-	public void init(IWorkbenchWindow window) {
-		shell = window.getShell();
-	}
-
-	private Shell shell;
-
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		shell = targetPart.getSite().getShell();
-	}
+    public void selectionChanged( final IAction action, 
+                                  final ISelection selection )
+    {
+        this.selection = selection;
+    }
+    public void dispose()
+    {
+    }
+    public void init( final IWorkbenchWindow window )
+    {
+        shell = window.getShell();
+    }
+    public void setActivePart( final IAction action, 
+                               final IWorkbenchPart targetPart )
+    {
+        shell = targetPart.getSite().getShell();
+    }
 }

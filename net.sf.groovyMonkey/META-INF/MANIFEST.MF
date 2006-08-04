@@ -9,11 +9,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.core.resources,
- org.junit,
  org.eclipse.update.core,
  org.eclipse.update.ui
 Eclipse-LazyStart: true
 Export-Package: net.sf.groovyMonkey,
+ net.sf.groovyMonkey.actions,
  net.sf.groovyMonkey.dom,
  net.sf.groovyMonkey.dom.bundle,
  net.sf.groovyMonkey.dom.resources,
