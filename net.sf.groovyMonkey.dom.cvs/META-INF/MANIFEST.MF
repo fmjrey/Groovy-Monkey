@@ -8,6 +8,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  net.sf.groovyMonkey,
- org.eclipse.team.cvs.core
+ org.eclipse.team.cvs.core,
+ org.eclipse.team.core
 Eclipse-LazyStart: true
 Bundle-Vendor: James E. Ervin

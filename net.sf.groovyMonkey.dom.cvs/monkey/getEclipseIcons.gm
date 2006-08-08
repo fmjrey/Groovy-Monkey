@@ -23,23 +23,10 @@ Validate.notNull( repositoryLoc, "Error could not find the repository ${cvsRepos
 
 // Here we query all the remote repository top level projects for sub-folders
 //  called icons and then store them into a list for later use.
-def members = repositoryLoc.members( null, false, null )
-monitor.beginTask( '', 2 * members.size() )
-def iconFolders = []
-for( member in members )
-{
-    member.fetchChildren()
-    if( monitor.isCanceled() )
-        return
-    if( !member.childExists( 'icons' ) )
-    {
-        monitor.worked( 1 )
-        continue
-    }
-    def icons = member.getFolder( 'icons' )
-    iconFolders.add( icons )
-    monitor.worked( 1 )
-}
+def iconFolders = cvsDOM.getRepositoryResources( new SubProgressMonitor( monitor, 1 ), repositoryLoc, 'icons' )
+if( iconFolders == null )
+	return
+
 // Check out those icon folders under a sub-folder of the target project called
 //  icons and place each remote icon folder in a sub-folder of icons that corresponds
 //  to its project name.
