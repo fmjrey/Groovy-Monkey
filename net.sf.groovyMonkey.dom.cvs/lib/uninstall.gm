@@ -1,12 +1,11 @@
 /*
- * Menu: uninstall
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
  */
 import org.apache.commons.lang.Validate
 
-Validate.notNull( bsf.lookupBean( 'plugin' ), 'plugin must be set' )
+Validate.notNull( bsf.lookupBean( 'pluginToUninstall' ), 'pluginToUninstall must be set' )
 
 for( plugin in bundleDOM.context().getBundles() )
 {

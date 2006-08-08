@@ -1,0 +1,69 @@
+/*
+ * Menu: Get Eclipse Icons > Refactored DOM
+ * Kudos: ervinja
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * Include-Bundle: org.eclipse.team.cvs.core
+ * Include-Bundle: org.eclipse.team.cvs.ui
+ * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom.cvs
+ */
+import org.apache.commons.lang.Validate
+import org.eclipse.core.resources.IProject
+import org.eclipse.core.resources.IResource
+import org.eclipse.core.runtime.SubProgressMonitor
+import org.eclipse.team.internal.ccvs.core.ICVSRemoteFolder
+import org.eclipse.team.internal.ccvs.ui.operations.CheckoutIntoOperation
+import org.eclipse.team.internal.ccvs.ui.operations.DisconnectOperation
+
+// Here we find the desired repository location that has already been configured
+//  in the CVS Respository Explorer.
+def cvsRepository = ':pserver:anonymous@dev.eclipse.org:/home/eclipse'
+def repositoryLoc = cvsDOM.getKnownRepository( cvsRepository )
+Validate.notNull( repositoryLoc, "Error could not find the repository ${cvsRepository}, has it been added to the CVS Repository Explorer?" )
+
+// Here we query all the remote repository top level projects for sub-folders
+//  called icons and then store them into a list for later use.
+def members = repositoryLoc.members( null, false, null )
+monitor.beginTask( '', 2 * members.size() )
+def iconFolders = []
+for( member in members )
+{
+    member.fetchChildren()
+    if( monitor.isCanceled() )
+        return
+    if( !member.childExists( 'icons' ) )
+    {
+        monitor.worked( 1 )
+        continue
+    }
+    def icons = member.getFolder( 'icons' )
+    iconFolders.add( icons )
+    monitor.worked( 1 )
+}
+// Check out those icon folders under a sub-folder of the target project called
+//  icons and place each remote icon folder in a sub-folder of icons that corresponds
+//  to its project name.
+def targetProject = workspace.getRoot().getProject( 'GroovyMonkeyExamples' )
+iconFolders.each
+{ folder ->
+    if( monitor.isCanceled() )
+        return
+    def targetFolder = targetProject.getFolder( 'icons' ).getFolder( folder.getRemoteParent().getRepositoryRelativePath() )
+    new CheckoutIntoOperation( null, folder, targetFolder, true ).execute( new SubProgressMonitor( monitor, 1 ) )
+    monitor.worked( 1 )
+}
+// Clear off the CVS cruft.
+jface.syncExec
+{
+    new DisconnectOperation( null, [ targetProject ].toArray( new IProject[0] ), true ).run()
+}
+// Build the eclipse-icons.zip file using AntBuilder
+def baseDir = targetProject.getFolder( 'icons' )
+def destFile = targetProject.getFile( 'eclipse-icons.zip' )
+if( destFile.exists() )
+ destFile.delete( true, null )
+def ant = new AntBuilder()
+ant.zip( basedir:"${baseDir.getRawLocation()}", destfile:"${destFile.getRawLocation()}" )
+// Refresh the targetProject so that eclipse-icons.zip shows up in the Navigator and Package Explorer.
+targetProject.refreshLocal( IResource.DEPTH_INFINITE, null )
+monitor.done()
