@@ -30,7 +30,7 @@ implements IStartup
     public static final String FILE_EXTENSION = "." + SCRIPT_SUFFIX;
     public static final String FILE_EXTENSION_WILDCARD = "*" + FILE_EXTENSION;
     public static final String MONKEY_DIR = "monkey";
-    public static final String EXAMPLES_PROJECT = "GroovyMonkeyExamples";
+    public static final String SCRIPTS_PROJECT = "GroovyMonkeyScripts";
     public static final String MENU_PATH = "groovyMonkeyMenu";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;

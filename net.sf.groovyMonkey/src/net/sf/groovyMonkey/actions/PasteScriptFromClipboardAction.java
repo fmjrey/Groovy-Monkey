@@ -12,7 +12,7 @@
 package net.sf.groovyMonkey.actions;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.EXAMPLES_PROJECT;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
@@ -125,7 +125,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         IProject project = null;
         for( final IProject p : projects )
         {
-            if( p.getName().equals( EXAMPLES_PROJECT ) )
+            if( p.getName().equals( SCRIPTS_PROJECT ) )
             {
                 project = p;
                 break;
@@ -133,7 +133,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         }
         if( project == null )
         {
-            project = workspace.getRoot().getProject( EXAMPLES_PROJECT );
+            project = workspace.getRoot().getProject( SCRIPTS_PROJECT );
             project.create( null );
             project.open( null );
         }

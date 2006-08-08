@@ -1,5 +1,5 @@
 package net.sf.groovyMonkey.actions;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.EXAMPLES_PROJECT;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
@@ -34,7 +34,7 @@ implements IWorkbenchWindowActionDelegate
 	public void run( final IAction action ) 
     {
 		final IWorkspace workspace = getWorkspace();
-		final IProject project = workspace.getRoot().getProject( EXAMPLES_PROJECT );
+		final IProject project = workspace.getRoot().getProject( SCRIPTS_PROJECT );
 		try 
         {
             final List< URL > examples = getExampleScripts( getDefault().getBundle() );
