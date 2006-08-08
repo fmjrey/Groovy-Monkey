@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Cvs Plug-in
+Bundle-SymbolicName: net.sf.groovyMonkey.dom.cvs;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: net.sf.groovymonkey.dom.cvsdom.Activator
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ net.sf.groovyMonkey
+Eclipse-LazyStart: true
+Bundle-Vendor: James E. Ervin
