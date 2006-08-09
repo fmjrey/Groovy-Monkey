@@ -8,12 +8,8 @@
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom.cvs
  */
 import org.apache.commons.lang.Validate
-import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.runtime.SubProgressMonitor
-import org.eclipse.team.internal.ccvs.core.ICVSRemoteFolder
-import org.eclipse.team.internal.ccvs.ui.operations.CheckoutIntoOperation
-import org.eclipse.team.internal.ccvs.ui.operations.DisconnectOperation
 
 // Here we find the desired repository location that has already been configured
 //  in the CVS Respository Explorer.
@@ -31,19 +27,8 @@ if( iconFolders == null )
 //  icons and place each remote icon folder in a sub-folder of icons that corresponds
 //  to its project name.
 def targetProject = workspace.getRoot().getProject( 'GroovyMonkeyExamples' )
-iconFolders.each
-{ folder ->
-    if( monitor.isCanceled() )
-        return
-    def targetFolder = targetProject.getFolder( 'icons' ).getFolder( folder.getRemoteParent().getRepositoryRelativePath() )
-    new CheckoutIntoOperation( null, folder, targetFolder, true ).execute( new SubProgressMonitor( monitor, 1 ) )
-    monitor.worked( 1 )
-}
-// Clear off the CVS cruft.
-jface.syncExec
-{
-    new DisconnectOperation( null, [ targetProject ].toArray( new IProject[0] ), true ).run()
-}
+cvsDOM.checkOut( new SubProgressMonitor( monitor, 1 ), iconFolders, targetProject.getFolder( 'icons' ), true )
+
 // Build the eclipse-icons.zip file using AntBuilder
 def baseDir = targetProject.getFolder( 'icons' )
 def destFile = targetProject.getFile( 'eclipse-icons.zip' )
