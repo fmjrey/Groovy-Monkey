@@ -28,6 +28,7 @@ import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Subscription;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
+import net.sf.groovyMonkey.util.TreeList;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -168,10 +169,12 @@ implements ITreeContentProvider
     }
     public static class VarDescriptor
     extends Descriptor
+    implements Comparable< VarDescriptor >
     {
         public final DOMDescriptor parent;
         public final String varName;
         public final Class type;
+        private final String toString;
         
         public VarDescriptor( final DOMDescriptor parent, 
                               final String varName, 
@@ -180,11 +183,16 @@ implements ITreeContentProvider
             this.parent = parent;
             this.varName = varName;
             this.type = type;
+            this.toString = varName + ": " + type.getName();
         }
         @Override
         public String toString()
         {
-            return varName + ": " + type.getName();
+            return toString;
+        }
+        public int compareTo( final VarDescriptor descriptor )
+        {
+            return toString().compareTo( descriptor.toString() );
         }
     };
     public static final class MethodDescriptor
@@ -265,7 +273,7 @@ implements ITreeContentProvider
     private final List< ListenerDescriptor > listeners = new ArrayList< ListenerDescriptor >();
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
-    private final Set< BundleDescriptor > bundles = new TreeSet< BundleDescriptor >();
+    private final List< BundleDescriptor > bundles = new TreeList< BundleDescriptor >();
     private ScriptMetadata data = null;
     
     public Object[] getChildren( final Object parentElement )
@@ -274,7 +282,7 @@ implements ITreeContentProvider
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
             final Map< String, Class > dom = getDOMInfo( descriptor.pluginName );
-            final List< VarDescriptor > list = new ArrayList< VarDescriptor >();
+            final List< VarDescriptor > list = new TreeList< VarDescriptor >();
             for( final String var : dom.keySet() )
                 if( dom.get( var ) != null )
                     list.add( new VarDescriptor( descriptor, var, dom.get( var ) ) );
