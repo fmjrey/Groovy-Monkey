@@ -1,7 +1,10 @@
 package net.sf.groovyMonkey;
+import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -504,7 +507,11 @@ extends IconAndMessageDialog
        }
        buffer.append(buildingStatus.getMessage());
        buffer.append("\n"); //$NON-NLS-1$
-       
+       if( buildingStatus.getException() != null )
+       {
+           buffer.append( getFullStackTrace( buildingStatus.getException() ) );
+           buffer.append( "\n" );
+       }
        // Look for a nested core exception
        Throwable t = buildingStatus.getException();
        if (t instanceof CoreException) {
