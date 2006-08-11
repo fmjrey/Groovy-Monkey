@@ -10,6 +10,7 @@ import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.eclipse.core.resources.IResource.FOLDER;
 import static org.eclipse.core.resources.IResource.PROJECT;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -353,7 +354,14 @@ extends WizardPage
     }
     public String getFileName()
     {
-        return fileText.getText();
+        final String fileName = fileText.getText();
+        if( isBlank( fileName ) )
+            return fileName;
+        if( fileName.endsWith( FILE_EXTENSION ) )
+            return fileName;
+        if( fileName.indexOf( "." ) != -1 && !fileName.endsWith( FILE_EXTENSION ) )
+            return substringBeforeLast( fileName, "." ) + FILE_EXTENSION;
+        return fileName + FILE_EXTENSION;
     }
     public String getMenuName()
     {
