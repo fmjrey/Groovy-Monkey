@@ -410,26 +410,36 @@ implements ITreeContentProvider
     private void addBundles()
     {
         bundles.clear();
+        for( final String bundle : getBundles( data ) )
+            bundles.add( new BundleDescriptor( bundle, null ) );
+    }
+    public static Set< String > getBundles( final ScriptMetadata data )
+    {
+        final Set< String > bundles = new TreeSet< String >();
+        if( data == null )
+            return bundles;
         final Set< String > visited = new HashSet< String >();
         for( final String bundle : data.getIncludedBundles() )
         {
-            bundles.add( new BundleDescriptor( bundle, null ) );
+            bundles.add( bundle );
             visited.add( bundle );
         }
         for( final String bundle : getAllRequiredBundles() )
         {
-            bundles.add( new BundleDescriptor( bundle, null ) );
+            bundles.add( bundle );
             visited.add( bundle );
         }
-        addReexportedBundles( visited, new HashSet< String >( visited ) );
+        bundles.addAll( getReexportedBundles( visited, new TreeSet< String >( bundles ) ) );
+        return bundles;
     }
-    private void addReexportedBundles( final Set< String > visited,
-                                       final Set< String > bundles )
+    public static Set< String > getReexportedBundles( final Set< String > visited,
+                                                      final Set< String > bundlesToCheck )
     {
-        if( bundles == null || bundles.size() == 0 )
-            return;
+        final Set< String > bundles = new TreeSet< String >();
+        if( bundlesToCheck == null || bundlesToCheck.size() == 0 )
+            return bundles;
         final Set< String > newBundles = new HashSet< String >();
-        for( final String bundle : bundles )
+        for( final String bundle : bundlesToCheck )
         {
             final Set< String > reexported = getAllReexportedBundles( bundle );
             for( final String exported : reexported )
@@ -437,12 +447,13 @@ implements ITreeContentProvider
                 if( visited.contains( exported ) )
                     continue;
                 visited.add( exported );
-                this.bundles.add( new BundleDescriptor( exported, null ) );
+                bundles.add( exported );
                 newBundles.add( exported );
             }
         }
         if( newBundles.size() > 0 )
-            addReexportedBundles( visited, newBundles );
+            bundles.addAll( getReexportedBundles( visited, newBundles ) );
+        return bundles;
     }
     public boolean diff( final ScriptMetadata data )
     {

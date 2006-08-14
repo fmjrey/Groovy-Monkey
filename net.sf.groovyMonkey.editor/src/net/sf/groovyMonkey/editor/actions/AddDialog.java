@@ -1,10 +1,13 @@
 package net.sf.groovyMonkey.editor.actions;
-import java.util.LinkedHashSet;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
+import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import java.util.Set;
+import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -22,27 +25,67 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
-public class AddDOMDialog 
+public class AddDialog 
 extends Dialog
 implements ISelectionChangedListener
 {
-    private final Set< String > availableDOMPlugins;
-    private final Set< String > selectedDOMPlugins = new LinkedHashSet< String >();
+    public enum Text
+    {
+        BUNDLE, DOM;
+        @Override
+        public String toString()
+        {
+            return "Add " + name() + "(s): ";
+        }
+    };
+    public static final String DIALOG_SETTINGS_SECTION = AddDialog.class.getName();
+    private final Text text;
+    private final String dialogSettingsSection;
+    private final Set< String > available;
+    private final Set< String > selected = new TreeSet< String >();
     private TableViewer table;
     private TreeViewer details;
     
-    public AddDOMDialog( final Shell parentShell,
-                         final Set< String > availableDOMPlugins )
+    public static AddDialog createAddDOMDialog( final Shell parent, 
+                                                final Set< String > available )
+    {
+        return new AddDialog( parent, Text.DOM, available );
+    }
+    public static AddDialog createAddBundleDialog( final Shell parent, 
+                                                   final Set< String > available )
+    {
+        return new AddDialog( parent, Text.BUNDLE, available );
+    }
+    public AddDialog( final Shell parentShell,
+                      final Text text,
+                      final Set< String > available )
     {
         super( parentShell );
-        this.availableDOMPlugins = availableDOMPlugins;
+        this.text = text;
+        dialogSettingsSection = DIALOG_SETTINGS_SECTION + "." + text.name();
+        this.available = available;
         setShellStyle( getShellStyle() | SWT.RESIZE );
     }
+    @Override
+    protected IDialogSettings getDialogBoundsSettings()
+    {
+        final IDialogSettings settings = getDefault().getDialogSettings();
+        if( settings.getSection( dialogSettingsSection ) == null )
+            settings.addNewSection( dialogSettingsSection );
+        return settings.getSection( dialogSettingsSection );
+    }
+    @Override
+    protected int getDialogBoundsStrategy()
+    {
+        return super.getDialogBoundsStrategy();
+    }
+    @Override
     protected void configureShell( final Shell newShell )
     {
         super.configureShell( newShell );
-        newShell.setText( "Add DOMs: " );
+        newShell.setText( "" + text );
     }
+    @Override
     protected Control createDialogArea( final Composite parent )
     {
         final GridLayout layout = new GridLayout( 1, false );
@@ -57,12 +100,14 @@ implements ISelectionChangedListener
             {
                 if( !( element instanceof String ) )
                     return super.getImage( element );
+                if( !getDOMPlugins().contains( "" + element ) )
+                    return provider.getImage( new ScriptContentProvider.BundleDescriptor( "" + element, null ) );
                 return provider.getImage( new DOMDescriptor( "", "" + element ) );
             }
             
         };
         table.setLabelProvider( labelProvider );
-        table.setInput( availableDOMPlugins );
+        table.setInput( available );
         table.addSelectionChangedListener( this );
         table.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
         details = new TreeViewer( parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL | SWT.H_SCROLL | SWT.RESIZE );
@@ -85,16 +130,17 @@ implements ISelectionChangedListener
         details.getControl().setLayoutData( new GridData( SWT.FILL, SWT.FILL, true, true ) );
         return parent;
     }
+    @Override
     protected void okPressed()
     {
         for( final TableItem item : table.getTable().getItems() )
             if( item.getChecked() )
-                selectedDOMPlugins.add( item.getText() );
+                selected.add( item.getText() );
         super.okPressed();
     }
-    public Set< String > selectedDOMPlugins()
+    public Set< String > selected()
     {
-        return selectedDOMPlugins;
+        return selected;
     }
     public void selectionChanged( final SelectionChangedEvent event )
     {

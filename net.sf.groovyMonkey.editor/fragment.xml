@@ -13,9 +13,17 @@
 	                enablesFor="1"
      	            icon="icons/feature_obj.gif"
           	        id="net.sf.groovymonkey.actions.AddDOM"
-               		label="Add DOM to Script"
+               		label="Add DOM To Script"
                		menubarPath="group.editor"
                		tooltip="Add existing DOM to Monkey Script"/>
+               	<action
+               		class="net.sf.groovyMonkey.editor.actions.AddBundle"
+	                enablesFor="1"
+     	            icon="icons/feature_obj.gif"
+          	        id="net.sf.groovymonkey.actions.AddBundle"
+               		label="Add Bundle To Script"
+               		menubarPath="group.editor"
+               		tooltip="Add existing Bundle to Monkey Script"/>
          		<action
                		class="net.sf.groovyMonkey.editor.actions.RunScript"
                		enablesFor="1"

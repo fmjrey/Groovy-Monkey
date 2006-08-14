@@ -1,6 +1,8 @@
 package net.sf.groovyMonkey.dom;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -15,9 +17,9 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
 import org.apache.commons.io.IOUtils;
@@ -34,11 +36,13 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.osgi.framework.Bundle;
 
 public class Utilities 
 {
     public static final String SCRIPT_NAME = "scriptName";
-	
+    public static final String DOM_EXTENSION_POINT_ID = PLUGIN_ID + ".dom";
+    
     public static String contents( final IFile file ) 
     throws CoreException, IOException
     {
@@ -73,6 +77,15 @@ public class Utilities
     public static String key( final IFile file )
     {
     	return file != null ? file.getFullPath().toString() : null;
+    }
+    public static Set< String > getAllAvailableBundles()
+    {
+        final Set< String > set = new TreeSet< String >();
+        final Set< String > defaultBundles = getAllRequiredBundles();
+        for( final Bundle bundle : context().getBundles() )
+            if( !defaultBundles.contains( bundle.getSymbolicName() ) )
+                set.add( bundle.getSymbolicName() );
+        return set;
     }
     public static Map< String, Object > getExtensionGlobalVariables( final ScriptMetadata metadata ) 
     {
@@ -135,7 +148,7 @@ public class Utilities
     }
     public static Set< String > getDOMPlugins()
     {
-        final Set< String > plugins = new LinkedHashSet< String >();
+        final Set< String > plugins = new TreeSet< String >();
         final IExtensionPoint point = getDOMExtensionPoint();
         if( point == null )
             return plugins;
@@ -264,7 +277,7 @@ public class Utilities
     public static IExtensionPoint getDOMExtensionPoint()
     {
         final IExtensionRegistry registry = getExtensionRegistry();
-        return registry.getExtensionPoint( "net.sf.groovyMonkey.dom" );
+        return registry.getExtensionPoint( DOM_EXTENSION_POINT_ID );
     }
     public static void error( final String title, 
                               final String message,

@@ -4,19 +4,20 @@ import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static net.sf.groovyMonkey.dom.Utilities.error;
+import static net.sf.groovyMonkey.dom.Utilities.getAllAvailableBundles;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
-import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
-import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddDOMDialog;
+import static net.sf.groovyMonkey.editor.ScriptContentProvider.getBundles;
+import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddBundleDialog;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.editor.ScriptEditor;
 import org.eclipse.core.resources.IFile;
@@ -34,21 +35,21 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 
-public class AddDOM 
+public class AddBundle 
 extends Action
 implements IObjectActionDelegate
 {
     private ScriptEditor targetEditor = null;
     private IStructuredSelection selection = null;
     
-    public AddDOM()
+    public AddBundle()
     {
     }
-    public AddDOM( final ScriptEditor targetEditor )
+    public AddBundle( final ScriptEditor targetEditor )
     {
         this.targetEditor = targetEditor;
-        setText( "Add DOM to Script" );
-        setToolTipText( "Add existing DOM to Monkey Script" );
+        setText( "Add Bundle to Script" );
+        setToolTipText( "Add existing Bundle to Monkey Script" );
     }
     public void run( final IAction action )
     {
@@ -71,10 +72,10 @@ implements IObjectActionDelegate
                     return;
                 saveChangesInEditor( editor );
             }
-            final Set< String > selectedDOMPlugins = openSelectDOMsDialog( getUnusedDOMs( script ) );
-            if( selectedDOMPlugins.size() == 0 )
+            final Set< String > selectedBundles = openSelectBundlesDialog( getUnusedBundles( script ) );
+            if( selectedBundles.size() == 0 )
                 return;
-            addDOMsToScript( script, selectedDOMPlugins );
+            addBundlesToScript( script, selectedBundles );
         }
         catch( final CoreException e )
         {
@@ -85,39 +86,40 @@ implements IObjectActionDelegate
             error( "IO Error", "Error getting the contents of: " + script.getName() + ". " + e, e );
         }
     }
-    private void addDOMsToScript( final IFile script, 
-                                  final Set< String > selectedDOMPlugins ) 
+    private void addBundlesToScript( final IFile script, 
+                                     final Set< String > selectedBundles ) 
     throws CoreException, IOException
     {
         final List< String > metadata = getMetadataLines( getContents( script ) );
-        for( final String selectedDOMPlugin : selectedDOMPlugins )
-            metadata.add( metadata.size() - 1, " * DOM: " + getUpdateSiteForDOMPlugin( selectedDOMPlugin ) );
+        for( final String selectedDOMPlugin : selectedBundles )
+            metadata.add( metadata.size() - 1, " * Include-Bundle: " + getUpdateSiteForDOMPlugin( selectedDOMPlugin ) );
         final String contents = join( metadata.toArray( new String[ 0 ] ), "\n" ) + "\n" + stripMetadata( getContents( script ) );
         script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
         script.refreshLocal( DEPTH_ONE, null );
     }
-    private Set< String > openSelectDOMsDialog( final Set< String > availableDOMPlugins )
+    private Set< String > openSelectBundlesDialog( final Set< String > availablePlugins )
     {
-        if( availableDOMPlugins == null || availableDOMPlugins.size() == 0 )
-            return new LinkedHashSet< String >();
-        final AddDialog dialog = createAddDOMDialog( shell(), availableDOMPlugins );
+        if( availablePlugins == null || availablePlugins.size() == 0 )
+            return new TreeSet< String >();
+        final AddDialog dialog = createAddBundleDialog( shell(), availablePlugins );
         final int returnCode = dialog.open();
         if( returnCode != Window.OK )
-            return new LinkedHashSet< String >();
+            return new TreeSet< String >();
         return dialog.selected();
     }
-    private Set< String > getUnusedDOMs( final IFile script ) 
+    private Set< String > getUnusedBundles( final IFile script ) 
     throws CoreException, IOException
     {
         final ScriptMetadata data = getScriptMetadata( getContents( script ) );
-        final Set< String > availableDOMPlugins = getDOMPlugins();
-        for( final Iterator< String > iterator = availableDOMPlugins.iterator(); iterator.hasNext(); )
+        final Set< String > installedBundles = getAllAvailableBundles();
+        final Set< String > alreadyIncludedBundles = getBundles( data );
+        for( final Iterator< String > iterator = installedBundles.iterator(); iterator.hasNext(); )
         {
             final String pluginID = iterator.next();
-            if( data.containsDOMByPlugin( pluginID ) )
+            if( alreadyIncludedBundles.contains( pluginID ) )
                 iterator.remove();
         }
-        return availableDOMPlugins;
+        return installedBundles;
     }
     private void saveChangesInEditor( final IEditorPart editor )
     {
