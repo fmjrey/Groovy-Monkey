@@ -12,12 +12,16 @@
 package net.sf.groovyMonkey.actions;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
+import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
+import static net.sf.groovyMonkey.dom.Utilities.openEditor;
+import static net.sf.groovyMonkey.dom.Utilities.shell;
+import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import java.io.ByteArrayInputStream;
@@ -35,6 +39,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -75,14 +80,15 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                 final IFolder destination = findDestinationFor( scriptText );
                 final IFile file = createScriptFile( destination, scriptText );
                 highlightNewScriptInNavigator( file );
+                openEditor( file );
             }
             catch( final CoreException x )
             {
-                openInformation( shell, "Groovy Monkey", "Unable to create the Examples project due to " + x );
+                openInformation( shell, "Groovy Monkey", "Unable to create the " + SCRIPTS_PROJECT  + " project or create Monkey script due to " + x );
             }
             catch( final IOException x )
             {
-                openInformation( shell, "Groovy Monkey", "Unable to create the Examples project due to " + x );
+                openInformation( shell, "Groovy Monkey", "Unable to create the " + SCRIPTS_PROJECT + " project or create a Monkey script due to " + x );
             }
         if( scripts.isEmpty() )
             openInformation( shell, "Groovy Monkey", "Can't find any scripts on clipboard - make sure you include the Jabberwocky-inspired markers at the beginning and ending of the script" );
@@ -162,6 +168,19 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                 final String filename = file.getName();
                 final Matcher match = suffix.matcher( filename );
                 if( match.matches() )
+                {
+                    if( file.exists() && file.getName().equals( metadata.getReasonableFilename() ))
+                    {
+                        final MessageDialog dialog = new MessageDialog( shell(), "Overwrite?", null, "Overwrite existing script: " + file.getName() + " ?", MessageDialog.WARNING, new String[] { "Yes", "No" }, 0 );
+                        if( dialog.open() == 0 )
+                        {
+                            file.delete( true, null );
+                            closeEditor( file );
+                            maxsuffix = -1;
+                            basename = substringBeforeLast( file.getName(), "." );
+                            break;
+                        }
+                    }
                     if( match.group( 2 ) == null )
                         maxsuffix = Math.max( maxsuffix, 0 );
                     else
@@ -169,12 +188,13 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                         final int n = Integer.parseInt( match.group( 2 ) );
                         maxsuffix = Math.max( maxsuffix, n );
                     }
+                }
             }
         }
         final String filename = maxsuffix == -1 ? basename + FILE_EXTENSION : basename + "-" + ( maxsuffix + 1 ) + FILE_EXTENSION;
-        final ByteArrayInputStream stream = new ByteArrayInputStream( script.getBytes() );
         final IFile file = destination.getFile( filename );
-        file.create( stream, false, null );
+        final ByteArrayInputStream stream = new ByteArrayInputStream( script.getBytes() );
+        file.create( stream, true, null );
         stream.close();
         return file;
     }

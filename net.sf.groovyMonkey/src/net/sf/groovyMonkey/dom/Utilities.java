@@ -34,8 +34,12 @@ import org.eclipse.core.runtime.InvalidRegistryObjectException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.Bundle;
 
 public class Utilities 
@@ -330,5 +334,22 @@ public class Utilities
     public static ImageDescriptor imageDescriptor( final String symbolicName )
     {
         return getWorkbench().getSharedImages().getImageDescriptor( symbolicName );
+    }
+    public static void closeEditor( final IFile file )
+    {
+        if( file == null )
+            return;
+        final IEditorPart editorPart = activePage().findEditor( new FileEditorInput( file ) );
+        if( editorPart == null )
+            return;
+        activePage().closeEditor( editorPart, true );
+    }
+    public static void openEditor( final IFile file ) 
+    throws PartInitException
+    {
+        if( file == null )
+            return;
+        final IEditorDescriptor descriptor = getWorkbench().getEditorRegistry().getDefaultEditor( file.getName() );
+        activePage().openEditor( new FileEditorInput( file ), descriptor.getId() );
     }
 }
