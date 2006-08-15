@@ -13,8 +13,8 @@ import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.ISharedImages.IMG_OBJS_INFO_TSK;
 import static org.eclipse.ui.IWorkbenchActionConstants.MB_ADDITIONS;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
@@ -86,7 +86,7 @@ implements IRegistryChangeListener
             public Object[] getElements( final Object inputElement )
             {
                 final Set< String > list = getDOMPlugins();
-                final Set< DOMDescriptor > doms = new LinkedHashSet< DOMDescriptor >();
+                final Set< DOMDescriptor > doms = new TreeSet< DOMDescriptor >();
                 for( final String pluginID : list )
                     doms.add( new DOMDescriptor( remove( getUpdateSiteForDOMPlugin( pluginID ), pluginID ), pluginID ) );
                 return doms.toArray( new DOMDescriptor[ 0 ] );

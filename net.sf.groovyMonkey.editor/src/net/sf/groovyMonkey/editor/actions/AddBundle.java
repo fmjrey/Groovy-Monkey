@@ -1,21 +1,17 @@
 package net.sf.groovyMonkey.editor.actions;
-import static net.sf.groovyMonkey.ScriptMetadata.getMetadataLines;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static net.sf.groovyMonkey.dom.Utilities.error;
 import static net.sf.groovyMonkey.dom.Utilities.getAllAvailableBundles;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
-import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.editor.ScriptContentProvider.getBundles;
 import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddBundleDialog;
-import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import net.sf.groovyMonkey.ScriptMetadata;
@@ -90,10 +86,10 @@ implements IObjectActionDelegate
                                      final Set< String > selectedBundles ) 
     throws CoreException, IOException
     {
-        final List< String > metadata = getMetadataLines( getContents( script ) );
-        for( final String selectedDOMPlugin : selectedBundles )
-            metadata.add( metadata.size() - 1, " * Include-Bundle: " + getUpdateSiteForDOMPlugin( selectedDOMPlugin ) );
-        final String contents = join( metadata.toArray( new String[ 0 ] ), "\n" ) + "\n" + stripMetadata( getContents( script ) );
+        final ScriptMetadata metadata = getScriptMetadata( script );
+        for( final String bundle : selectedBundles )
+            metadata.addIncludedBundle( bundle );
+        final String contents = metadata.toHeader() + stripMetadata( getContents( script ) );
         script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
         script.refreshLocal( DEPTH_ONE, null );
     }
@@ -113,6 +109,10 @@ implements IObjectActionDelegate
         final ScriptMetadata data = getScriptMetadata( getContents( script ) );
         final Set< String > installedBundles = getAllAvailableBundles();
         final Set< String > alreadyIncludedBundles = getBundles( data );
+        for( final String included : alreadyIncludedBundles )
+        {
+            System.out.println( "AddBundle.getUnusedBundles(): included: " + included );
+        }
         for( final Iterator< String > iterator = installedBundles.iterator(); iterator.hasNext(); )
         {
             final String pluginID = iterator.next();

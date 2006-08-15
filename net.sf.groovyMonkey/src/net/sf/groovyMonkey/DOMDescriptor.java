@@ -4,6 +4,7 @@ import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 
 public class DOMDescriptor
+implements Comparable< DOMDescriptor >
 {
     public final String url;
     public final String pluginName;
@@ -30,5 +31,15 @@ public class DOMDescriptor
     public int hashCode()
     {
         return reflectionHashCode( this );
+    }
+    public int compareTo( final DOMDescriptor descriptor )
+    {
+        if( descriptor == null )
+            return 1;
+        if( toString().compareTo( descriptor.toString() ) == 0 )
+            return 0;
+        if( toString().equals( "Default" ) )
+            return 1;
+        return toString().compareTo( descriptor.toString() );
     }
 }

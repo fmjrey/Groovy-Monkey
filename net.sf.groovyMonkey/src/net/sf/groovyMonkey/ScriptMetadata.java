@@ -3,6 +3,7 @@ import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
@@ -23,6 +24,7 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import static org.osgi.framework.Bundle.UNINSTALLED;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -327,34 +330,47 @@ public class ScriptMetadata
         buffer.append( "/*" ).append( "\n" );
         if( isNotBlank( getMenuName() ) )
             buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
+        
         buffer.append( " * Kudos: " + getKudos() ).append( "\n" );
+        
         buffer.append( " * License: " + getLicense() ).append( "\n" );
         if( !getLang().equals( DEFAULT_LANG ) )
             buffer.append( " * LANG: " + getLang() ).append( "\n" );
+        
         if( !getJobMode().equals( DEFAULT_JOB ) )
             buffer.append( " * Job: " + getJobMode() ).append( "\n" );
+        
         if( !getExecMode().equals( DEFAULT_MODE ) )
             buffer.append( " * Exec-Mode: " + getExecMode() ).append( "\n" );
+        
         for( final DOMDescriptor dom : getDOMs() )
-        {
-            if( dom.equals( DEFAULT_DOM ) )
-                continue;
-            buffer.append( " * DOM: " + dom ).append( "\n" );
-        }
+            if( !dom.equals( DEFAULT_DOM ) )
+                buffer.append( " * DOM: " + dom ).append( "\n" );
+        
         for( final String include : getIncludes() )
             buffer.append( " * Include: " + include ).append( "\n" );
+        
         for( final String include : getIncludedBundles() )
-            buffer.append( " * Include-Bundle: " + include ).append( "\n" );
+            if( !include.equals( PLUGIN_ID ) )
+                buffer.append( " * Include-Bundle: " + include ).append( "\n" );
+        
         for( final Subscription subscription : getSubscriptions() )
             buffer.append( " * Listener: " + subscription.getFilter() ).append( "\n" );
+        
         buffer.append( " */" ).append( "\n" );
         buffer.append( "\n" );
         return buffer.toString();
+    }
+    public static ScriptMetadata getScriptMetadata( final IFile file ) 
+    throws CoreException, IOException
+    {
+        return getScriptMetadata( getContents( file ) );
     }
 	public static ScriptMetadata getScriptMetadata( final String contents ) 
     {
 		final ScriptMetadata metadata = new ScriptMetadata();
         metadata.addDOM( DEFAULT_DOM );
+        metadata.addIncludedBundle( PLUGIN_ID );
         Pattern pattern = compile( "^\\s*\\/\\*.*?\\*\\/", DOTALL );
         Matcher matcher = pattern.matcher( contents );
         if( !matcher.find() )

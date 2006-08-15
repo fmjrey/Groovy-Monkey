@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey.editor.actions;
-import static net.sf.groovyMonkey.ScriptMetadata.getMetadataLines;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
@@ -9,14 +8,14 @@ import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddDOMDialog;
-import static org.apache.commons.lang.StringUtils.join;
+import static org.apache.commons.lang.StringUtils.substringBefore;
 import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
+import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.editor.ScriptEditor;
 import org.eclipse.core.resources.IFile;
@@ -89,21 +88,24 @@ implements IObjectActionDelegate
                                   final Set< String > selectedDOMPlugins ) 
     throws CoreException, IOException
     {
-        final List< String > metadata = getMetadataLines( getContents( script ) );
+        final ScriptMetadata metadata = getScriptMetadata( script );
         for( final String selectedDOMPlugin : selectedDOMPlugins )
-            metadata.add( metadata.size() - 1, " * DOM: " + getUpdateSiteForDOMPlugin( selectedDOMPlugin ) );
-        final String contents = join( metadata.toArray( new String[ 0 ] ), "\n" ) + "\n" + stripMetadata( getContents( script ) );
+        {
+            final String updateSiteURL = substringBefore( getUpdateSiteForDOMPlugin( selectedDOMPlugin ), selectedDOMPlugin );
+            metadata.addDOM( new DOMDescriptor( updateSiteURL, selectedDOMPlugin ) );
+        }
+        final String contents = metadata.toHeader() + stripMetadata( getContents( script ) );
         script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
         script.refreshLocal( DEPTH_ONE, null );
     }
     private Set< String > openSelectDOMsDialog( final Set< String > availableDOMPlugins )
     {
         if( availableDOMPlugins == null || availableDOMPlugins.size() == 0 )
-            return new LinkedHashSet< String >();
+            return new TreeSet< String >();
         final AddDialog dialog = createAddDOMDialog( shell(), availableDOMPlugins );
         final int returnCode = dialog.open();
         if( returnCode != Window.OK )
-            return new LinkedHashSet< String >();
+            return new TreeSet< String >();
         return dialog.selected();
     }
     private Set< String > getUnusedDOMs( final IFile script ) 

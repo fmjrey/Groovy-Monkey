@@ -79,7 +79,6 @@ public class Bundler
                 job.join();
             }
         } );
-        System.out.println( job.getResult() + " done with building" );
         return this;
     }
 }
