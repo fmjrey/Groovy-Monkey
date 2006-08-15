@@ -4,6 +4,7 @@ import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
@@ -170,17 +171,20 @@ public class ScriptMetadata
     {
         if( file != null )
             return file.getName();
-        if( isNotBlank( menuName ) )
+        if( isNotBlank( getMenuName() ) )
         {
-            String result = menuName;
-            result = result.replaceAll( " ", "_" );
-            final Pattern illegalChars = compile( "[^\\p{Alnum}_-]" );
-            final Matcher match = illegalChars.matcher( result );
-            result = match.replaceAll( "" );
-            if( !result.equals( "" ) )
-                return result + FILE_EXTENSION;
+            final StringBuffer buffer = new StringBuffer();
+            final String[] array = split( getMenuName(), " " );
+            for( final String token : array )
+                buffer.append( capitalize( stripIllegalChars( token ) ) );
+            if( isNotBlank( buffer.toString() ) )
+                return buffer.toString() + FILE_EXTENSION;
         }
         return "script" + FILE_EXTENSION;
+    }
+    public static String stripIllegalChars( final String string )
+    {
+        return compile( "[^\\p{Alnum}_-]" ).matcher( string ).replaceAll( "" );
     }
     public boolean containsDOMByPlugin( final String pluginID )
     {
