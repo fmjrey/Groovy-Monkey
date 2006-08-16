@@ -31,11 +31,23 @@ import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.util.TreeList;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.jdt.core.IClassFile;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.service.resolver.ExportPackageDescription;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.internal.core.PDECore;
+import org.eclipse.pde.internal.core.PluginModelManager;
 
 public class ScriptContentProvider 
 implements ITreeContentProvider
@@ -183,7 +195,7 @@ implements ITreeContentProvider
             this.parent = parent;
             this.varName = varName;
             this.type = type;
-            this.toString = varName + ": " + type.getName();
+            toString = varName + ": " + type.getName();
         }
         @Override
         public String toString()
@@ -251,6 +263,7 @@ implements ITreeContentProvider
     }
     public static final class ClassDescriptor
     extends Descriptor
+    implements Comparable< ClassDescriptor >
     {
         public final Class clase;
         public final Object parent;
@@ -265,6 +278,10 @@ implements ITreeContentProvider
         {
             return clase.getSimpleName();
         }
+        public int compareTo( final ClassDescriptor descriptor )
+        {
+            return toString().compareTo( descriptor.toString() );
+        }
     }
     private final LangDescriptor lang = new LangDescriptor( DEFAULT_LANG );
     private final JobDescriptor job = new JobDescriptor( DEFAULT_JOB );
@@ -278,6 +295,7 @@ implements ITreeContentProvider
     
     public Object[] getChildren( final Object parentElement )
     {
+        System.out.println( "ScriptContentProvider.getChildren(): " + parentElement + " -> " + parentElement.getClass() );
         if( parentElement instanceof DOMDescriptor )
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
@@ -326,6 +344,53 @@ implements ITreeContentProvider
                 packages.add( new PackageDescriptor( description.getName(), descriptor ) );
             return packages.toArray();
         }
+        if( parentElement instanceof PackageDescriptor )
+        {
+            final PackageDescriptor descriptor = ( PackageDescriptor )parentElement;
+            final Set< ClassDescriptor > clases = new TreeSet< ClassDescriptor >();
+            final IJavaProject javaProject = getSearchableProject( "" + descriptor.parent );
+            if( javaProject == null )
+                return clases.toArray();
+            try
+            {
+                for( final IPackageFragmentRoot root : javaProject.getAllPackageFragmentRoots() )
+                {
+                    final IPackageFragment fragment = root.getPackageFragment( descriptor.name );
+                    if( !fragment.exists() )
+                        continue;
+                    for( final IClassFile classFile : fragment.getClassFiles() )
+                        clases.add( new ClassDescriptor( Class.forName( classFile.getType().getFullyQualifiedName() ), descriptor ) );
+                    for( final ICompilationUnit unit : fragment.getCompilationUnits() )
+                        for( final IType type : unit.getTypes() )
+                            clases.add( new ClassDescriptor( Class.forName( type.getFullyQualifiedName() ), descriptor ) );
+                }
+            }
+            catch( final ClassNotFoundException e )
+            {
+                e.printStackTrace();
+                throw new RuntimeException( e );
+            }
+            catch( final JavaModelException e )
+            {
+                e.printStackTrace();
+                throw new RuntimeException( e );
+            }
+            return clases.toArray();
+        }
+        return null;
+    }
+    private static IJavaProject getSearchableProject( final String projectName )
+    {
+        final PluginModelManager manager = PDECore.getDefault().getModelManager();
+        final IJavaProject javaProject = manager.getSearchablePluginsManager().getProxyProject();
+        if( javaProject != null )
+            return javaProject;
+        for( final IPluginModelBase base : manager.getWorkspaceModels() )
+        {
+            final IProject project = base.getUnderlyingResource().getProject();
+            if( project.getName().equals( projectName ) )
+                return JavaCore.create( project );
+        }
         return null;
     }
     public Object getParent( final Object element )
@@ -351,6 +416,8 @@ implements ITreeContentProvider
         if( element instanceof ClassDescriptor )
             return true;
         if( element instanceof BundleDescriptor )
+            return true;
+        if( element instanceof PackageDescriptor )
             return true;
         return false;
     }
