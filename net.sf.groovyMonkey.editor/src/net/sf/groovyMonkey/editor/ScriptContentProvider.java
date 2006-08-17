@@ -438,10 +438,10 @@ implements ITreeContentProvider
     public Object[] getElements( final Object inputElement )
     {
         final List< Object > elements = new ArrayList< Object >();
-        if( isNotBlank( menu.menu ) )
-            elements.add( menu );
         if( isNotBlank( path.path ) )
             elements.add( path );
+        if( isNotBlank( menu.menu ) )
+            elements.add( menu );
         elements.add( lang );
         elements.add( job );
         elements.add( exec );
