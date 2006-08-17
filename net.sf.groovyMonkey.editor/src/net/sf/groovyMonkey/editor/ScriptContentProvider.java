@@ -135,6 +135,20 @@ implements ITreeContentProvider
             return "Menu: " + menu;
         }
     }
+    public static class ScriptPathDescriptor
+    extends Descriptor
+    {
+        public String path;
+        public ScriptPathDescriptor( final String path )
+        {
+            this.path = path;
+        }
+        @Override
+        public String toString()
+        {
+            return "Script-Path: " + path;
+        }
+    }
     public static class BundleDescriptor
     extends Descriptor
     implements Comparable< BundleDescriptor >
@@ -287,6 +301,7 @@ implements ITreeContentProvider
     private final JobDescriptor job = new JobDescriptor( DEFAULT_JOB );
     private final ExecDescriptor exec = new ExecDescriptor( DEFAULT_MODE );
     private final MenuDescriptor menu = new MenuDescriptor( "" );
+    private final ScriptPathDescriptor path = new ScriptPathDescriptor( "" );
     private final List< ListenerDescriptor > listeners = new ArrayList< ListenerDescriptor >();
     private final List< DOMDescriptor > doms = new ArrayList< DOMDescriptor >();
     private final List< String > includes = new ArrayList< String >();
@@ -295,7 +310,6 @@ implements ITreeContentProvider
     
     public Object[] getChildren( final Object parentElement )
     {
-        System.out.println( "ScriptContentProvider.getChildren(): " + parentElement + " -> " + parentElement.getClass() );
         if( parentElement instanceof DOMDescriptor )
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
@@ -426,6 +440,8 @@ implements ITreeContentProvider
         final List< Object > elements = new ArrayList< Object >();
         if( isNotBlank( menu.menu ) )
             elements.add( menu );
+        if( isNotBlank( path.path ) )
+            elements.add( path );
         elements.add( lang );
         elements.add( job );
         elements.add( exec );
@@ -451,6 +467,7 @@ implements ITreeContentProvider
         {
             data = getScriptMetadata( getContents( script ) );
             menu.menu = defaultString( data.getMenuName() );
+            path.path = defaultString( data.scriptPath() );
             lang.lang = data.getLang();
             job.mode = data.getJobMode();
             exec.mode = data.getExecMode();

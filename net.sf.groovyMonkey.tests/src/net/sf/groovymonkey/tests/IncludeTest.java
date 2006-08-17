@@ -38,19 +38,19 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInDefault()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInGroovy()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
 //    public void testIncludeInPython()
 //    throws Exception
@@ -62,7 +62,7 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
 //    public void testIncludeInTcl()
 //    throws Exception

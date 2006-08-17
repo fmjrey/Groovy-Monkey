@@ -15,7 +15,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.clearScripts;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.removeScript;
 import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
-import static net.sf.groovyMonkey.dom.Utilities.contents;
+import static net.sf.groovyMonkey.ScriptMetadata.refreshScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.isMonkeyScript;
 import static org.eclipse.core.resources.IResourceDelta.ADDED;
 import static org.eclipse.core.resources.IResourceDelta.CHANGED;
@@ -123,15 +123,11 @@ implements IResourceChangeListener
         }
         catch( final CoreException x )
         {
-            metadata = new ScriptMetadata();
-            metadata.setFile( file );
-            // log an error in the error log
+            throw new RuntimeException( x );
         }
         catch( final IOException x )
         {
-            metadata = new ScriptMetadata();
-            metadata.setFile( file );
-            // log an error in the error log
+            throw new RuntimeException( x );
         }
         addScript( name, metadata );
         for( final IMonkeyScriptFactory factory : getScriptFactories().values() )
@@ -175,12 +171,12 @@ implements IResourceChangeListener
             }
         }
     }
-    private ScriptMetadata getMetadataFrom( final IFile file ) 
+    private ScriptMetadata getMetadataFrom( final IFile script ) 
     throws CoreException, IOException
     {
-        final String contents = contents( file );
-        final ScriptMetadata metadata = getScriptMetadata( contents );
-        metadata.setFile( file );
+        final ScriptMetadata metadata = getScriptMetadata( script );
+        metadata.setFile( script );
+        refreshScriptMetadata( script, metadata );
         return metadata;
     }
     public static void createTheMonkeyMenu()

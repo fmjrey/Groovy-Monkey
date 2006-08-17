@@ -34,16 +34,16 @@ implements IStartup
     public static final String MENU_PATH = "groovyMonkeyMenu";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;
-    private final Map< String, ScriptMetadata > scriptStore = synchronizedMap( new HashMap< String, ScriptMetadata >() );
+    private static final Map< String, ScriptMetadata > scriptStore = synchronizedMap( new HashMap< String, ScriptMetadata >() );
     private ServiceTracker tracker = null;
     
-    public Map< String, ScriptMetadata > getScriptStore()
+    public static Map< String, ScriptMetadata > getScriptStore()
     {
         return scriptStore;
     }
     public static Map< String, ScriptMetadata > scriptStore()
     {
-        return getDefault().getScriptStore();
+        return getScriptStore();
     }
     public GroovyMonkeyPlugin()
     {

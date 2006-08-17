@@ -21,6 +21,11 @@ import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.apache.commons.lang.StringUtils.substringAfter;
+import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
@@ -36,7 +41,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -77,8 +81,9 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             try
             {
                 final String scriptText = collapseEscapedNewlines( script );
-                final IFolder destination = findDestinationFor( scriptText );
-                final IFile file = createScriptFile( destination, scriptText );
+                final ScriptMetadata metadata = getScriptMetadata( scriptText );
+                final IFolder destination = findDestinationFor( metadata );
+                final IFile file = createScriptFile( destination, metadata, scriptText );
                 highlightNewScriptInNavigator( file );
                 openEditor( file );
             }
@@ -117,43 +122,56 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             }
         }
     }
-    private IFolder findDestinationFor( final String script ) 
+    private IProject getProject( final String fullPathString ) 
+    throws CoreException
+    {
+        final String pathString = removeStart( fullPathString, "/" );
+        final String path = pathString.indexOf( "/" ) != -1 ? pathString.substring( 0, pathString.indexOf( "/" ) ) : pathString;
+        return getProject( getWorkspace().getRoot().getProject( path ) );
+    }
+    private IProject getProject( final IResource resource ) 
+    throws CoreException
+    {
+        final IProject project = resource.getProject();
+        if( !project.exists() )
+            project.create( null );
+        if( !project.isOpen() )
+            project.open( null );
+        return project;
+    }
+    private IFolder findDestinationFor( final ScriptMetadata metadata ) 
     throws CoreException
     {
         if( selection != null && selection.getFirstElement() instanceof IFolder )
         {
-            final IFolder element = ( IFolder )selection.getFirstElement();
-            if( element.getName().equals( MONKEY_DIR ) )
-                return element;
+            final IFolder folder = ( IFolder )selection.getFirstElement();
+            getProject( folder );
+            if( !folder.exists() )
+                folder.create( IResource.NONE, true, null );
+            return folder;
         }
-        final IWorkspace workspace = getWorkspace();
-        final IProject[] projects = workspace.getRoot().getProjects();
-        IProject project = null;
-        for( final IProject p : projects )
+        if( isNotBlank( metadata.scriptPath() ) )
         {
-            if( p.getName().equals( SCRIPTS_PROJECT ) )
-            {
-                project = p;
-                break;
-            }
+            final String path = substringBeforeLast( metadata.scriptPath(), "/" );
+            final IProject project = getProject( path );
+            final String folderPath = substringAfter( removeStart( path, "/" ), "/" );
+            if( isBlank( folderPath ) )
+                return ( IFolder )project.getAdapter( IFolder.class );
+            return project.getFolder( folderPath );
         }
-        if( project == null )
-        {
-            project = workspace.getRoot().getProject( SCRIPTS_PROJECT );
-            project.create( null );
-            project.open( null );
-        }
+        final IProject project = getProject( getWorkspace().getRoot().getProject( SCRIPTS_PROJECT ) );
         final IFolder folder = project.getFolder( MONKEY_DIR );
         if( !folder.exists() )
             folder.create( IResource.NONE, true, null );
         return folder;
     }
     private IFile createScriptFile( final IFolder destination, 
+                                    final ScriptMetadata metadata,
                                     final String script ) 
     throws CoreException, IOException
     {
-        final ScriptMetadata metadata = getScriptMetadata( script );
-        String basename = metadata.getReasonableFilename();
+        final String defaultName = substringAfterLast( metadata.scriptPath(), "/" );
+        String basename = defaultName;
         final int ix = basename.lastIndexOf( "." );
         if( ix > 0 )
             basename = basename.substring( 0, ix );
@@ -169,7 +187,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                 final Matcher match = suffix.matcher( filename );
                 if( match.matches() )
                 {
-                    if( file.exists() && file.getName().equals( metadata.getReasonableFilename() ))
+                    if( file.exists() && file.getName().equals( defaultName ))
                     {
                         final MessageDialog dialog = new MessageDialog( shell(), "Overwrite?", null, "Overwrite existing script: " + file.getName() + " ?", MessageDialog.WARNING, new String[] { "Yes", "No" }, 0 );
                         if( dialog.open() == 0 )

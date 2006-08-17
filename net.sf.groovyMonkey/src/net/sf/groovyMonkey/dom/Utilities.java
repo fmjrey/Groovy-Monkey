@@ -6,6 +6,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.IStatus.INFO;
 import static org.eclipse.core.runtime.IStatus.OK;
@@ -14,6 +15,7 @@ import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedHashMap;
@@ -55,15 +57,35 @@ public class Utilities
     public static String getContents( final IFile file ) 
     throws CoreException, IOException
     {
+        if( file == null )
+            return "";
         InputStream contents = null;
         try
         {
-            contents = file.getContents();
+            if( !file.isSynchronized( DEPTH_ONE ) )
+                file.refreshLocal( DEPTH_ONE, null );
+            contents = file.getContents( true );
             return IOUtils.toString( contents );
         }
         finally
         {
             closeQuietly( contents );
+        }
+    }
+    public static void setContents( final String contents, 
+                                    final IFile file ) 
+    throws CoreException
+    {
+        if( file == null )
+            return;
+        final byte[] bytes = contents != null ? contents.getBytes() : "".getBytes();
+        try
+        {
+            file.setContents( new ByteArrayInputStream( bytes ), true, false, null );
+        }
+        finally
+        {
+            file.refreshLocal( DEPTH_ONE, null );
         }
     }
     public static boolean isMonkeyScript( final IFile file )

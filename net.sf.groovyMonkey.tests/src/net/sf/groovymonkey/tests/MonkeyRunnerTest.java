@@ -48,12 +48,12 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testMonkeyRunnerJob()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
 }

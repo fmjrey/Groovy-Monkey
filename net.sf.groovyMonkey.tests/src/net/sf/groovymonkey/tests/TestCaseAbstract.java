@@ -10,6 +10,8 @@ import junit.framework.TestCase;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import utmj.threaded.RetriedAssert;
+import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import net.sf.groovymonkey.tests.fixtures.projects.TestJavaProject;
 import net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject;
 
@@ -59,5 +61,17 @@ extends TestCase
          closeQuietly( javaFileInput );
          monkeyProject.dispose();
          javaProject.dispose();
+    }
+    protected void assertTestDOMEquals() 
+    throws Exception
+    {
+        new RetriedAssert( 60000, 500 )
+        {
+            @Override
+            public void run() throws Exception
+            {
+                assertEquals( getName(), TestDOM.string() );
+            }
+        }.start();
     }
 }

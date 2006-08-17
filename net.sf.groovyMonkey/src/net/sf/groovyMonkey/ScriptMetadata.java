@@ -2,12 +2,18 @@ package net.sf.groovyMonkey;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
+import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static net.sf.groovyMonkey.dom.Utilities.setContents;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.chomp;
+import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.apache.commons.lang.StringUtils.removeEnd;
@@ -16,7 +22,9 @@ import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.Platform.getBundle;
+import static org.eclipse.core.runtime.Status.OK_STATUS;
 import static org.eclipse.jface.dialogs.MessageDialog.QUESTION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.eclipse.swt.widgets.Display.getCurrent;
@@ -38,7 +46,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorDescriptor;
@@ -66,6 +78,7 @@ public class ScriptMetadata
     public static final JobModes DEFAULT_JOB = JobModes.Job;
     public static final ExecModes DEFAULT_MODE = ExecModes.Background;
 	private IFile file;
+    private String scriptPath = "";
 	private String menuName = "";
     private String kudos = "";
     private String license = "EPL 1.0";
@@ -131,11 +144,33 @@ public class ScriptMetadata
     }
     public void setMenuName( final String string )
     {
-        menuName = string;
+        menuName = defaultString( string );
+    }
+    public void setScriptPath( final String string )
+    {
+        scriptPath = defaultString( string );
+    }
+    public void setScriptPath()
+    {
+        if( file() != null )
+            scriptPath = defaultString( file().getFullPath().toString() );
+        else
+            scriptPath = "/" + SCRIPTS_PROJECT + "/" + MONKEY_DIR + "/" + getReasonableFilename();
+    }
+    public String getScriptPath()
+    {
+        if( isBlank( scriptPath ) || ( file() != null && !file().getFullPath().toString().equals( scriptPath ) ) )
+            setScriptPath();
+        return scriptPath;
+    }
+    public String scriptPath()
+    {
+        return getScriptPath();
     }
     public void setFile( final IFile file )
     {
         this.file = file;
+        setScriptPath();
     }
     public IFile getFile()
     {
@@ -144,16 +179,6 @@ public class ScriptMetadata
     public IFile file()
     {
         return getFile();
-    }
-    public String path()
-    {
-        return getPath();
-    }
-    private String getPath()
-    {
-        if( file() != null )
-            return file().getFullPath().toPortableString();
-        return getReasonableFilename();
     }
     public String getMenuName()
     {
@@ -167,7 +192,7 @@ public class ScriptMetadata
     {
 		return doms;
 	}
-	public String getReasonableFilename()
+	private String getReasonableFilename()
     {
         if( file != null )
             return file.getName();
@@ -328,12 +353,19 @@ public class ScriptMetadata
         final String choice = choices[ result ];
         return choice;
     }
+    public String header()
+    {
+        return toHeader();
+    }
     public String toHeader()
     {
         final StringBuffer buffer = new StringBuffer();
         buffer.append( "/*" ).append( "\n" );
         if( isNotBlank( getMenuName() ) )
             buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
+        
+        if( isNotBlank( scriptPath() ) )
+            buffer.append( " * Script-Path: " + scriptPath() ).append( "\n" );
         
         buffer.append( " * Kudos: " + getKudos() ).append( "\n" );
         
@@ -385,6 +417,11 @@ public class ScriptMetadata
             if( line.startsWith( "Menu:" ) )
             {
                 metadata.setMenuName( removeStart( line, "Menu:" ).trim() );
+                continue;
+            }
+            if( line.startsWith( "Script-Path:" ) )
+            {
+                metadata.setScriptPath( removeStart( line, "Script-Path:" ).trim() );
                 continue;
             }
             if( line.startsWith( "Kudos:" ) )
@@ -489,6 +526,45 @@ public class ScriptMetadata
             code.add( line );
         }
         return join( code.toArray( new String[ 0 ] ), "\n" );
+    }
+    public static void refreshScriptMetadata( final IFile script,
+                                              final ScriptMetadata metadata )
+    {
+        if( script == null || !script.exists() || metadata == null )
+            return;
+        try
+        {
+            if( metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
+                return;
+        }
+        catch( final CoreException e )
+        {
+            throw new RuntimeException( e );
+        }
+        catch( final IOException e )
+        {
+            throw new RuntimeException( e );
+        }
+        new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
+        {
+            @Override
+            public IStatus runInWorkspace( final IProgressMonitor monitor ) 
+            throws CoreException
+            {
+                try
+                {
+                    if( metadata.header().equals( getScriptMetadata( script ).header() ) )
+                        return Status.OK_STATUS;
+                    setContents( metadata.header() + stripMetadata( contents( script ) ), script );
+                }
+                catch( final IOException e )
+                {
+                    throw new CoreException( new Status( ERROR, PLUGIN_ID, 0, e.getMessage(), e ) );
+                }
+                return OK_STATUS;
+            }
+            
+        }.schedule();
     }
 	public void subscribe()
     {

@@ -1,17 +1,14 @@
 package net.sf.groovyMonkey.editor.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
-import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
+import static net.sf.groovyMonkey.ScriptMetadata.refreshScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static net.sf.groovyMonkey.dom.Utilities.error;
-import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
-import static org.eclipse.core.resources.IResource.DEPTH_ONE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.IStatus.OK;
 import static org.eclipse.jdt.core.JavaCore.NATURE_ID;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -101,9 +98,7 @@ implements IObjectActionDelegate
         final ScriptMetadata metadata = getScriptMetadata( script );
         for( final String include : includes )
             metadata.addInclude( include );
-        final String contents = metadata.toHeader() + stripMetadata( getContents( script ) );
-        script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
-        script.refreshLocal( DEPTH_ONE, null );
+        refreshScriptMetadata( script, metadata );
     }
     private Set< String > openSelectDialog( final Set< String > alreadyIncluded )
     {

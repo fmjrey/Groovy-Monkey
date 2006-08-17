@@ -1,5 +1,7 @@
 package net.sf.groovymonkey.tests;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import junit.framework.TestCase;
 import net.sf.groovyMonkey.ScriptMetadata;
 
@@ -10,14 +12,19 @@ extends TestCase
     {
         final ScriptMetadata data = new ScriptMetadata();
         data.setMenuName( "This is a test" );
-        assertEquals( "ThisIsATest" + FILE_EXTENSION, data.getReasonableFilename() );
+        final String defaultPath = "/" + SCRIPTS_PROJECT + "/" + MONKEY_DIR + "/";
+        assertEquals( defaultPath + "ThisIsATest" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( "ABCD@#$%@$#DEFG" );
-        assertEquals( "ABCDDEFG" + FILE_EXTENSION, data.getReasonableFilename() );
+        data.setFile( null );
+        assertEquals( defaultPath + "ABCDDEFG" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( "!!!+++" );
-        assertEquals( "script" + FILE_EXTENSION, data.getReasonableFilename() );
+        data.setFile( null );
+        assertEquals( defaultPath + "script" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( null );
-        assertEquals( "script" + FILE_EXTENSION, data.getReasonableFilename() );
+        data.setFile( null );
+        assertEquals( defaultPath + "script" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( "Explore > JDT" );
-        assertEquals( "ExploreJDT" + FILE_EXTENSION, data.getReasonableFilename() );
+        data.setFile( null );
+        assertEquals( defaultPath + "ExploreJDT" + FILE_EXTENSION, data.scriptPath() );
     }
 }

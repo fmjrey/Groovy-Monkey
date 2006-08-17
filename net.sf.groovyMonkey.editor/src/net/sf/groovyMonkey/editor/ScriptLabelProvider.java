@@ -12,6 +12,7 @@ import net.sf.groovyMonkey.editor.ScriptContentProvider.ListenerDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MenuDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.MethodDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.PackageDescriptor;
+import net.sf.groovyMonkey.editor.ScriptContentProvider.ScriptPathDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider.VarDescriptor;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -56,6 +57,8 @@ extends LabelProvider
             return icon( "package_obj.gif" );
         if( element instanceof ListenerDescriptor )
             return icon( "annotation_obj.gif" );
+        if( element instanceof ScriptPathDescriptor )
+            return icon( "fldr_obj.gif" );
         return super.getImage( element );
     } 
 }

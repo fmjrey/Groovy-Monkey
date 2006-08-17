@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor.actions;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
-import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
+import static net.sf.groovyMonkey.ScriptMetadata.refreshScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static net.sf.groovyMonkey.dom.Utilities.error;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
@@ -9,8 +9,6 @@ import static net.sf.groovyMonkey.dom.Utilities.getUpdateSiteForDOMPlugin;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddDOMDialog;
 import static org.apache.commons.lang.StringUtils.substringBefore;
-import static org.eclipse.core.resources.IResource.DEPTH_ONE;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -94,9 +92,7 @@ implements IObjectActionDelegate
             final String updateSiteURL = substringBefore( getUpdateSiteForDOMPlugin( selectedDOMPlugin ), selectedDOMPlugin );
             metadata.addDOM( new DOMDescriptor( updateSiteURL, selectedDOMPlugin ) );
         }
-        final String contents = metadata.toHeader() + stripMetadata( getContents( script ) );
-        script.setContents( new ByteArrayInputStream( contents.getBytes() ), true, false, null );
-        script.refreshLocal( DEPTH_ONE, null );
+        refreshScriptMetadata( script, metadata );
     }
     private Set< String > openSelectDOMsDialog( final Set< String > availableDOMPlugins )
     {

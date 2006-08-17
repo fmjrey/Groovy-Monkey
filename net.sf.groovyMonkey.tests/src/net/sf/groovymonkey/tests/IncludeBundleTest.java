@@ -40,30 +40,30 @@ extends TestCaseAbstract
     throws Exception
     {
         assertEquals( getName(), runMonkeyScript( script ) );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInBundleDefault()
     throws Exception
     {
         assertEquals( getName(), runMonkeyScript( script ) );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInBundleGroovy()
     throws Exception
     {
         assertEquals( getName(), runMonkeyScript( script ) );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInBundleRuby()
     throws Exception
     {
         assertEquals( getName(), runMonkeyScript( script ) );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testIncludeInBundleTcl()
     throws Exception
     {
         assertEquals( getName(), runMonkeyScript( script ) );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
 }

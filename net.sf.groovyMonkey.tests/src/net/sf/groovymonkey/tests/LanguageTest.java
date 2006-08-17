@@ -37,36 +37,36 @@ extends TestCaseAbstract
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testDefaultRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testGroovyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testPythonRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testRubyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
     public void testTclRuntime()
     throws Exception
     {
         runMonkeyScript( script );
-        assertEquals( getName(), TestDOM.string() );
+        assertTestDOMEquals();
     }
 }
