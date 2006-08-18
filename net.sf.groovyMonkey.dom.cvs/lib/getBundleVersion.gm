@@ -1,13 +1,13 @@
 /*
+ * Script-Path: /net.sf.groovyMonkey.dom.cvs/lib/getBundleVersion.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
  */
+
 import java.util.jar.Manifest
 import org.apache.commons.lang.Validate
-
 Validate.notNull( bsf.lookupBean( 'plugin' ), 'plugin must be set' )
-
 def file = workspace.getRoot().getProject( plugin ).getFile( 'META-INF/MANIFEST.MF' )
 def input = file.getContents()
 try

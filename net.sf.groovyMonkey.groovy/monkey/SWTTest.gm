@@ -1,10 +1,12 @@
 /*
  * Menu: Test SWT - Groovy
+ * Script-Path: /net.sf.groovyMonkey.groovy/monkey/SWTTest.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
- * DOM: http://groovy-monkey.sourceforge.net/update/plugins/groovy.swt
  * Job: UIJob
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/groovy.swt
  */
+
  
  def subapp = jface.shell( window.getShell() ) 
  {	

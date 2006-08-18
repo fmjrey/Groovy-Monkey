@@ -1,8 +1,10 @@
 /*
  * Menu: testUpdateLocalBundle
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeLocalBundleTest/testUpdateLocalBundle.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: file://tmp/PDEJUnit/IncludeLocalBundleTest/testUpdateLocalBundle/net.sf.test.dom
  */
+
  assert testingDOM.getClass().getSimpleName() == 'CopyOfTestingDOM'
  

@@ -1,9 +1,11 @@
 /*
  * Menu: testIncludeInPython
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeTest/testIncludeInPython.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * LANG: Python
  * Include: TestJavaProject/bin
  */
+
 dom = Class.forName( 'net.sf.groovymonkey.tests.TestInclude' ).newInstance()
 dom.callDOM( 'testIncludeInPython' )

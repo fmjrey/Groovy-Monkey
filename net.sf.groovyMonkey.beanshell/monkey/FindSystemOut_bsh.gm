@@ -1,5 +1,6 @@
 /*
  * Menu: Find System Prints > Beanshell
+ * Script-Path: /net.sf.groovyMonkey.beanshell/monkey/FindSystemOut_bsh.gm
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Beanshell

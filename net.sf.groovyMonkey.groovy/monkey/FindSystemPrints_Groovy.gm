@@ -1,10 +1,12 @@
 /*
  * Menu: Find System Prints > Groovy
+ * Script-Path: /net.sf.groovyMonkey.groovy/monkey/FindSystemPrints_Groovy.gm
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
- * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
  * Exec-Mode: Foreground
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
  */
+
 def files = resources.filesMatching( '.*\\.java' )
 monitor.beginTask( '', files.size() )
 if( monitor.isCanceled() )

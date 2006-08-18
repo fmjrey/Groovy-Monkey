@@ -1,10 +1,11 @@
 /*
  * Menu: monkeyRunner
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/MonkeyRunnerTest/monkeyRunner.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
- * LANG: Groovy
  * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
+
 testDom.callDOM( message )
 def returnValue = [ : ]
 returnValue.message = message

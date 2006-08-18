@@ -1,11 +1,13 @@
 /*
  * Menu: testIncludeInBundleRuby
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeBundleTest/testIncludeInBundleRuby.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * LANG: Ruby
  * Include-Bundle: net.sf.groovyMonkey.tests
  * Include-Bundle: org.apache.ant
  */
+
 require 'java'
 include_class 'org.apache.tools.ant.Main'
 antMain = Main.new

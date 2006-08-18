@@ -1,11 +1,13 @@
 /*
  * Menu: Open Dialog > Beanshell
+ * Script-Path: /net.sf.groovyMonkey.beanshell/monkey/OpenDialog_Beanshell.gm
  * Kudos: ervinja
  * License: EPL 1.0
  * LANG: Beanshell
  * Job: UIJob
  * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
  */
+
 out.println( "hello world from Beanshell" );
 org.eclipse.jface.dialogs.MessageDialog.openInformation( window.getShell(), 
 														 "Monkey Dialog", 

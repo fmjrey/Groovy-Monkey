@@ -1,34 +1,32 @@
 /*
  * Menu: Get Eclipse Icons > Refactored DOM
+ * Script-Path: /net.sf.groovyMonkey.dom.cvs/monkey/getEclipseIcons.gm
  * Kudos: ervinja
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom.cvs
  * Include-Bundle: org.eclipse.team.cvs.core
  * Include-Bundle: org.eclipse.team.cvs.ui
- * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom.cvs
  */
+
 import org.apache.commons.lang.Validate
 import org.eclipse.core.resources.IResource
 import org.eclipse.core.runtime.SubProgressMonitor
-
 // Here we find the desired repository location that has already been configured
 //  in the CVS Respository Explorer.
 def cvsRepository = ':pserver:anonymous@dev.eclipse.org:/home/eclipse'
 def repositoryLoc = cvsDOM.getKnownRepository( cvsRepository )
 Validate.notNull( repositoryLoc, "Error could not find the repository ${cvsRepository}, has it been added to the CVS Repository Explorer?" )
-
 // Here we query all the remote repository top level projects for sub-folders
 //  called icons and then store them into a list for later use.
 def iconFolders = cvsDOM.getRepositoryResources( new SubProgressMonitor( monitor, 1 ), repositoryLoc, 'icons' )
 if( iconFolders == null )
 	return
-
 // Check out those icon folders under a sub-folder of the target project called
 //  icons and place each remote icon folder in a sub-folder of icons that corresponds
 //  to its project name.
 def targetProject = workspace.getRoot().getProject( 'GroovyMonkeyExamples' )
 cvsDOM.checkOut( new SubProgressMonitor( monitor, 1 ), iconFolders, targetProject.getFolder( 'icons' ), true )
-
 // Build the eclipse-icons.zip file using AntBuilder
 def baseDir = targetProject.getFolder( 'icons' )
 def destFile = targetProject.getFile( 'eclipse-icons.zip' )

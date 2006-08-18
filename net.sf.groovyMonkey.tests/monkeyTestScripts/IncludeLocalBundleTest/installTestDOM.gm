@@ -1,17 +1,17 @@
 /*
  * Menu: Install Test DOM
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeLocalBundleTest/installTestDOM.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
  */
+
 import java.io.File
 import org.apache.commons.io.FileUtils
-
 def plugin = 'net.sf.test.dom'
 def map = [ : ]
 map.pluginToUninstall = plugin
 runnerDOM.runScript( window, "TestMonkeyProject/lib/uninstall.gm", map )
-
 def context = bundleDOM.context()
 def installedBundle = context.installBundle( "file:" + deployDir + "/" + plugin + "_" + bundleVersion + ".jar" )
 installedBundle.start()

@@ -1,9 +1,10 @@
 /*
  * Menu: testMonkeyRunner
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/MonkeyRunnerTest/testMonkeyRunner.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
- * LANG: Groovy
  */
+
 def map = [ : ]
 map.message = 'testMonkeyRunner'
 def returned = runnerDOM.runScript( window, '/TestMonkeyProject/includedScripts/monkeyRunner.gm', map, monitor )

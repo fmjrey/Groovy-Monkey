@@ -1,10 +1,11 @@
 /*
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeLocalBundleTest/lib/getBundleVersion.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
  */
-import java.util.jar.Manifest
 
+import java.util.jar.Manifest
 def file = workspace.getRoot().getProject( plugin ).getFile( 'META-INF/MANIFEST.MF' )
 def input = file.getContents()
 try

@@ -1,10 +1,12 @@
 /*
  * Menu: Find System Prints > Ruby
+ * Script-Path: /net.sf.groovyMonkey.ruby/monkey/FindSystemPrints_Ruby.gm
  * Kudos: Bjorn Freeman-Benson & Ward Cunningham & James E. Ervin
  * License: EPL 1.0
  * LANG: Ruby
  * Job: UIJob
  */
+
  files = $resources.filesMatching( ".*\\.java" )
  for file in files
 	file.removeMyTasks( $metadata.path() )
