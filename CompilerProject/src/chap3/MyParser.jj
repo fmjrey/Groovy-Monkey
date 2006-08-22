@@ -1,0 +1,34 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.5";
+}
+PARSER_BEGIN(MyParser)
+package chap3;
+@SuppressWarnings({"static-access","unused"})
+class MyParser 
+{
+}
+PARSER_END(MyParser)
+
+SKIP :
+{
+	<"--" (["a"-"z"])* ( "\n" | "\r" | "\r\n" )>
+	| " "
+	| "\t"
+	| "\n"
+}
+TOKEN :
+{
+	< IF: "if" >
+	| < #DIGIT: [ "0" - "9" ] >
+	| < ID: [ "a" - "z" ] ( [ "a" - "z" ] | <DIGIT> )* >
+	| < NUM: (<DIGIT>)+ >
+	| < REAL: ((<DIGIT>)+ "." (<DIGIT>)*) | ((<DIGIT>)* "." (<DIGIT>)+) >
+}
+
+void Start():
+{}
+{ ( <IF> | <ID> | <NUM> | <REAL> )* }
