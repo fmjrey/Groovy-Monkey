@@ -307,6 +307,7 @@ implements ITreeContentProvider
     private final List< String > includes = new ArrayList< String >();
     private final List< BundleDescriptor > bundles = new TreeList< BundleDescriptor >();
     private ScriptMetadata data = null;
+    private boolean flat = false;
     
     public Object[] getChildren( final Object parentElement )
     {
@@ -446,10 +447,27 @@ implements ITreeContentProvider
         elements.add( job );
         elements.add( exec );
         elements.addAll( listeners );
+        if( !flat )
+            hierarchicalView( elements );
+        else
+            flatView( elements );
+        return elements.toArray();
+    }
+    private void hierarchicalView( final List< Object > elements )
+    {
         elements.addAll( doms );
         elements.addAll( includes );
         elements.addAll( bundles );
-        return elements.toArray();
+    }
+    private void flatView( final List< Object > elements )
+    {
+        for( final DOMDescriptor dom : doms )
+            for( final Object child : getChildren( dom ) )
+                elements.add( child );
+        elements.addAll( includes );
+        for( final BundleDescriptor bundle : bundles )
+            for( final Object child : getChildren( bundle ) )
+                elements.add( child );
     }
     public void dispose()
     {
@@ -542,5 +560,9 @@ implements ITreeContentProvider
     public boolean diff( final ScriptMetadata data )
     {
         return !ObjectUtils.equals( this.data, data );
+    }
+    public void setViewLayout( final boolean flat )
+    {
+        this.flat = flat;
     }
 }

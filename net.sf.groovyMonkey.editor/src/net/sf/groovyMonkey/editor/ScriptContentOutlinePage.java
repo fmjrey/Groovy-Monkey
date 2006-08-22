@@ -1,6 +1,9 @@
 package net.sf.groovyMonkey.editor;
 import static org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
+import net.sf.groovyMonkey.editor.actions.FlatOutlineViewAction;
+import net.sf.groovyMonkey.editor.actions.HierarchicalOutlineViewAction;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
@@ -27,6 +30,13 @@ extends ContentOutlinePage
         listener = new ScriptResourceChangeListener( viewer, contentProvider );
         getWorkspace().addResourceChangeListener( listener, POST_CHANGE );
         viewer.addDoubleClickListener( new ScriptOutlineDoubleClickAction() );
+        final IMenuManager manager = getSite().getActionBars().getMenuManager();
+        final HierarchicalOutlineViewAction hierarchy = new HierarchicalOutlineViewAction( contentProvider, listener );
+        final FlatOutlineViewAction flat = new FlatOutlineViewAction( contentProvider, listener );
+        hierarchy.setOtherAction( flat );
+        flat.setOtherAction( hierarchy );
+        manager.add( hierarchy );
+        manager.add( flat );
     }
     public void setInput( final IEditorInput editorInput )
     {

@@ -76,7 +76,7 @@ implements IResourceChangeListener
         if( anyMatches && diff( changedFile[ 0 ] ) )
             updateViewer();
     }
-    private void updateViewer()
+    public void updateViewer()
     {
         if( getCurrent() == null )
         {

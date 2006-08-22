@@ -32,6 +32,7 @@ implements IStartup
     public static final String MONKEY_DIR = "monkey";
     public static final String SCRIPTS_PROJECT = "GroovyMonkeyScripts";
     public static final String MENU_PATH = "groovyMonkeyMenu";
+    public static final String ICON_PATH = "icons/";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;
     private static final Map< String, ScriptMetadata > scriptStore = synchronizedMap( new HashMap< String, ScriptMetadata >() );
@@ -116,7 +117,7 @@ implements IStartup
         final Image image = registry().get( name );
         if( image != null )
             return image;
-        registry().put( name, getImageDescriptor( "icons/" + name ) );
+        registry().put( name, getImageDescriptor( ICON_PATH + name ) );
         return registry().get( name );
     }
     public static BundleContext context()
