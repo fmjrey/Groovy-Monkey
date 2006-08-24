@@ -9,9 +9,9 @@
 
  files = $resources.filesMatching( ".*\\.java" )
  for file in files
-	file.removeMyTasks( $metadata.path() )
+	file.removeMyTasks( $metadata.scriptPath() )
 	for line in file.getLines()
-		line.addMyTask( $metadata.path(), line.getString().to_s().strip() ) if line.getString().to_s() =~ /System\.out\.print(ln)? *\(.*\)/
+		line.addMyTask( $metadata.scriptPath(), line.getString().to_s().strip() ) if line.getString().to_s() =~ /System\.out\.print(ln)? *\(.*\)/
 	end
  end
  

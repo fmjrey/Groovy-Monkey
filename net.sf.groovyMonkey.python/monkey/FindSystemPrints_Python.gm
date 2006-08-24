@@ -9,9 +9,9 @@
 
 files = resources.filesMatching('.*\\.java')
 for file in files:
-	file.removeMyTasks( metadata.path() )
+	file.removeMyTasks( metadata.scriptPath() )
 	lines = file.lines
 	for line in lines:
 		if line.getString().find( 'System.out.print' ) != -1:
-			line.addMyTask( metadata.path(), line.getString().strip() )
+			line.addMyTask( metadata.scriptPath(), line.getString().strip() )
 window.getActivePage().showView( 'org.eclipse.ui.views.TaskList' )

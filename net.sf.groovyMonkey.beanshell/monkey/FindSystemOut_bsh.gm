@@ -9,12 +9,12 @@
 files = resources.filesMatching( ".*\\.java" );
 for( i = 0; i < files.length; i++ )
 {
-  files[i].removeMyTasks( metadata.path() );
+  files[i].removeMyTasks( metadata.scriptPath() );
   lines = files[i].lines;
   for( j = 0; j < lines.size(); j++ ) 
   {
     if( lines.get( j ).string.contains( "System.out.print" ) )
-       lines.get( j ).addMyTask( metadata.path(), lines.get( j ).string.trim() );
+       lines.get( j ).addMyTask( metadata.scriptPath(), lines.get( j ).string.trim() );
   }
 }
 final Runnable runnable = new Runnable()

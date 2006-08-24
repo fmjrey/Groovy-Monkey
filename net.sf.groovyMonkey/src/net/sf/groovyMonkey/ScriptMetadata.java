@@ -5,9 +5,13 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
+import static net.sf.groovyMonkey.Tags.getTag;
+import static net.sf.groovyMonkey.Tags.getTagText;
 import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.setContents;
+import static net.sf.groovyMonkey.util.ListUtils.caseless;
+import static net.sf.groovyMonkey.util.ListUtils.list;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.defaultString;
@@ -22,6 +26,7 @@ import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+import static org.eclipse.core.resources.IResource.DEPTH_INFINITE;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.Platform.getBundle;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
@@ -45,7 +50,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -88,8 +95,257 @@ public class ScriptMetadata
     private final Set< String > includes = new LinkedHashSet< String >();
     private final Set< String > includedBundles = new LinkedHashSet< String >();
     private JobModes jobMode = DEFAULT_JOB;
-    private ExecModes execMode = DEFAULT_MODE; 
+    private ExecModes execMode = DEFAULT_MODE;
+    private final Set< Marker > markers = new HashSet< Marker >();
     
+    public static List< String > getMetadataLines( final String contents )
+    {
+        final String[] lines = split( contents, "\r\n" );
+        final List< String > code = new ArrayList< String >();
+        boolean started = false;
+        boolean finished = false;
+        for( final String line : lines )
+        {
+            if( strip( line ).startsWith( "/*" ) )
+            {
+                started = true;
+                code.add( line );
+                continue;
+            }
+            if( strip( line ).endsWith( "*/" ) )
+            {
+                finished = true;
+                code.add( line );
+                continue;
+            }
+            if( started && !finished )
+            {
+                code.add( line );
+                continue;
+            }
+        }
+        return code;
+    }
+    public static String stripMetadata( final String contents )
+    {
+        final String[] lines = split( contents, "\r\n" );
+        final List< String > code = new ArrayList< String >();
+        boolean started = false;
+        boolean finished = false;
+        for( final String line : lines )
+        {
+            if( strip( line ).startsWith( "/*" ) )
+            {
+                started = true;
+                continue;
+            }
+            if( strip( line ).endsWith( "*/" ) )
+            {
+                finished = true;
+                continue;
+            }
+            if( started && !finished )
+                continue;
+            code.add( line );
+        }
+        return join( code.toArray( new String[ 0 ] ), "\n" );
+    }
+    public static ScriptMetadata getScriptMetadata( final IFile file ) 
+    throws CoreException, IOException
+    {
+        return getScriptMetadata( getContents( file ) );
+    }
+    public static ScriptMetadata getScriptMetadata( final String contents ) 
+    {
+        System.out.printf( "ScriptMetadata.getScriptMetadata(): ", contents );
+        final ScriptMetadata metadata = new ScriptMetadata();
+        metadata.addDOM( DEFAULT_DOM );
+        metadata.addIncludedBundle( PLUGIN_ID );
+        Pattern pattern = compile( "^\\s*\\/\\*.*?\\*\\/", DOTALL );
+        Matcher matcher = pattern.matcher( contents );
+        if( !matcher.find() )
+            return metadata; // no meta-data comment - do nothing
+        int lineNumber = 0;
+        int eolOffset = 0;
+        for( final String lineString : split( matcher.group(), "\r\n" ) )
+        {
+            eolOffset += lineString.length();
+            lineNumber++;
+            final String line = removeEnd( removeEnd( removeStart( removeStart( lineString.trim(), "/" ), "*" ).trim(), "/" ).trim(), "*" ).trim();
+            if( isBlank( line ) )
+                continue;
+            if( line.startsWith( getTag( Tags.Type.PATH ) ) )
+            {
+                metadata.setScriptPath( removeStart( line, getTag( Tags.Type.PATH ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.MENU ) ) )
+            {
+                metadata.setMenuName( removeStart( line, getTag( Tags.Type.MENU ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.KUDOS ) ) )
+            {
+                metadata.setKudos( removeStart( line, getTag( Tags.Type.KUDOS ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.LICENSE ) ) )
+            {
+                metadata.setLicense( removeStart( line, getTag( Tags.Type.LICENSE ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.DOM ) ) )
+            {
+                pattern = compile( getTag( Tags.Type.DOM ) + "\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
+                matcher = pattern.matcher( line );
+                if( matcher.find() )
+                    metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.LISTENER ) ) )
+            {
+                final String filter = removeStart( line, getTag( Tags.Type.LISTENER ) ).trim();
+                if( isBlank( filter ) )
+                    metadata.markers.add( Marker.warning( "Empty filter string: matches all resource changed events.", lineNumber ) );
+                metadata.subscriptions.add( new Subscription( metadata, filter ) );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.LANG ) ) )
+            {
+                final String langName = removeStart( line, getTag( Tags.Type.LANG ) ).trim();
+                final Map< String, IMonkeyScriptFactory > languages = RunMonkeyScript.getScriptFactories();
+                if( !languages.containsKey( langName ) )
+                {
+                    final int charStart = lineString.indexOf( langName ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charEnd = charStart + langName.length();
+                    metadata.markers.add( Marker.error( "Error language: " + langName + " is not currently supported. Supported: " + languages.keySet(), lineNumber, charStart, charEnd ) );
+                }
+                metadata.setLang( langName );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.INCLUDE ) ) )
+            {
+                metadata.addInclude( removeStart( line, getTag( Tags.Type.INCLUDE ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.INCLUDE_BUNDLE ) ) )
+            {
+                metadata.addIncludedBundle( removeStart( line, getTag( Tags.Type.INCLUDE_BUNDLE ) ).trim() );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.JOB ) ) )
+            {
+                final String jobType = removeStart( line, getTag( Tags.Type.JOB ) ).trim();
+                if( !caseless( JobModes.values() ).contains( jobType ) )
+                {
+                    final int charStart = lineString.indexOf( jobType ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charEnd = charStart + jobType.length();
+                    metadata.markers.add( Marker.error( "Error no Job Type: " + jobType + " supported. Supported: " + list( JobModes.values() ), lineNumber, charStart, charEnd ) );
+                }
+                metadata.setJobMode( jobType );
+                continue;
+            }
+            if( line.startsWith( getTag( Tags.Type.EXEC_MODE ) ) )
+            {
+                final String execModeType = removeStart( line, getTag( Tags.Type.EXEC_MODE ) ).trim();
+                if( !caseless( ExecModes.values() ).contains( execModeType ) )
+                {
+                    final int charStart = lineString.indexOf( execModeType ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charEnd = charStart + execModeType.length();
+                    metadata.markers.add( Marker.error( "Error no Exec-Mode Type: " + execModeType + " supported. Supported: " + list( ExecModes.values() ), lineNumber, charStart, charEnd ) );
+                }
+                metadata.setExecMode( execModeType );
+                continue;
+            }
+            metadata.markers.add( Marker.error( "Error no identifiable tag: " + line, lineNumber ) );
+        }
+        return metadata;
+    }
+    public static void refreshScriptMetadata( final IFile script,
+                                              final ScriptMetadata metadata )
+    {
+        if( script == null || !script.exists() || metadata == null )
+            return;
+        try
+        {
+            if( metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
+            {
+                new WorkspaceJob( "Refreshing markers for script: " + script.getName() )
+                {
+                    @Override
+                    public IStatus runInWorkspace( final IProgressMonitor monitor ) 
+                    throws CoreException
+                    {
+                        setMarkers( script );
+                        return Status.OK_STATUS;
+                    }                    
+                }.schedule();
+                return;
+            }
+        }
+        catch( final CoreException e )
+        {
+            throw new RuntimeException( e );
+        }
+        catch( final IOException e )
+        {
+            throw new RuntimeException( e );
+        }
+        new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
+        {
+            @Override
+            public IStatus runInWorkspace( final IProgressMonitor monitor ) 
+            throws CoreException
+            {
+                try
+                {
+                    if( metadata.header().equals( getScriptMetadata( script ).header() ) )
+                        return Status.OK_STATUS;
+                    setContents( metadata.header() + stripMetadata( contents( script ) ), script );
+                }
+                catch( final IOException e )
+                {
+                    throw new CoreException( new Status( ERROR, PLUGIN_ID, 0, e.getMessage(), e ) );
+                }
+                finally
+                {
+                    setMarkers( script );
+                }
+                return OK_STATUS;
+            }
+        }.schedule();
+    }
+    public static void setMarkers( final IFile script ) 
+    throws CoreException
+    {
+        if( script == null || !script.exists() )
+            return;
+        try
+        {
+            script.deleteMarkers( IMarker.PROBLEM, true, DEPTH_INFINITE );
+            final ScriptMetadata metadata = getScriptMetadata( script );
+            for( final Marker marker : metadata.markers() )
+            {
+                final IMarker m = script.createMarker( IMarker.PROBLEM );
+                m.setAttribute( IMarker.SEVERITY, marker.severity() );
+                m.setAttribute( IMarker.MESSAGE, marker.message() );
+                if( marker.lineNumber() != -1 )
+                    m.setAttribute( IMarker.LINE_NUMBER, marker.lineNumber() );
+                if( marker.charStart() != -1 )
+                    m.setAttribute( IMarker.CHAR_START, marker.charStart() );
+                if( marker.charEnd() != -1 )
+                    m.setAttribute( IMarker.CHAR_END, marker.charEnd() );
+            }
+        }
+        catch( final IOException e )
+        {
+            throw new CoreException( new Status( ERROR, PLUGIN_ID, 0, e.getMessage(), e ) );
+        }
+    }
+    public static String stripIllegalChars( final String string )
+    {
+        return compile( "[^\\p{Alnum}_-]" ).matcher( string ).replaceAll( "" );
+    }
     public void setJobMode( final String jobMode )
     {
         for( final JobModes mode : JobModes.values() )
@@ -206,10 +462,6 @@ public class ScriptMetadata
                 return buffer.toString() + FILE_EXTENSION;
         }
         return "script" + FILE_EXTENSION;
-    }
-    public static String stripIllegalChars( final String string )
-    {
-        return compile( "[^\\p{Alnum}_-]" ).matcher( string ).replaceAll( "" );
     }
     public boolean containsDOMByPlugin( final String pluginID )
     {
@@ -362,209 +614,40 @@ public class ScriptMetadata
         final StringBuffer buffer = new StringBuffer();
         buffer.append( "/*" ).append( "\n" );
         if( isNotBlank( getMenuName() ) )
-            buffer.append( " * Menu: " + getMenuName() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.MENU ) + getMenuName() ).append( "\n" );
         
         if( isNotBlank( scriptPath() ) )
-            buffer.append( " * Script-Path: " + scriptPath() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.PATH ) + scriptPath() ).append( "\n" );
         
-        buffer.append( " * Kudos: " + getKudos() ).append( "\n" );
+        buffer.append( getTagText( Tags.Type.KUDOS ) + getKudos() ).append( "\n" );
         
-        buffer.append( " * License: " + getLicense() ).append( "\n" );
+        buffer.append( getTagText( Tags.Type.LICENSE ) + getLicense() ).append( "\n" );
         if( !getLang().equals( DEFAULT_LANG ) )
-            buffer.append( " * LANG: " + getLang() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.LANG ) + getLang() ).append( "\n" );
         
         if( !getJobMode().equals( DEFAULT_JOB ) )
-            buffer.append( " * Job: " + getJobMode() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.JOB ) + getJobMode() ).append( "\n" );
         
         if( !getExecMode().equals( DEFAULT_MODE ) )
-            buffer.append( " * Exec-Mode: " + getExecMode() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.EXEC_MODE ) + getExecMode() ).append( "\n" );
         
         for( final DOMDescriptor dom : getDOMs() )
             if( !dom.equals( DEFAULT_DOM ) )
-                buffer.append( " * DOM: " + dom ).append( "\n" );
+                buffer.append( getTagText( Tags.Type.DOM ) + dom ).append( "\n" );
         
         for( final String include : getIncludes() )
-            buffer.append( " * Include: " + include ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.INCLUDE ) + include ).append( "\n" );
         
         for( final String include : getIncludedBundles() )
             if( !include.equals( PLUGIN_ID ) )
-                buffer.append( " * Include-Bundle: " + include ).append( "\n" );
+                buffer.append( getTagText( Tags.Type.INCLUDE_BUNDLE ) + include ).append( "\n" );
         
         for( final Subscription subscription : getSubscriptions() )
-            buffer.append( " * Listener: " + subscription.getFilter() ).append( "\n" );
+            buffer.append( getTagText( Tags.Type.LISTENER ) + subscription.getFilter() ).append( "\n" );
         
         buffer.append( " */" ).append( "\n" );
         buffer.append( "\n" );
         return buffer.toString();
-    }
-    public static ScriptMetadata getScriptMetadata( final IFile file ) 
-    throws CoreException, IOException
-    {
-        return getScriptMetadata( getContents( file ) );
-    }
-	public static ScriptMetadata getScriptMetadata( final String contents ) 
-    {
-		final ScriptMetadata metadata = new ScriptMetadata();
-        metadata.addDOM( DEFAULT_DOM );
-        metadata.addIncludedBundle( PLUGIN_ID );
-        Pattern pattern = compile( "^\\s*\\/\\*.*?\\*\\/", DOTALL );
-        Matcher matcher = pattern.matcher( contents );
-        if( !matcher.find() )
-            return metadata; // no meta-data comment - do nothing
-        for( final String lineString : split( matcher.group(), "\r\n" ) )
-        {
-            final String line = removeStart( lineString.trim(), "*" ).trim();
-            if( line.startsWith( "Menu:" ) )
-            {
-                metadata.setMenuName( removeStart( line, "Menu:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Script-Path:" ) )
-            {
-                metadata.setScriptPath( removeStart( line, "Script-Path:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Kudos:" ) )
-            {
-                metadata.setKudos( removeStart( line, "Kudos:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "License:" ) )
-            {
-                metadata.setLicense( removeStart( line, "License:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "DOM:" ) )
-            {
-                pattern = compile( "DOM:\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
-                matcher = pattern.matcher( line );
-                if( matcher.find() )
-                    metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
-                continue;
-            }
-            if( line.startsWith( "Listener:" ) )
-            {
-                metadata.subscriptions.add( new Subscription( metadata, removeStart( line, "Listener:" ).trim() ) );
-                continue;
-            }
-            if( line.startsWith( "LANG:" ) )
-            {
-                metadata.setLang( removeStart( line, "LANG:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Include:" ) )
-            {
-                metadata.addInclude( removeStart( line, "Include:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Include-Bundle:" ) )
-            {
-                metadata.addIncludedBundle( removeStart( line, "Include-Bundle:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Job:" ) )
-            {
-                metadata.setJobMode( removeStart( line, "Job:" ).trim() );
-                continue;
-            }
-            if( line.startsWith( "Exec-Mode:" ) )
-            {
-                metadata.setExecMode( removeStart( line, "Exec-Mode:" ).trim() );
-                continue;
-            }
-        }
-        return metadata;
-	}
-    public static List< String > getMetadataLines( final String contents )
-    {
-        final String[] lines = split( contents, "\r\n" );
-        final List< String > code = new ArrayList< String >();
-        boolean started = false;
-        boolean finished = false;
-        for( final String line : lines )
-        {
-            if( strip( line ).startsWith( "/*" ) )
-            {
-                started = true;
-                code.add( line );
-                continue;
-            }
-            if( strip( line ).endsWith( "*/" ) )
-            {
-                finished = true;
-                code.add( line );
-                continue;
-            }
-            if( started && !finished )
-            {
-                code.add( line );
-                continue;
-            }
-        }
-        return code;
-    }
-	public static String stripMetadata( final String contents )
-    {
-	    final String[] lines = split( contents, "\r\n" );
-        final List< String > code = new ArrayList< String >();
-        boolean started = false;
-        boolean finished = false;
-        for( final String line : lines )
-        {
-            if( strip( line ).startsWith( "/*" ) )
-            {
-                started = true;
-                continue;
-            }
-            if( strip( line ).endsWith( "*/" ) )
-            {
-                finished = true;
-                continue;
-            }
-            if( started && !finished )
-                continue;
-            code.add( line );
-        }
-        return join( code.toArray( new String[ 0 ] ), "\n" );
-    }
-    public static void refreshScriptMetadata( final IFile script,
-                                              final ScriptMetadata metadata )
-    {
-        if( script == null || !script.exists() || metadata == null )
-            return;
-        try
-        {
-            if( metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
-                return;
-        }
-        catch( final CoreException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch( final IOException e )
-        {
-            throw new RuntimeException( e );
-        }
-        new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
-        {
-            @Override
-            public IStatus runInWorkspace( final IProgressMonitor monitor ) 
-            throws CoreException
-            {
-                try
-                {
-                    if( metadata.header().equals( getScriptMetadata( script ).header() ) )
-                        return Status.OK_STATUS;
-                    setContents( metadata.header() + stripMetadata( contents( script ) ), script );
-                }
-                catch( final IOException e )
-                {
-                    throw new CoreException( new Status( ERROR, PLUGIN_ID, 0, e.getMessage(), e ) );
-                }
-                return OK_STATUS;
-            }
-            
-        }.schedule();
     }
 	public void subscribe()
     {
@@ -599,5 +682,13 @@ public class ScriptMetadata
     public void setLicense( final String license )
     {
         this.license = license;
+    }
+    public Set< Marker > getMarkers()
+    {
+        return markers;
+    }
+    public Set< Marker > markers()
+    {
+        return getMarkers();
     }
 }

@@ -16,14 +16,14 @@ for( file in files )
 	if( monitor.isCanceled() )
 		return
 	monitor.subTask( 'file: ' + file.getEclipseObject().getName() )
-	file.removeMyTasks( metadata.path() )
+	file.removeMyTasks( metadata.scriptPath() )
   	for( line in file.lines )
   	{
   		if( monitor.isCanceled() )
 			return
     	if( line.string.contains( 'System.out.print' ) && !line.string.trim().startsWith( '//' ) ) 
     	{
-       		line.addMyTask( metadata.path(), line.string.trim() )
+       		line.addMyTask( metadata.scriptPath(), line.string.trim() )
     	}
   	}
   	monitor.worked( 1 )
