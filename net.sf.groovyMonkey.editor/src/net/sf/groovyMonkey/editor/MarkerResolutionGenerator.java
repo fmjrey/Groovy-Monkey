@@ -52,7 +52,7 @@ implements IMarkerResolutionGenerator
                              final String value )
             {
                 metadata.setExecMode( value );
-            }   
+            }
         };
         for( final ScriptMetadata.ExecModes exec : ScriptMetadata.ExecModes.values() )
             list.add( new ChangeToQuickFix( exec.name(), runnable ) );

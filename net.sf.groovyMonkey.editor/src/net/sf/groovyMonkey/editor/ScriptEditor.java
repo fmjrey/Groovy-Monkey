@@ -19,6 +19,7 @@ extends TextEditor
     public ScriptEditor()
     {
         super();
+        setSourceViewerConfiguration( new Configuration( this ) );
     }
     @Override
     protected void createActions()
