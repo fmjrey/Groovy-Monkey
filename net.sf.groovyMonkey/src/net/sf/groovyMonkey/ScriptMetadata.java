@@ -208,7 +208,7 @@ public class ScriptMetadata
             {
                 final String filter = removeStart( line, getTag( Tags.Type.LISTENER ) ).trim();
                 if( isBlank( filter ) )
-                    metadata.markers.add( Marker.warning( "Empty filter string: matches all resource changed events.", lineNumber ) );
+                    metadata.markers.add( Marker.warning( Tags.Type.LISTENER, "Empty filter string: matches all resource changed events.", lineNumber ) );
                 metadata.subscriptions.add( new Subscription( metadata, filter ) );
                 continue;
             }
@@ -220,7 +220,7 @@ public class ScriptMetadata
                 {
                     final int charStart = lineString.indexOf( langName ) + eolOffset;
                     final int charEnd = charStart + langName.length();
-                    metadata.markers.add( Marker.error( "Error language: " + langName + " is not currently supported. Supported: " + languages.keySet(), lineNumber, charStart, charEnd ) );
+                    metadata.markers.add( Marker.error( Tags.Type.LANG, "Error language: " + langName + " is not currently supported. Supported: " + languages.keySet(), lineNumber, charStart, charEnd ) );
                 }
                 metadata.setLang( langName );
                 continue;
@@ -242,7 +242,7 @@ public class ScriptMetadata
                 {
                     final int charStart = lineString.indexOf( jobType ) + eolOffset;
                     final int charEnd = charStart + jobType.length();
-                    metadata.markers.add( Marker.error( "Error no Job Type: " + jobType + " supported. Supported: " + list( JobModes.values() ), lineNumber, charStart, charEnd ) );
+                    metadata.markers.add( Marker.error( Tags.Type.JOB, "Error no Job Type: " + jobType + " supported. Supported: " + list( JobModes.values() ), lineNumber, charStart, charEnd ) );
                 }
                 metadata.setJobMode( jobType );
                 continue;
@@ -254,33 +254,38 @@ public class ScriptMetadata
                 {
                     final int charStart = lineString.indexOf( execModeType ) + eolOffset;
                     final int charEnd = charStart + execModeType.length();
-                    metadata.markers.add( Marker.error( "Error no Exec-Mode Type: " + execModeType + " supported. Supported: " + list( ExecModes.values() ), lineNumber, charStart, charEnd ) );
+                    metadata.markers.add( Marker.error( Tags.Type.EXEC_MODE, "Error no Exec-Mode Type: " + execModeType + " supported. Supported: " + list( ExecModes.values() ), lineNumber, charStart, charEnd ) );
                 }
                 metadata.setExecMode( execModeType );
                 continue;
             }
-            metadata.markers.add( Marker.error( "Error no identifiable tag: " + line, lineNumber ) );
+            metadata.markers.add( Marker.error( Tags.Type.BAD_TAG, "Error no identifiable tag: " + line, lineNumber ) );
         }
         return metadata;
     }
     public static void refreshScriptMetadata( final IFile script,
                                               final ScriptMetadata metadata )
     {
+        refreshScriptMetadata( script, metadata, false );
+    }
+    public static void refreshScriptMetadata( final IFile script, 
+                                              final ScriptMetadata metadata,
+                                              final boolean force )
+    {
         if( script == null || !script.exists() || metadata == null )
             return;
         try
         {
-            if( metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
+            if( !force && metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
             {
                 new WorkspaceJob( "Refreshing markers for script: " + script.getName() )
                 {
                     @Override
-                    public IStatus runInWorkspace( final IProgressMonitor monitor ) 
-                    throws CoreException
+                    public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
                     {
                         setMarkers( script );
                         return Status.OK_STATUS;
-                    }                    
+                    }
                 }.schedule();
                 return;
             }
@@ -296,12 +301,11 @@ public class ScriptMetadata
         new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
         {
             @Override
-            public IStatus runInWorkspace( final IProgressMonitor monitor ) 
-            throws CoreException
+            public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
             {
                 try
                 {
-                    if( metadata.header().equals( getScriptMetadata( script ).header() ) )
+                    if( !force && metadata.header().equals( getScriptMetadata( script ).header() ) )
                         return Status.OK_STATUS;
                     setContents( metadata.header() + stripMetadata( contents( script ) ), script );
                 }
@@ -316,7 +320,7 @@ public class ScriptMetadata
                 return OK_STATUS;
             }
         }.schedule();
-    }
+}
     public static void setMarkers( final IFile script ) 
     throws CoreException
     {
@@ -331,6 +335,10 @@ public class ScriptMetadata
                 final IMarker m = script.createMarker( IMarker.PROBLEM );
                 m.setAttribute( IMarker.SEVERITY, marker.severity() );
                 m.setAttribute( IMarker.MESSAGE, marker.message() );
+                // The next attribute is a marker to allow us to provide potential resolutions ( i.e. Quick Fixes )
+                m.setAttribute( PLUGIN_ID, "marker" );
+                // The next attribute is a hint to the resolution ( i.e. quick fix ) generator as to what to do.
+                m.setAttribute( PLUGIN_ID + ".tag", marker.tag().toString() );
                 if( marker.lineNumber() != -1 )
                     m.setAttribute( IMarker.LINE_NUMBER, marker.lineNumber() );
                 if( marker.charStart() != -1 )

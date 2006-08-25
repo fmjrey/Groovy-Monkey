@@ -6,7 +6,7 @@ public class Tags
 {
     public enum Type
     {
-        PATH, MENU, KUDOS, LICENSE, DOM, LISTENER, LANG, INCLUDE, INCLUDE_BUNDLE, JOB, EXEC_MODE
+        PATH, MENU, KUDOS, LICENSE, DOM, LISTENER, LANG, INCLUDE, INCLUDE_BUNDLE, JOB, EXEC_MODE, BAD_TAG
     }
     public static final Map< Type, String > Tags = new EnumMap< Type, String >( Type.class );
     static

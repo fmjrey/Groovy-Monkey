@@ -91,4 +91,14 @@
           id="net.sf.groovyMonkey.editor.views.DOMView"
           name="Installed DOMs"/>
  </extension>
+ <extension
+       point="org.eclipse.ui.ide.markerResolution">
+    <markerResolutionGenerator
+          class="net.sf.groovyMonkey.editor.MarkerResolutionGenerator"
+          markerType="org.eclipse.core.resources.problemmarker">
+       <attribute
+             name="net.sf.groovyMonkey"
+             value="marker"/>
+    </markerResolutionGenerator>
+ </extension>
 </fragment>
