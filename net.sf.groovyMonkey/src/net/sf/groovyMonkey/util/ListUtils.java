@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey.util;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.commons.lang.ObjectUtils;
 
@@ -100,12 +101,23 @@ public class ListUtils
             list.add( transformer.transform( object ) );
         return list;
     }
-    public static < T > List< T > list( final T... objects )
+    public static < T > List< T > array( final T... objects )
     {
         final List< T > list = new ArrayList< T >();
         for( final T object : objects )
             list.add( object );
         return list;
+    }
+    public static < T > List< T > linked( final T... objects )
+    {
+        final List< T > list = new LinkedList< T >();
+        for( final T object : objects )
+            list.add( object );
+        return list;
+    }
+    public static < T > List< T > list( final T... objects )
+    {
+        return array( objects );
     }
     public static < E extends Object > List< String > caseless( final E... objects )
     {

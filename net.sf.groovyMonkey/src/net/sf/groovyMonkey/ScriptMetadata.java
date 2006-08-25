@@ -9,6 +9,7 @@ import static net.sf.groovyMonkey.Tags.getTag;
 import static net.sf.groovyMonkey.Tags.getTagText;
 import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static net.sf.groovyMonkey.dom.Utilities.readLines;
 import static net.sf.groovyMonkey.dom.Utilities.setContents;
 import static net.sf.groovyMonkey.util.ListUtils.caseless;
 import static net.sf.groovyMonkey.util.ListUtils.list;
@@ -157,7 +158,6 @@ public class ScriptMetadata
     }
     public static ScriptMetadata getScriptMetadata( final String contents ) 
     {
-        System.out.printf( "ScriptMetadata.getScriptMetadata(): ", contents );
         final ScriptMetadata metadata = new ScriptMetadata();
         metadata.addDOM( DEFAULT_DOM );
         metadata.addIncludedBundle( PLUGIN_ID );
@@ -166,11 +166,13 @@ public class ScriptMetadata
         if( !matcher.find() )
             return metadata; // no meta-data comment - do nothing
         int lineNumber = 0;
-        int eolOffset = 0;
-        for( final String lineString : split( matcher.group(), "\r\n" ) )
+        int currentLineEOLOffset = 0;
+        for( final String lineString : readLines( matcher.group() ) )
         {
-            eolOffset += lineString.length();
+            final int eolOffset = currentLineEOLOffset;
+            currentLineEOLOffset += lineString.length() + 1;
             lineNumber++;
+            // The next line ensures that /*, *, */ and whitespace are removed from the ends of the line.
             final String line = removeEnd( removeEnd( removeStart( removeStart( lineString.trim(), "/" ), "*" ).trim(), "/" ).trim(), "*" ).trim();
             if( isBlank( line ) )
                 continue;
@@ -216,7 +218,7 @@ public class ScriptMetadata
                 final Map< String, IMonkeyScriptFactory > languages = RunMonkeyScript.getScriptFactories();
                 if( !languages.containsKey( langName ) )
                 {
-                    final int charStart = lineString.indexOf( langName ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charStart = lineString.indexOf( langName ) + eolOffset;
                     final int charEnd = charStart + langName.length();
                     metadata.markers.add( Marker.error( "Error language: " + langName + " is not currently supported. Supported: " + languages.keySet(), lineNumber, charStart, charEnd ) );
                 }
@@ -238,7 +240,7 @@ public class ScriptMetadata
                 final String jobType = removeStart( line, getTag( Tags.Type.JOB ) ).trim();
                 if( !caseless( JobModes.values() ).contains( jobType ) )
                 {
-                    final int charStart = lineString.indexOf( jobType ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charStart = lineString.indexOf( jobType ) + eolOffset;
                     final int charEnd = charStart + jobType.length();
                     metadata.markers.add( Marker.error( "Error no Job Type: " + jobType + " supported. Supported: " + list( JobModes.values() ), lineNumber, charStart, charEnd ) );
                 }
@@ -250,7 +252,7 @@ public class ScriptMetadata
                 final String execModeType = removeStart( line, getTag( Tags.Type.EXEC_MODE ) ).trim();
                 if( !caseless( ExecModes.values() ).contains( execModeType ) )
                 {
-                    final int charStart = lineString.indexOf( execModeType ) + eolOffset - lineString.length() + lineNumber - 1;
+                    final int charStart = lineString.indexOf( execModeType ) + eolOffset;
                     final int charEnd = charStart + execModeType.length();
                     metadata.markers.add( Marker.error( "Error no Exec-Mode Type: " + execModeType + " supported. Supported: " + list( ExecModes.values() ), lineNumber, charStart, charEnd ) );
                 }

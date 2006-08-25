@@ -3,6 +3,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
+import static net.sf.groovyMonkey.util.ListUtils.list;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -15,10 +16,14 @@ import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -70,6 +75,27 @@ public class Utilities
         finally
         {
             closeQuietly( contents );
+        }
+    }
+    public static List< String > readLines( final Reader input ) 
+    throws IOException 
+    {
+        final BufferedReader reader = new BufferedReader( input );
+        final List< String > list = list();
+        String line;
+        while( ( line = reader.readLine() ) != null ) 
+            list.add( line );
+        return list;
+    }
+    public static List< String > readLines( final String string )
+    {
+        try
+        {
+            return readLines( new StringReader( string ) );
+        }
+        catch( final IOException e )
+        {
+            throw new RuntimeException( e );
         }
     }
     public static void setContents( final String contents, 
