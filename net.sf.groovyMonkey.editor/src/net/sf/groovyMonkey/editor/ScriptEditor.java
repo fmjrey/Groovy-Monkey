@@ -7,11 +7,11 @@ import net.sf.groovyMonkey.editor.actions.RunScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.ui.editors.text.TextEditor;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 public class ScriptEditor 
-extends TextEditor
+extends AbstractDecoratedTextEditor
 {
     public static final String ADD_GROUP = GROUP_EDIT + "/Add To Script";
     private ScriptContentOutlinePage outline = null;
@@ -20,6 +20,7 @@ extends TextEditor
     {
         super();
         setSourceViewerConfiguration( new Configuration( this ) );
+        setDocumentProvider( new ScriptDocumentProvider() );
     }
     @Override
     protected void createActions()

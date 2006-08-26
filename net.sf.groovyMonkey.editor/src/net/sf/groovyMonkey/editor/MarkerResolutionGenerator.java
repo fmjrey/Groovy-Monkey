@@ -1,10 +1,16 @@
 package net.sf.groovyMonkey.editor;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
+import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
+import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
+import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
+import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.util.ListUtils.list;
+
 import java.util.List;
-import net.sf.groovyMonkey.RunMonkeyScript;
+
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Tags;
+
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IMarkerResolution;
@@ -55,7 +61,12 @@ implements IMarkerResolutionGenerator
             }
         };
         for( final ScriptMetadata.ExecModes exec : ScriptMetadata.ExecModes.values() )
-            list.add( new ChangeToQuickFix( exec.name(), runnable ) );
+        {
+            if( exec.equals( DEFAULT_MODE ) )
+                list.add( 0, new ChangeToQuickFix( exec.name(), runnable, true ) );
+            else
+                list.add( new ChangeToQuickFix( exec.name(), runnable ) );
+        }
     }
     private void addJobSuggestions( final IMarker marker, 
                                     final List< IMarkerResolution > list )
@@ -69,7 +80,12 @@ implements IMarkerResolutionGenerator
             }   
         };
         for( final ScriptMetadata.JobModes job : ScriptMetadata.JobModes.values() )
-            list.add( new ChangeToQuickFix( job.name(), runnable ) );
+        {
+            if( job.equals( DEFAULT_JOB ) )
+                list.add( 0, new ChangeToQuickFix( job.name(), runnable, true ) );
+            else
+                list.add( new ChangeToQuickFix( job.name(), runnable ) );
+        }
     }
     private void addLangSuggestions( final IMarker marker, 
                                      final List< IMarkerResolution > list )
@@ -82,7 +98,12 @@ implements IMarkerResolutionGenerator
                 metadata.setLang( value );
             }   
         };
-        for( final String lang : RunMonkeyScript.getScriptFactories().keySet() )
-            list.add( new ChangeToQuickFix( lang, runnable ) );
+        for( final String lang : getScriptFactories().keySet() )
+        {
+            if( lang.equalsIgnoreCase( DEFAULT_LANG ) )
+                list.add( 0, new ChangeToQuickFix( lang, runnable, true ) );
+            else
+                list.add( new ChangeToQuickFix( lang, runnable ) );
+        }
     }
 }

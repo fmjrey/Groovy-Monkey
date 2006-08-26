@@ -26,16 +26,24 @@ implements IMarkerResolution, ICompletionProposal
     }
     private final String value;
     private final IRunnable runnable;
+    private final boolean defaultValue;
     
     public ChangeToQuickFix( final String value,
-                             final IRunnable runnable )
+                             final IRunnable runnable,
+                             final boolean defaultValue )
     {
         this.value = defaultString( value );
         this.runnable = runnable;
+        this.defaultValue = defaultValue;
+    }
+    public ChangeToQuickFix( final String value,
+                             final IRunnable runnable )
+    {
+        this( value, runnable, false );
     }
     public String getLabel()
     {
-        return "Change to " + value;
+        return "Change to " + value + ( defaultValue ? " <default>" : "" );
     }
     public void run( final IMarker marker )
     {
