@@ -22,7 +22,8 @@ implements IMarkerResolution, ICompletionProposal
 {
     public interface IRunnable
     {
-        public void run( final ScriptMetadata metadata, final String value );
+        public void run( final ScriptMetadata metadata, 
+                         final String value );
     }
     private final String value;
     private final IRunnable runnable;
