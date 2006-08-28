@@ -28,6 +28,7 @@ implements IMarkerResolution, ICompletionProposal
     private final String value;
     private final IRunnable runnable;
     private final boolean defaultValue;
+    private boolean force = true;
     
     public ChangeToQuickFix( final String value,
                              final IRunnable runnable,
@@ -41,6 +42,11 @@ implements IMarkerResolution, ICompletionProposal
                              final IRunnable runnable )
     {
         this( value, runnable, false );
+    }
+    public ChangeToQuickFix setForce( final boolean force )
+    {
+        this.force = force;
+        return this;
     }
     public String getLabel()
     {
@@ -73,6 +79,8 @@ implements IMarkerResolution, ICompletionProposal
         final String code = stripMetadata( contents );
         this.runnable.run( metadata, value );
         document.set( metadata.header() + code );
+        if( !force )
+            return;
         // Since this should be activated when the user uses Ctrl-1, the
         //  active editor should be the one, if this doesn't work we could try
         //  and cheat using the script path metadata attribute.

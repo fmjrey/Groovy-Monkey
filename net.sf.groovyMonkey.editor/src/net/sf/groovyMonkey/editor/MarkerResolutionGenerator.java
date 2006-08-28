@@ -5,12 +5,9 @@ import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
 import static net.sf.groovyMonkey.util.ListUtils.list;
-
 import java.util.List;
-
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Tags;
-
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IMarkerResolution;
@@ -33,13 +30,13 @@ implements IMarkerResolutionGenerator
             switch( tagType )
             {
                 case JOB:
-                    addJobSuggestions( marker, list );
+                    addJobSuggestions( list );
                 break;
                 case LANG:
-                    addLangSuggestions( marker, list );
+                    addLangSuggestions( list );
                 break;
                 case EXEC_MODE:
-                    addExecModeSuggestions( marker, list );
+                    addExecModeSuggestions( list );
                 break;
             }
         }
@@ -49,8 +46,12 @@ implements IMarkerResolutionGenerator
         }
         return list.toArray( new IMarkerResolution[ 0 ] );
     }
-    private void addExecModeSuggestions( final IMarker marker, 
-                                         final List< IMarkerResolution > list )
+    public static void addExecModeSuggestions( final List< IMarkerResolution > list )
+    {
+        addExecModeSuggestions( list, true );
+    }
+    public static void addExecModeSuggestions( final List< IMarkerResolution > list,
+                                               final boolean force )
     {
         final ChangeToQuickFix.IRunnable runnable = new ChangeToQuickFix.IRunnable()
         {
@@ -63,13 +64,17 @@ implements IMarkerResolutionGenerator
         for( final ScriptMetadata.ExecModes exec : ScriptMetadata.ExecModes.values() )
         {
             if( exec.equals( DEFAULT_MODE ) )
-                list.add( 0, new ChangeToQuickFix( exec.name(), runnable, true ) );
+                list.add( 0, new ChangeToQuickFix( exec.name(), runnable, true ).setForce( force ) );
             else
-                list.add( new ChangeToQuickFix( exec.name(), runnable ) );
+                list.add( new ChangeToQuickFix( exec.name(), runnable ).setForce( force ) );
         }
     }
-    private void addJobSuggestions( final IMarker marker, 
-                                    final List< IMarkerResolution > list )
+    public static void addJobSuggestions( final List< IMarkerResolution > list )
+    {
+        addJobSuggestions( list, true );
+    }
+    public static void addJobSuggestions( final List< IMarkerResolution > list,
+                                          final boolean force )
     {
         final ChangeToQuickFix.IRunnable runnable = new ChangeToQuickFix.IRunnable()
         {
@@ -82,13 +87,17 @@ implements IMarkerResolutionGenerator
         for( final ScriptMetadata.JobModes job : ScriptMetadata.JobModes.values() )
         {
             if( job.equals( DEFAULT_JOB ) )
-                list.add( 0, new ChangeToQuickFix( job.name(), runnable, true ) );
+                list.add( 0, new ChangeToQuickFix( job.name(), runnable, true ).setForce( force ) );
             else
-                list.add( new ChangeToQuickFix( job.name(), runnable ) );
+                list.add( new ChangeToQuickFix( job.name(), runnable ).setForce( force ) );
         }
     }
-    private void addLangSuggestions( final IMarker marker, 
-                                     final List< IMarkerResolution > list )
+    public static void addLangSuggestions( final List< IMarkerResolution > list )
+    {
+        addLangSuggestions( list, true );
+    }
+    public static void addLangSuggestions( final List< IMarkerResolution > list,
+                                           final boolean force )
     {
         final ChangeToQuickFix.IRunnable runnable = new ChangeToQuickFix.IRunnable()
         {
@@ -101,9 +110,9 @@ implements IMarkerResolutionGenerator
         for( final String lang : getScriptFactories().keySet() )
         {
             if( lang.equalsIgnoreCase( DEFAULT_LANG ) )
-                list.add( 0, new ChangeToQuickFix( lang, runnable, true ) );
+                list.add( 0, new ChangeToQuickFix( lang, runnable, true ).setForce( force ) );
             else
-                list.add( new ChangeToQuickFix( lang, runnable ) );
+                list.add( new ChangeToQuickFix( lang, runnable ).setForce( force ) );
         }
     }
 }
