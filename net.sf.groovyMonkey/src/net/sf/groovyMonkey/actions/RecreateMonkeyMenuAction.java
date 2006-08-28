@@ -11,10 +11,12 @@
  *******************************************************************************/
 package net.sf.groovyMonkey.actions;
 import static java.util.regex.Pattern.compile;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MENU_EDIT_PATH;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MENU_PATH;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.RunMonkeyScript.LAST_RUN;
+import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.ActionSetContributionItem;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
@@ -150,6 +153,13 @@ implements IWorkbenchWindowActionDelegate
                     delegate.run( action );
                 }
             } );
+        final IMenuManager editMenu = menuManager.findMenuUsingPath( MENU_EDIT_PATH ) != null ? menuManager.findMenuUsingPath( MENU_EDIT_PATH ) : new MenuManager( "Edit Script", MENU_EDIT_PATH );
+        menuManager.add( editMenu );
+        current.key = "";
+        current.menu = editMenu;
+        current.submenu = new MonkeyMenuStruct();
+        for( final Association association : sorted )
+            addNestedMenuEditAction( current, association.key, association.file );
         menuManager.updateAll( true );
     }
     private void addNestedMenuAction( final MonkeyMenuStruct current, 
@@ -176,10 +186,56 @@ implements IWorkbenchWindowActionDelegate
         else
             current.menu.add( menuAction( menuString, scriptFile ) );
     }
-    private Action menuAction( final String key, 
-                               final IFile value )
+    private void addNestedMenuEditAction( final MonkeyMenuStruct current, 
+                                          final String menuString, 
+                                          final IFile scriptFile )
     {
-        final RunMonkeyScript runner = new RunMonkeyScript( value, window );
+        if( menuString == null )
+            return;
+        final Matcher match = submenu_pattern.matcher( menuString );
+        if( match.find() )
+        {
+            final String primaryKey = match.group( 1 ).trim();
+            final String secondaryKey = match.group( 2 ).trim();
+            if( !primaryKey.equals( current.submenu.key ) )
+            {
+                final IMenuManager submenu = new MenuManager( primaryKey );
+                current.menu.add( submenu );
+                current.submenu.menu = submenu;
+                current.submenu.key = primaryKey;
+                current.submenu.submenu = new MonkeyMenuStruct();
+            }
+            addNestedMenuEditAction( current.submenu, secondaryKey, scriptFile );
+        }
+        else
+            current.menu.add( editAction( menuString, scriptFile ) );
+    }
+    private Action editAction( final String key, 
+                               final IFile script )
+    {
+        final Action action = new Action( key )
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    openEditor( script );
+                }
+                catch( final PartInitException e )
+                {
+                    throw new RuntimeException( e );
+                }
+            }
+        };
+        if( LAST_RUN != null && script.equals( LAST_RUN.getFile() ) )
+            action.setAccelerator( SWT.ALT | SWT.CONTROL | 'E' );
+        return action;
+    }
+    private Action menuAction( final String key, 
+                               final IFile script )
+    {
+        final RunMonkeyScript runner = new RunMonkeyScript( script, window );
         final Action action = new Action( key )
         {
             @Override
@@ -188,7 +244,7 @@ implements IWorkbenchWindowActionDelegate
                 runner.run( false );
             }
         };
-        if( LAST_RUN != null && value.equals( LAST_RUN.getFile() ) )
+        if( LAST_RUN != null && script.equals( LAST_RUN.getFile() ) )
             action.setAccelerator( SWT.ALT | SWT.CONTROL | 'M' );
         return action;
     }

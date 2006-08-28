@@ -32,6 +32,7 @@ implements IStartup
     public static final String MONKEY_DIR = "monkey";
     public static final String SCRIPTS_PROJECT = "GroovyMonkeyScripts";
     public static final String MENU_PATH = "groovyMonkeyMenu";
+    public static final String MENU_EDIT_PATH = "groovyMonkeyEditMenu";
     public static final String ICON_PATH = "icons/";
     private static GroovyMonkeyPlugin plugin;
     private static BundleContext context;
