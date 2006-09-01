@@ -1,5 +1,8 @@
 package net.sf.groovyMonkey.editor;
 import static org.eclipse.jface.text.IDocument.DEFAULT_CONTENT_TYPE;
+import net.sf.groovyMonkey.editor.contentAssist.HippieProposalProcessor;
+import net.sf.groovyMonkey.editor.contentAssist.QuickAssistProcessor;
+import net.sf.groovyMonkey.editor.contentAssist.ScriptMetadataContentAssistProcessor;
 import org.apache.commons.lang.Validate;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
@@ -8,7 +11,6 @@ import org.eclipse.jface.text.quickassist.IQuickAssistAssistant;
 import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
-import org.eclipse.ui.texteditor.HippieProposalProcessor;
 
 public class Configuration 
 extends SourceViewerConfiguration

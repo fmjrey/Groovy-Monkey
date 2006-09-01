@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.editor;
+package net.sf.groovyMonkey.editor.contentAssist;
 import static net.sf.groovyMonkey.util.ListUtils.list;
 import java.util.List;
 import org.apache.commons.lang.Validate;

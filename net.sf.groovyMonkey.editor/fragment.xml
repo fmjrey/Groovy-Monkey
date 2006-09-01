@@ -94,7 +94,7 @@
  <extension
        point="org.eclipse.ui.ide.markerResolution">
     <markerResolutionGenerator
-          class="net.sf.groovyMonkey.editor.MarkerResolutionGenerator"
+          class="net.sf.groovyMonkey.editor.contentAssist.MarkerResolutionGenerator"
           markerType="org.eclipse.core.resources.problemmarker">
        <attribute
              name="net.sf.groovyMonkey"

@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.editor;
+package net.sf.groovyMonkey.editor.contentAssist;
 import static net.sf.groovyMonkey.util.ListUtils.list;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.substringAfterLast;

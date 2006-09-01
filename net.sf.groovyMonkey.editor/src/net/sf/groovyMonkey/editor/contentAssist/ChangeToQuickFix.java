@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.editor;
+package net.sf.groovyMonkey.editor.contentAssist;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.refreshScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;

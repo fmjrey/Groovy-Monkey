@@ -1,4 +1,4 @@
-package net.sf.groovyMonkey.editor;
+package net.sf.groovyMonkey.editor.contentAssist;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
