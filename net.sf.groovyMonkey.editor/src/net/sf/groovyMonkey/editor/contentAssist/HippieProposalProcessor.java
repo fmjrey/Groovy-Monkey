@@ -34,6 +34,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * Once we go to 3.2, get rid of it...
  */
 // TODO: Once we goto Eclipse 3.2 for real, get rid of this class, it is just a copy.
+@SuppressWarnings( "unchecked" )
 public final class HippieProposalProcessor implements IContentAssistProcessor {
 
     private static final ICompletionProposal[] NO_PROPOSALS= new ICompletionProposal[0];

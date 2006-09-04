@@ -27,6 +27,7 @@ import org.eclipse.jface.text.IRegion;
  * @since 3.1
  * @author Genady Beryozkin, me@genady.org
  */
+@SuppressWarnings( "unchecked" )
 public final class HippieCompletionEngine {
 
     /**
