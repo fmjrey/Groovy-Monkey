@@ -3,20 +3,41 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class DOMDescriptor
 implements Comparable< DOMDescriptor >
 {
     public final String url;
     public final String pluginName;
+    public final Map< String, String > map = new TreeMap< String, String >();
 
     public DOMDescriptor( final String url, 
-                          final String pluginName ) 
+                          final String pluginName,
+                          final Map< String, String > map ) 
     {
         this.url = url;
         this.pluginName = pluginName;
+        if( map != null && !map.isEmpty() )
+            this.map.putAll( map );
     }
     @Override
     public String toString()
+    {
+        final StringBuffer domUpdateURL = new StringBuffer( getDOMUpdateSite() );
+        if( !map.isEmpty() )
+            domUpdateURL.append( "[ " );
+        for( final String scriptVarName : map.keySet() )
+            domUpdateURL.append( map.get( scriptVarName ) ).append( ":" ).append( scriptVarName ).append( ", " );
+        if( !map.isEmpty() )
+        {
+            domUpdateURL.deleteCharAt( domUpdateURL.length() - 1 ); // Removing that last appended comma
+            domUpdateURL.append( "]" );
+        }
+        return domUpdateURL.toString();
+    }
+    public String getDOMUpdateSite()
     {
         if( pluginName.equals( PLUGIN_ID ) )
             return "Default";

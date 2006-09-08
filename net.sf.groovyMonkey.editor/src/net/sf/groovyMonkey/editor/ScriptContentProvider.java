@@ -14,6 +14,7 @@ import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,13 +24,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Subscription;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.util.TreeList;
+
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -199,17 +203,22 @@ implements ITreeContentProvider
     {
         public final DOMDescriptor parent;
         public final String varName;
+        public final String localName;
         public final Class type;
         private final String toString;
         
         public VarDescriptor( final DOMDescriptor parent, 
-                              final String varName, 
+                              final String varName,
                               final Class type )
         {
             this.parent = parent;
             this.varName = varName;
+            this.localName = defaultString( parent.map.get( varName ) );
             this.type = type;
-            toString = varName + ": " + type.getName();
+            if( StringUtils.isBlank( localName ) )
+                toString = varName + ": " + type.getName();
+            else
+                toString = localName + "[" + varName + "]" + ":" + type.getName();
         }
         @Override
         public String toString()
@@ -317,8 +326,11 @@ implements ITreeContentProvider
             final Map< String, Class > dom = getDOMInfo( descriptor.pluginName );
             final List< VarDescriptor > list = new TreeList< VarDescriptor >();
             for( final String var : dom.keySet() )
-                if( dom.get( var ) != null )
-                    list.add( new VarDescriptor( descriptor, var, dom.get( var ) ) );
+            {
+                if( dom.get( var ) == null )
+                    continue;
+                list.add( new VarDescriptor( descriptor, var, dom.get( var ) ) );
+            }
             return list.toArray( new VarDescriptor[ 0 ] );
         }
         if( parentElement instanceof VarDescriptor )

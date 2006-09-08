@@ -88,7 +88,7 @@ implements IRegistryChangeListener
                 final Set< String > list = getDOMPlugins();
                 final Set< DOMDescriptor > doms = new TreeSet< DOMDescriptor >();
                 for( final String pluginID : list )
-                    doms.add( new DOMDescriptor( remove( getUpdateSiteForDOMPlugin( pluginID ), pluginID ), pluginID ) );
+                    doms.add( new DOMDescriptor( remove( getUpdateSiteForDOMPlugin( pluginID ), pluginID ), pluginID, null ) );
                 return doms.toArray( new DOMDescriptor[ 0 ] );
             }
             @Override

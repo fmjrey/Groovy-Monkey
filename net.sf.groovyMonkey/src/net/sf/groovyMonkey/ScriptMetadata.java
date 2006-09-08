@@ -25,6 +25,8 @@ import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
 import static org.apache.commons.lang.StringUtils.strip;
+import static org.apache.commons.lang.StringUtils.substringAfterLast;
+import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
 import static org.eclipse.core.resources.IResource.DEPTH_INFINITE;
@@ -39,6 +41,7 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import static org.osgi.framework.Bundle.UNINSTALLED;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,9 +52,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -73,7 +79,7 @@ import org.osgi.framework.Bundle;
 
 public class ScriptMetadata 
 {
-    public static final DOMDescriptor DEFAULT_DOM = new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", PLUGIN_ID );
+    public static final DOMDescriptor DEFAULT_DOM = new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", PLUGIN_ID, null );
     public enum JobModes
     {
         Job, UIJob, WorkspaceJob
@@ -199,9 +205,19 @@ public class ScriptMetadata
             if( line.startsWith( getTag( Tags.Type.DOM ) ) )
             {
                 pattern = compile( getTag( Tags.Type.DOM ) + "\\s*(\\p{Graph}+)\\/((\\p{Alnum}|\\.)+)", DOTALL );
-                matcher = pattern.matcher( line );
+                final String domString = substringBeforeLast( line, "[" );
+                final String varMapString = substringBeforeLast( substringAfterLast( line, "[" ), "]" );
+                final Map< String, String > varNameMap = new TreeMap< String, String >();
+                for( final String mapping : split( varMapString, ',' ) )
+                {
+                    final String localVarName = substringBeforeLast( mapping, ":" );
+                    final String domVarName = substringAfterLast( mapping, ":" );
+                    if( isNotBlank( localVarName ) && isNotBlank( domVarName ) )
+                        varNameMap.put( domVarName.trim(), localVarName.trim() );
+                }
+                matcher = pattern.matcher( domString );
                 if( matcher.find() )
-                    metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ) ) );
+                    metadata.addDOM( new DOMDescriptor( matcher.group( 1 ), matcher.group( 2 ), varNameMap ) );
                 continue;
             }
             if( line.startsWith( getTag( Tags.Type.LISTENER ) ) )

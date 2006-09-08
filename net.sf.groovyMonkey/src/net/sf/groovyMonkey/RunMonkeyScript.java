@@ -8,12 +8,16 @@ import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.key;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.core.runtime.SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK;
+import static org.eclipse.swt.widgets.Display.getCurrent;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.dom.Utilities;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
+
 import org.apache.bsf.BSFException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -28,7 +32,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
 
@@ -178,7 +181,7 @@ public class RunMonkeyScript
     private void join( final Job job )
     {
         // There is no use joining a job from within the same UI Thread
-        if( job instanceof UIJob && Display.getCurrent() != null )
+        if( job instanceof UIJob && getCurrent() != null )
             return;
         try
         {

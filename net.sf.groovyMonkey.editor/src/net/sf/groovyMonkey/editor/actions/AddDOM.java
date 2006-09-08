@@ -90,7 +90,7 @@ implements IObjectActionDelegate
         for( final String selectedDOMPlugin : selectedDOMPlugins )
         {
             final String updateSiteURL = substringBefore( getUpdateSiteForDOMPlugin( selectedDOMPlugin ), selectedDOMPlugin );
-            metadata.addDOM( new DOMDescriptor( updateSiteURL, selectedDOMPlugin ) );
+            metadata.addDOM( new DOMDescriptor( updateSiteURL, selectedDOMPlugin, null ) );
         }
         refreshScriptMetadata( script, metadata );
     }

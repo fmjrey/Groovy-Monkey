@@ -102,7 +102,7 @@ implements ISelectionChangedListener
                     return super.getImage( element );
                 if( !getDOMPlugins().contains( "" + element ) )
                     return provider.getImage( new ScriptContentProvider.BundleDescriptor( "" + element, null ) );
-                return provider.getImage( new DOMDescriptor( "", "" + element ) );
+                return provider.getImage( new DOMDescriptor( "", "" + element, null ) );
             }
             
         };
@@ -117,7 +117,7 @@ implements ISelectionChangedListener
             @Override
             public Object[] getElements( final Object inputElement )
             {
-                return new Object[] { new DOMDescriptor( "", "" + inputElement ) };
+                return new Object[] { new DOMDescriptor( "", "" + inputElement, null ) };
             }
             @Override
             public void inputChanged( final Viewer viewer, 

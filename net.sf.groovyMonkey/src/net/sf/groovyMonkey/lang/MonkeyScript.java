@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.sf.groovyMonkey.BundleClassLoaderAdapter;
+import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.MonkeyClassLoader;
 import net.sf.groovyMonkey.ScriptMetadata;
 import org.apache.bsf.BSFException;
@@ -81,7 +82,18 @@ implements IMonkeyScript
         this.metadata = metadata;
         this.map.clear();
         if( map != null )
-            this.map.putAll( map );
+        {
+            for( final String varName : map.keySet() )
+            {
+                String resolvedName = varName;
+                for( final DOMDescriptor descriptor : metadata.getDOMs() )
+                {
+                    if( descriptor.map.containsKey( varName ) )
+                        resolvedName = descriptor.map.get( varName );
+                }
+                this.map.put( resolvedName, map.get( varName ) );
+            }
+        }
         setBinding();
         return this;
     }
