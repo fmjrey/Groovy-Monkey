@@ -496,6 +496,13 @@ public class ScriptMetadata
                 return true;
         return false;
     }
+    public DOMDescriptor getDOMByPlugin( final String pluginID )
+    {
+        for( final DOMDescriptor dom : doms )
+            if( equals( dom.pluginName, pluginID ) )
+                return dom;
+        return null;
+    }
 	public boolean ensureDomsAreLoaded( final IWorkbenchWindow window )
     {
         final StringBuffer missingPlugins = new StringBuffer();

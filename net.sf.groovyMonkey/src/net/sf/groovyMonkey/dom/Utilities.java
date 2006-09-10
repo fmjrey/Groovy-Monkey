@@ -16,6 +16,7 @@ import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,9 +28,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
+
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -181,7 +186,11 @@ public class Utilities
                         final String variableName = element.getAttribute( "variableName" );
                         final IMonkeyDOMFactory factory = ( IMonkeyDOMFactory )element.createExecutableExtension( "class" );
                         final Object rootObject = factory.getDOMroot();
-                        vars.put( variableName, rootObject );
+                        final DOMDescriptor descriptor = metadata.getDOMByPlugin( declaring_plugin_id );
+                        if( !StringUtils.equals( descriptor.pluginName, PLUGIN_ID ) && descriptor.map.containsKey( variableName ) )
+                            vars.put( descriptor.map.get( variableName ), rootObject );
+                        else
+                            vars.put( variableName, rootObject );
                     }
                 }
                 catch( final Exception x )
