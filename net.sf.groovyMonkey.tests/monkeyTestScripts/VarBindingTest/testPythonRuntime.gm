@@ -1,0 +1,10 @@
+/*
+ * Menu: testPythonRuntime
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/VarBindingTest/testPythonRuntime.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * LANG: Python
+ * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom ]
+ */
+
+testingDOM.callDOM( 'testPythonRuntime' )

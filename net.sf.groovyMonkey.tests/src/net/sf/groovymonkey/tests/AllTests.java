@@ -16,6 +16,7 @@ public class AllTests
         suite.addTestSuite( IncludeTest.class );
         suite.addTestSuite( ResourcesTest.class );
         suite.addTestSuite( ScriptMetadataTest.class );
+        suite.addTestSuite( VarBindingTest.class );
         //$JUnit-END$
         return suite;
     }

@@ -1,0 +1,10 @@
+/*
+ * Menu: testRubyRuntime
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/VarBindingTest/testRubyRuntime.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * LANG: Ruby
+ * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom ]
+ */
+
+$testingDOM.callDOM( "testRubyRuntime" )
