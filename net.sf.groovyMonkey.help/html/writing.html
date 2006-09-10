@@ -176,6 +176,24 @@ loaded set of DOMs available in the Eclipse workbench for you to use.
 <img src="images/installedDOMs.png">
 </center>
 
+<p>
+There is now the ability to rename DOM variable names for your current script in order to handle conflicts
+between DOM plugins or to pick names that more suit you.  To accomplish this you use a notation very similar
+to Groovy Maps.  DOM variables declared in the 'Default' DOM Descriptor cannot as of now be remapped.  The
+following shows an example whereby in this script the 'out' binding variable is renamed to 'myOut' and the 
+'launchManager ' binding variable is renamed to 'launch'.
+</p>
+<code>
+/*
+ * Menu: Open Dialog > Groovy
+ * Kudos: ervinja
+ * License: EPL 1.0
+ * Job: UIJob
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom [ myOut:out, launch:launchManager ]
+ */
+myOut.println( 'hello world' )
+</code>
+
 <h3>Objects of all Kinds</h3>
 
 <p>
