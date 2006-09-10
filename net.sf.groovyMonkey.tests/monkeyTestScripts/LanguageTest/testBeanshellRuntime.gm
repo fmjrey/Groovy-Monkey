@@ -8,3 +8,4 @@
  */
 
 testDom.callDOM( "testBeanshellRuntime" );
+anotherDom.callDOM( "testBeanshellRuntime" );

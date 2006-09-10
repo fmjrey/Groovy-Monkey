@@ -38,18 +38,21 @@ extends TestCaseAbstract
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testDefaultRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testGroovyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testPythonRuntime()
     throws Exception
@@ -62,11 +65,13 @@ extends TestCaseAbstract
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testTclRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
 }

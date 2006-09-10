@@ -4,16 +4,17 @@ import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.io.IOUtils.toString;
 import static org.apache.commons.lang.StringUtils.removeStart;
+import static org.eclipse.core.resources.IncrementalProjectBuilder.FULL_BUILD;
 import java.io.File;
 import java.io.InputStream;
 import junit.framework.TestCase;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import utmj.threaded.RetriedAssert;
+import net.sf.groovymonkey.tests.fixtures.dom.AnotherDOM;
 import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import net.sf.groovymonkey.tests.fixtures.projects.TestJavaProject;
 import net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import utmj.threaded.RetriedAssert;
 
 public class TestCaseAbstract
 extends TestCase
@@ -51,7 +52,7 @@ extends TestCase
         javaProject.addWorkspacePathToClasspath( javaProject.project().getName() + "/externalLib" );
         javaProject.project().refreshLocal( IProject.DEPTH_INFINITE, null );
         javaProject.createJavaType( "net.sf.groovymonkey.tests", "TestInclude.java", toString( javaFileInput, "ISO-8859-1" ) );
-        javaProject.project().build( IncrementalProjectBuilder.FULL_BUILD, null );
+        javaProject.project().build( FULL_BUILD, null );
     }
     @Override
     protected void tearDown() 
@@ -71,6 +72,18 @@ extends TestCase
             public void run() throws Exception
             {
                 assertEquals( getName(), TestDOM.string() );
+            }
+        }.start();
+    }
+    protected void assertAnotherDOMEquals() 
+    throws Exception
+    {
+        new RetriedAssert( 60000, 500 )
+        {
+            @Override
+            public void run() throws Exception
+            {
+                assertEquals( getName(), AnotherDOM.string() );
             }
         }.start();
     }

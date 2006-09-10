@@ -7,6 +7,9 @@
       <dom
             class="net.sf.groovymonkey.tests.fixtures.dom.TestDOMFactory"
             variableName="testDom"/>
+      <dom
+            class="net.sf.groovymonkey.tests.fixtures.dom.AnotherDOMFactory"
+            variableName="anotherDom"/>
    </extension>
 
 </plugin>

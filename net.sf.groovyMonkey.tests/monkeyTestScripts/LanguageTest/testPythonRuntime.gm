@@ -6,5 +6,4 @@
  * LANG: Python
  * DOM: http://test.update.site/net.sf.groovyMonkey.tests
  */
-
 testDom.callDOM( 'testPythonRuntime' )

@@ -4,7 +4,8 @@
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * LANG: Beanshell
- * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom ]
+ * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom, anotherDOM:anotherDom ]
  */
 
 testingDOM.callDOM( "testBeanshellRuntime" );
+anotherDOM.callDOM( "testBeanshellRuntime" );

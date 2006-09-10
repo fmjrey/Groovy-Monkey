@@ -8,3 +8,4 @@
  */
 
 $testDom callDOM "testTclRuntime"
+$anotherDom callDOM "testTclRuntime"

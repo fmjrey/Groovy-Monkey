@@ -8,3 +8,4 @@
  */
 
 $testDom.callDOM( "testRubyRuntime" )
+$anotherDom.callDOM( "testRubyRuntime" )

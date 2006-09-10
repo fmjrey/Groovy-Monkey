@@ -3,7 +3,8 @@
  * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/VarBindingTest/testGroovyRuntime.gm
  * Kudos: James E. Ervin
  * License: EPL 1.0
- * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom ]
+ * DOM: http://test.update.site/net.sf.groovyMonkey.tests [ testingDOM:testDom, anotherDOM:anotherDom ]
  */
 
 testingDOM.callDOM( 'testGroovyRuntime' )
+anotherDOM.callDOM( 'testGroovyRuntime' )

@@ -4,6 +4,8 @@ import static net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject.MONK
 import static net.sf.groovymonkey.tests.fixtures.projects.TestMonkeyProject.runMonkeyScript;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import java.io.InputStream;
+
+import net.sf.groovymonkey.tests.fixtures.dom.AnotherDOM;
 import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import org.eclipse.core.resources.IFile;
 
@@ -23,6 +25,7 @@ extends TestCaseAbstract
     {
         super.setUp();
         new TestDOM().callDOM( "" );
+        new AnotherDOM().callDOM( "" );
         input = bundle().getResource( MONKEY_TEST_SCRIPTS + LanguageTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), input );
     }
@@ -38,18 +41,21 @@ extends TestCaseAbstract
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testDefaultRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testGroovyRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testPythonRuntime()
     throws Exception
@@ -62,11 +68,13 @@ extends TestCaseAbstract
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
     public void testTclRuntime()
     throws Exception
     {
         runMonkeyScript( script );
         assertTestDOMEquals();
+        assertAnotherDOMEquals();
     }
 }

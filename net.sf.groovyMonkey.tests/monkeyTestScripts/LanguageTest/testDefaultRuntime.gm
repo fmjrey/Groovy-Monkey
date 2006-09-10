@@ -7,3 +7,4 @@
  */
 
 testDom.callDOM( 'testDefaultRuntime' )
+anotherDom.callDOM( 'testDefaultRuntime' )
