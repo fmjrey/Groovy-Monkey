@@ -1,0 +1,15 @@
+/*
+ * Menu: testGroovyRuntime
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/VarNameDeconflictTest/testDeconflict.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * DOM: file://tmp/PDEJUnit/VarNameDeconflictTest/testDeconflict/net.sf.testing.dom
+ * DOM: file://tmp/PDEJUnit/VarNameDeconflictTest/testDeconflict/net.sf.testing.anotherDom [ anotherDOM:testingDOM ]
+ */
+assert testingDOM.getString() == ''
+testingDOM.callDOM( 'testGroovyRuntime' )
+assert testingDOM.getString() == 'testGroovyRuntime'
+
+assert anotherDOM.getString() == ''
+anotherDOM.callDOM( 'testGroovyRuntime' )
+assert anotherDOM.getString() == 'testGroovyRuntime'

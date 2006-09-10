@@ -10,13 +10,14 @@ public class AllTests
         //$JUnit-BEGIN$
         suite.addTestSuite( ActionsTests.class );
         suite.addTestSuite( IncludeBundleTest.class );
+        suite.addTestSuite( VarBindingTest.class );
         suite.addTestSuite( IncludeLocalBundleTest.class );
         suite.addTestSuite( MonkeyRunnerTest.class );
         suite.addTestSuite( LanguageTest.class );
         suite.addTestSuite( IncludeTest.class );
         suite.addTestSuite( ResourcesTest.class );
         suite.addTestSuite( ScriptMetadataTest.class );
-        suite.addTestSuite( VarBindingTest.class );
+        suite.addTestSuite( VarNameDeconflictTest.class );
         //$JUnit-END$
         return suite;
     }
