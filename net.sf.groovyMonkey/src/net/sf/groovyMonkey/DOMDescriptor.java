@@ -32,6 +32,7 @@ implements Comparable< DOMDescriptor >
             domUpdateURL.append( map.get( scriptVarName ) ).append( ":" ).append( scriptVarName ).append( ", " );
         if( !map.isEmpty() )
         {
+            domUpdateURL.deleteCharAt( domUpdateURL.length() - 1 ); // Removing that last appended space
             domUpdateURL.deleteCharAt( domUpdateURL.length() - 1 ); // Removing that last appended comma
             domUpdateURL.append( "]" );
         }
