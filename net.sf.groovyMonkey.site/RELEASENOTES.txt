@@ -1,2 +1,0 @@
-changed org.eclipse.eclipsemonkey.standarddoms to org.eclipse.dash.doms
-ctrl-option-M to rerun last script

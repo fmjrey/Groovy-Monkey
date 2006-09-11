@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Ruby Fragment
-Bundle-SymbolicName: net.sf.groovyMonkey.ruby;singleton:=true
-Bundle-Version: 0.3.0
-Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
-Bundle-Localization: plugin
-Bundle-ClassPath: .,
- jruby-0.8.3.jar
