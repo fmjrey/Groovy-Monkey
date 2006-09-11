@@ -14,7 +14,7 @@ Require-Bundle: net.sf.groovyMonkey,
  org.eclipse.jdt.core,
  org.eclipse.jdt.launching,
  org.junit
-Eclipse-LazyStart: true
+Eclipse-AutoStart: true
 Bundle-ClassPath: lib/commons-io-1.2.jar,
  lib/commons-lang-2.1.jar,
  .,

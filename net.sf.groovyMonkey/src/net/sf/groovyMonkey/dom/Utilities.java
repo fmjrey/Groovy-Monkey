@@ -165,6 +165,7 @@ public class Utilities
         getExtensionGlobalVariables( metadata, point, vars );
         return vars;
     }
+    @SuppressWarnings("deprecation")
     private static void getExtensionGlobalVariables( final ScriptMetadata metadata, 
                                                      final IExtensionPoint point, 
                                                      final Map< String, Object > vars )
@@ -180,7 +181,7 @@ public class Utilities
                 try
                 {
                     final IExtension declaring = element.getDeclaringExtension();
-                    final String declaring_plugin_id = declaring.getContributor().getName();
+                    final String declaring_plugin_id = declaring.getDeclaringPluginDescriptor().getUniqueIdentifier();
                     if( metadata.containsDOMByPlugin( declaring_plugin_id ) )
                     {
                         final String variableName = element.getAttribute( "variableName" );
@@ -207,6 +208,7 @@ public class Utilities
             return false;
         return true;
     }
+    @SuppressWarnings("deprecation")
     public static Set< String > getDOMPlugins()
     {
         final Set< String > plugins = new TreeSet< String >();
@@ -217,9 +219,10 @@ public class Utilities
         if( extensions == null )
             return plugins;
         for( final IExtension extension : extensions )
-            plugins.add( extension.getContributor().getName() );
+            plugins.add( extension.getDeclaringPluginDescriptor().getUniqueIdentifier() );
         return plugins;
     }
+    @SuppressWarnings("deprecation")
     public static Map< String, Class > getDOMInfo( final String pluginID ) 
     {
         final IExtensionPoint point = getDOMExtensionPoint();
@@ -239,7 +242,7 @@ public class Utilities
                 try
                 {
                     final IExtension declaring = element.getDeclaringExtension();
-                    final String declaring_plugin_id = declaring.getContributor().getName();
+                    final String declaring_plugin_id = declaring.getDeclaringPluginDescriptor().getUniqueIdentifier();
                     if( pluginID.trim().equals( declaring_plugin_id.trim() ) )
                     {
                         final String variableName = element.getAttribute( "variableName" );
@@ -273,6 +276,7 @@ public class Utilities
         }
         return vars;
     }
+    @SuppressWarnings("deprecation")
     public static Map< String, Object > getDOM( final String pluginID ) 
     {
         final IExtensionPoint point = getDOMExtensionPoint();
@@ -292,7 +296,7 @@ public class Utilities
                 try
                 {
                     final IExtension declaring = element.getDeclaringExtension();
-                    final String declaring_plugin_id = declaring.getContributor().getName();
+                    final String declaring_plugin_id = declaring.getDeclaringPluginDescriptor().getUniqueIdentifier();
                     if( pluginID.trim().equals( declaring_plugin_id.trim() ) )
                     {
                         final String variableName = element.getAttribute( "variableName" );
@@ -313,6 +317,7 @@ public class Utilities
         }
         return vars;
     }
+    @SuppressWarnings("deprecation")
     public static String getUpdateSiteForDOMPlugin( final String pluginID ) 
     {
         final IExtensionPoint point = getDOMExtensionPoint();
@@ -323,7 +328,7 @@ public class Utilities
             return "";
         for( final IExtension extension : extensions )
         {
-            if( !extension.getContributor().getName().equals( pluginID ) )
+            if( !extension.getDeclaringPluginDescriptor().getUniqueIdentifier().equals( pluginID ) )
                 continue;
             final IConfigurationElement[] configurations = extension.getConfigurationElements();
             for( final IConfigurationElement element : configurations )

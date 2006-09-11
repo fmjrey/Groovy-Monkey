@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey.editor.actions;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static net.sf.groovyMonkey.dom.Utilities.getDOMPlugins;
 import java.util.Set;
 import java.util.TreeSet;
@@ -7,7 +6,6 @@ import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,7 +38,7 @@ implements ISelectionChangedListener
     };
     public static final String DIALOG_SETTINGS_SECTION = AddDialog.class.getName();
     private final Text text;
-    private final String dialogSettingsSection;
+    //private final String dialogSettingsSection;
     private final Set< String > available;
     private final Set< String > selected = new TreeSet< String >();
     private TableViewer table;
@@ -62,23 +60,23 @@ implements ISelectionChangedListener
     {
         super( parentShell );
         this.text = text;
-        dialogSettingsSection = DIALOG_SETTINGS_SECTION + "." + text.name();
+        //dialogSettingsSection = DIALOG_SETTINGS_SECTION + "." + text.name();
         this.available = available;
         setShellStyle( getShellStyle() | SWT.RESIZE );
     }
-    @Override
-    protected IDialogSettings getDialogBoundsSettings()
-    {
-        final IDialogSettings settings = getDefault().getDialogSettings();
-        if( settings.getSection( dialogSettingsSection ) == null )
-            settings.addNewSection( dialogSettingsSection );
-        return settings.getSection( dialogSettingsSection );
-    }
-    @Override
-    protected int getDialogBoundsStrategy()
-    {
-        return super.getDialogBoundsStrategy();
-    }
+//    @Override
+//    protected IDialogSettings getDialogBoundsSettings()
+//    {
+//        final IDialogSettings settings = getDefault().getDialogSettings();
+//        if( settings.getSection( dialogSettingsSection ) == null )
+//            settings.addNewSection( dialogSettingsSection );
+//        return settings.getSection( dialogSettingsSection );
+//    }
+//    @Override
+//    protected int getDialogBoundsStrategy()
+//    {
+//        return super.getDialogBoundsStrategy();
+//    }
     @Override
     protected void configureShell( final Shell newShell )
     {
