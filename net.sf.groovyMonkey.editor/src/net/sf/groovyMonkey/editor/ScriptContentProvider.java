@@ -473,9 +473,11 @@ implements ITreeContentProvider
     }
     private void flatView( final List< Object > elements )
     {
+        final List< VarDescriptor > set = new TreeList< VarDescriptor >();
         for( final DOMDescriptor dom : doms )
-            for( final Object child : getChildren( dom ) )
-                elements.add( child );
+            for( final VarDescriptor child : ( VarDescriptor[] )getChildren( dom ) )
+                set.add( child );
+        elements.addAll( set );
         elements.addAll( includes );
         for( final BundleDescriptor bundle : bundles )
             for( final Object child : getChildren( bundle ) )
