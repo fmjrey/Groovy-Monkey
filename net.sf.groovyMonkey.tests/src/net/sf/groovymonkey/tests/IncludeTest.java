@@ -64,10 +64,4 @@ extends TestCaseAbstract
         runMonkeyScript( script );
         assertTestDOMEquals();
     }
-//    public void testIncludeInTcl()
-//    throws Exception
-//    {
-//        runMonkeyScript( script );
-//        assertEquals( getName(), TestDOM.string() );
-//    }
 }

@@ -60,10 +60,4 @@ extends TestCaseAbstract
         assertEquals( getName(), runMonkeyScript( script ) );
         assertTestDOMEquals();
     }
-    public void testIncludeInBundleTcl()
-    throws Exception
-    {
-        assertEquals( getName(), runMonkeyScript( script ) );
-        assertTestDOMEquals();
-    }
 }

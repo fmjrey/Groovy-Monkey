@@ -70,11 +70,4 @@ extends TestCaseAbstract
         assertTestDOMEquals();
         assertAnotherDOMEquals();
     }
-    public void testTclRuntime()
-    throws Exception
-    {
-        runMonkeyScript( script );
-        assertTestDOMEquals();
-        assertAnotherDOMEquals();
-    }
 }
