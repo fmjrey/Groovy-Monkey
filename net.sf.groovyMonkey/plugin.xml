@@ -124,4 +124,15 @@
             resource="net.sf.groovyMonkey.dom.resources.Resources"
             variableName="resources"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="net.sf.groovyMonkey.preferences.GroovyMonkeyPreferencePage"
+            id="net.sf.groovyMonkey.preferences"
+            name="Groovy Monkey"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="net.sf.groovyMonkey.preferences.PreferenceInitializer"/>
+   </extension>
 </plugin>
