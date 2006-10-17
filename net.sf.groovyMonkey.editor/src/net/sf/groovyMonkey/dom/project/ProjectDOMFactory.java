@@ -51,11 +51,9 @@ implements IMonkeyDOMFactory
                     final FileEditorInput finput = ( FileEditorInput )input;
                     return new Project( finput.getFile().getProject() );
                 }
-                else
-                    return "Unable to determine project from text \"" + textsel.getText() + "\"";
-            }
-            else
                 return "Unable to determine project from text \"" + textsel.getText() + "\"";
+            }
+            return "Unable to determine project from text \"" + textsel.getText() + "\"";
         }
         else
             return "Cannot determine project from selection " + selection.toString();

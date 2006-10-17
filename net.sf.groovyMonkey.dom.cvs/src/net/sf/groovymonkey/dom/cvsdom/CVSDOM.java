@@ -68,7 +68,7 @@ public class CVSDOM
                             final List< ICVSRemoteResource > remoteResources,
                             final IFolder target,
                             final boolean disconnect ) 
-    throws CVSException, InterruptedException, InvocationTargetException
+    throws CVSException, InterruptedException
     {
         final IProgressMonitor monitor = progressMonitor == null ? new NullProgressMonitor() : progressMonitor;
         monitor.beginTask( "Checking out into target: " + target.getFullPath(), remoteResources.size() );

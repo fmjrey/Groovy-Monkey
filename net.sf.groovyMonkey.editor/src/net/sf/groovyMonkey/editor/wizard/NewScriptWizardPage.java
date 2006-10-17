@@ -204,7 +204,7 @@ extends WizardPage
     @SuppressWarnings("unchecked")
     public Map< String, IMonkeyScriptFactory > getScriptLanguages()
     {
-        return ( Map< String, IMonkeyScriptFactory > )new CaseInsensitiveMap( getScriptFactories() );
+        return new CaseInsensitiveMap( getScriptFactories() );
     }
     /**
      * Tests if the current workbench selection is a suitable container to use.
@@ -300,7 +300,7 @@ extends WizardPage
             updateStatus( "Project must exist: " + container.getProject().getName() );
             return;
         }
-        if( container == null || ( container.getType() & ( PROJECT | FOLDER ) ) == 0 )
+        if( ( container.getType() & ( PROJECT | FOLDER ) ) == 0 )
         {
             updateStatus( "File container must exist" );
             return;

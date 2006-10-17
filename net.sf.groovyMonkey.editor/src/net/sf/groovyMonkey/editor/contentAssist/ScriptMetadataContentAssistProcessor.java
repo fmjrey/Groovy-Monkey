@@ -67,8 +67,7 @@ implements IContentAssistProcessor
     //  no other '*' in it.
     private ICompletionProposal[] proposals( final int offset,
                                              final IDocument document,
-                                             final String beforeInsert ) 
-    throws BadLocationException
+                                             final String beforeInsert )
     {
         final String alreadyTyped = substringAfterLast( beforeInsert, "*" ).trim();
         final List< ICompletionProposal > list = list();

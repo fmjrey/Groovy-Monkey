@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.ICON_PATH;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getImageDescriptor;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptResourceChangeListener;
 import org.eclipse.jface.action.Action;
@@ -18,7 +18,7 @@ extends Action
     {
         super( "Flat Layout", AS_CHECK_BOX );
         setChecked( false );
-        setImageDescriptor( getImageDescriptor( ICON_PATH + "flatLayout.gif" ) );
+        setImageDescriptor( GroovyMonkeyPlugin.getImageDescriptor( ICON_PATH + "flatLayout.gif" ) );
         this.provider = provider;
         this.listener = listener;
         

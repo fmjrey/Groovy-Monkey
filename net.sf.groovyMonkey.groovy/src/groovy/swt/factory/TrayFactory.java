@@ -1,26 +1,15 @@
-/*
- * Created on Feb 15, 2004
- *  
- */
 package groovy.swt.factory;
-
+import static org.eclipse.swt.widgets.Display.getCurrent;
 import java.util.Map;
 
-import org.codehaus.groovy.GroovyException;
-import org.eclipse.swt.widgets.Display;
-
-/**
- * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
- * @version $Revision$
- */
-public class TrayFactory extends AbstractSwtFactory implements SwtFactory {
-
-    /*
-     * @see groovy.swt.impl.Factory#newInstance(java.util.Map, java.lang.Object)
-     */
-    public Object newInstance(Map properties, Object parent)
-            throws GroovyException {
-        return Display.getCurrent().getSystemTray();
+public class TrayFactory 
+extends AbstractSwtFactory 
+implements SwtFactory
+{
+    @Override
+    public Object newInstance( final Map properties, 
+                               final Object parent )
+    {
+        return getCurrent().getSystemTray();
     }
-
 }

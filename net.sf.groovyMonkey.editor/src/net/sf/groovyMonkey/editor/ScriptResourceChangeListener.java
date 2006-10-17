@@ -72,7 +72,7 @@ implements IResourceChangeListener
             // log an error in the error log
             x.printStackTrace();
         }
-        final boolean anyMatches = ( ( Boolean )( changes[ 0 ] ) ).booleanValue();
+        final boolean anyMatches = changes[ 0 ].booleanValue();
         if( anyMatches && diff( changedFile[ 0 ] ) )
             updateViewer();
     }
