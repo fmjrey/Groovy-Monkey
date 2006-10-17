@@ -16,7 +16,6 @@ import static net.sf.groovyMonkey.util.ListUtils.list;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.defaultString;
-import static org.apache.commons.lang.StringUtils.equals;
 import static org.apache.commons.lang.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -41,7 +40,6 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import static org.osgi.framework.Bundle.UNINSTALLED;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,9 +53,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
-
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -492,14 +489,14 @@ public class ScriptMetadata
     public boolean containsDOMByPlugin( final String pluginID )
     {
         for( final DOMDescriptor dom : doms )
-            if( equals( dom.pluginName, pluginID ) )
+            if( StringUtils.equals( dom.pluginName, pluginID ) )
                 return true;
         return false;
     }
     public DOMDescriptor getDOMByPlugin( final String pluginID )
     {
         for( final DOMDescriptor dom : doms )
-            if( equals( dom.pluginName, pluginID ) )
+            if( StringUtils.equals( dom.pluginName, pluginID ) )
                 return dom;
         return null;
     }

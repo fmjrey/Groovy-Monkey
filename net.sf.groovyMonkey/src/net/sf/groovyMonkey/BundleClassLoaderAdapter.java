@@ -1,8 +1,8 @@
 package net.sf.groovyMonkey;
-import static org.apache.commons.lang.ArrayUtils.toString;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
+import org.apache.commons.lang.ArrayUtils;
 import org.osgi.framework.Bundle;
 
 public class BundleClassLoaderAdapter 
@@ -79,6 +79,6 @@ extends ClassLoader
     }
     public String toString()
     {
-        return "bundles: " + toString( bundles );
+        return "bundles: " + ArrayUtils.toString( bundles );
     }
 }
