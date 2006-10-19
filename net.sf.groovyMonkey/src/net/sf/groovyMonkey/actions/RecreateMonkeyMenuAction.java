@@ -31,7 +31,6 @@ import net.sf.groovyMonkey.ScriptMetadata;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -40,7 +39,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.ActionSetContributionItem;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
 public class RecreateMonkeyMenuAction 
@@ -85,7 +83,6 @@ implements IWorkbenchWindowActionDelegate
 
     public void run( final IAction action )
     {
-        clearTheMenu();
         final List< ScriptMetadata > metaDatas = getAllMetadatas();
         final List< Association > menuData = createMenuFromMetadatas( metaDatas );
         createTheMenu( menuData, action );
@@ -104,23 +101,15 @@ implements IWorkbenchWindowActionDelegate
         }
         return result;
     }
-    private void clearTheMenu()
-    {
-        final MenuManager manager = ( ( WorkbenchWindow )window ).getMenuManager();
-        if( manager == null )
-            return;
-        final IContributionItem two = manager.findUsingPath( MENU_PATH );
-        final IMenuManager three = ( IMenuManager )( ( ActionSetContributionItem )two ).getInnerItem();
-        three.removeAll();
-    }
     private void createTheMenu( final List< Association > menuData, 
                                 final IAction action )
     {
         final MenuManager outerManager = ( ( WorkbenchWindow )window ).getMenuManager();
         if( outerManager == null )
             return;
-        final IContributionItem contribution = outerManager.findUsingPath( MENU_PATH );
-        final IMenuManager menuManager = ( IMenuManager )( ( ActionSetContributionItem )contribution ).getInnerItem();
+        //final IMenuManager menuManager = ( IMenuManager )( ( ActionSetContributionItem )contribution ).getInnerItem();
+        final IMenuManager menuManager = new MenuManager( "GMonkey", MENU_PATH );
+        outerManager.replaceItem( MENU_PATH, menuManager );
         final MonkeyMenuStruct current = new MonkeyMenuStruct();
         current.key = "";
         current.menu = menuManager;
@@ -160,7 +149,7 @@ implements IWorkbenchWindowActionDelegate
         current.submenu = new MonkeyMenuStruct();
         for( final Association association : sorted )
             addNestedMenuEditAction( current, association.key, association.file );
-        menuManager.updateAll( true );
+        outerManager.updateAll(  true );
     }
     private void addNestedMenuAction( final MonkeyMenuStruct current, 
                                       final String menuString, 
