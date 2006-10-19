@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey;
 import static java.util.Collections.synchronizedMap;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
+import static net.sf.groovyMonkey.preferences.PreferenceInitializer.MONKEY_MENU_NAME;
 import static org.eclipse.core.resources.IResourceChangeEvent.POST_CHANGE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import java.util.HashMap;
@@ -9,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.BundleSpecification;
 import org.eclipse.osgi.service.resolver.PlatformAdmin;
@@ -82,6 +85,18 @@ implements IStartup
         final UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
         getWorkspace().addResourceChangeListener( listener, POST_CHANGE );
         listener.rescanAllFiles();
+        final IPropertyChangeListener propertyListener = new IPropertyChangeListener()
+        {
+            public void propertyChange( final PropertyChangeEvent event )
+            {
+                if( event == null )
+                    return;
+                if( !MONKEY_MENU_NAME.equals( event.getProperty() ) )
+                    return;
+                createTheMonkeyMenu();
+            }            
+        };
+        getPreferenceStore().addPropertyChangeListener( propertyListener );
         createTheMonkeyMenu();
     }
     public static void addScript( final String name, 

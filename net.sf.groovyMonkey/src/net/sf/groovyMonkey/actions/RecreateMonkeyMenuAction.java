@@ -14,9 +14,11 @@ import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MENU_EDIT_PATH;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MENU_PATH;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.RunMonkeyScript.LAST_RUN;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
+import static net.sf.groovyMonkey.preferences.PreferenceInitializer.MONKEY_MENU_NAME;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import java.util.ArrayList;
@@ -107,8 +109,8 @@ implements IWorkbenchWindowActionDelegate
         final MenuManager outerManager = ( ( WorkbenchWindow )window ).getMenuManager();
         if( outerManager == null )
             return;
-        //final IMenuManager menuManager = ( IMenuManager )( ( ActionSetContributionItem )contribution ).getInnerItem();
-        final IMenuManager menuManager = new MenuManager( "GMonkey", MENU_PATH );
+        final String menuName = getDefault().getPreferenceStore().getString( MONKEY_MENU_NAME );
+        final IMenuManager menuManager = new MenuManager( menuName, MENU_PATH );
         outerManager.replaceItem( MENU_PATH, menuManager );
         final MonkeyMenuStruct current = new MonkeyMenuStruct();
         current.key = "";
