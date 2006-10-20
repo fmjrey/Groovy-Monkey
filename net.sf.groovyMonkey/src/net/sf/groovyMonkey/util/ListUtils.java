@@ -104,20 +104,30 @@ public class ListUtils
     public static < T > List< T > array( final T... objects )
     {
         final List< T > list = new ArrayList< T >();
-        for( final T object : objects )
-            list.add( object );
+        add( list, objects );
         return list;
     }
     public static < T > List< T > linked( final T... objects )
     {
         final List< T > list = new LinkedList< T >();
-        for( final T object : objects )
-            list.add( object );
+        add( list, objects );
         return list;
     }
     public static < T > List< T > list( final T... objects )
     {
         return array( objects );
+    }
+    public static < T extends Comparable< T > > List< T > treeList( final T... objects )
+    {
+        final List< T > list = new TreeList< T >();
+        add( list, objects );
+        return list;
+    }
+    public static < T > void add( final List< T > list, 
+                                  final T... objects )
+    {
+        for( final T object : objects )
+            list.add( object );
     }
     public static < E extends Object > List< String > caseless( final E... objects )
     {
