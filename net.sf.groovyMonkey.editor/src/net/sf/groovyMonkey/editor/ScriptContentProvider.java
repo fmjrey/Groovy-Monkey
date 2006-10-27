@@ -406,7 +406,7 @@ implements ITreeContentProvider
         }
         return null;
     }
-    private static IJavaProject getSearchableProject( final String projectName )
+    public static IJavaProject getSearchableProject( final String projectName )
     {
         final PluginModelManager manager = PDECore.getDefault().getModelManager();
         final IJavaProject javaProject = manager.getSearchablePluginsManager().getProxyProject();
