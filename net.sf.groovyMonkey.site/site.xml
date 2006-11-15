@@ -3,7 +3,7 @@
    <description url="http://groovy-monkey.sourceforge.net/update/">
       Groovy Monkey scripting tool for Eclipse
    </description>
-   <feature url="features/net.sf.groovyMonkey_0.3.0.jar" id="net.sf.groovyMonkey" version="0.3.0">
+   <feature url="features/net.sf.groovyMonkey_0.4.0.jar" id="net.sf.groovyMonkey" version="0.4.0">
       <category name="Groovy Monkey"/>
    </feature>
    <category-def name="Groovy Monkey" label="Groovy Monkey"/>
