@@ -57,7 +57,7 @@
                id="net.sf.groovymonkey.action5"
                label="as Bugzilla (text)"
                menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"
-               tooltip="Publish script in wiki format"/>
+               tooltip="Publish script straight text format (Bugzilla)"/>
          <menu
                id="net.sf.groovymonkey.navigatorContextMenu"
                label="Copy for Publication"
@@ -66,7 +66,8 @@
                class="net.sf.groovyMonkey.actions.PublishScriptForEmail"
                id="net.sf.groovymonkey.action6"
                label="as Email (wrapped text)"
-               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"/>
+               menubarPath="net.sf.groovymonkey.navigatorContextMenu/group1"
+               tooltip="Publish script for transmitting as email"/>
       </objectContribution>
       <objectContribution
             adaptable="false"

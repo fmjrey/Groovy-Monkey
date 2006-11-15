@@ -13,10 +13,12 @@ package net.sf.groovyMonkey.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static net.sf.groovyMonkey.util.ListUtils.array;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
+
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;
@@ -31,23 +33,35 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
-public class PublishScript 
+public class PublishScript
 implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
 {
     private Shell shell;
+    private ISelection selection;
+
     public PublishScript() {}
 
+    protected List< IFile > getScripts()
+    {
+    	final List< IFile > scripts = array();
+    	if( !( selection instanceof IStructuredSelection ) )
+    		return scripts;
+    	final IStructuredSelection sel = ( IStructuredSelection )selection;
+        final List selectedObjects = sel.toList();
+        for( final Object object : selectedObjects )
+			if( object instanceof IFile )
+				scripts.add( ( IFile )object );
+    	return scripts;
+    }
     public void run( final IAction action )
     {
         String result = "";
-        final IStructuredSelection sel = ( IStructuredSelection )selection;
-        final List selectedObjects = sel.toList();
-        for( final Iterator iter = selectedObjects.iterator(); iter.hasNext(); )
+        final List< IFile > scripts = getScripts();
+        for( final IFile script : scripts )
         {
-            final IFile element = ( IFile )iter.next();
             try
             {
-                final String contents = getContents( element );
+                final String contents = getContents( script );
                 result += decorateText( contents );
             }
             catch( final IOException x )
@@ -74,10 +88,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     {
         return PUBLISH_BEFORE_MARKER + "\n" + contents + "\n" + PUBLISH_AFTER_MARKER;
     }
-
-    private ISelection selection;
-
-    public void selectionChanged( final IAction action, 
+    public void selectionChanged( final IAction action,
                                   final ISelection selection )
     {
         this.selection = selection;
@@ -89,7 +100,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     {
         shell = window.getShell();
     }
-    public void setActivePart( final IAction action, 
+    public void setActivePart( final IAction action,
                                final IWorkbenchPart targetPart )
     {
         shell = targetPart.getSite().getShell();
