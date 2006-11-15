@@ -10,6 +10,7 @@
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
 package net.sf.groovyMonkey.actions;
+import static java.lang.Math.max;
 import static java.util.regex.Pattern.DOTALL;
 import static java.util.regex.Pattern.compile;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
@@ -21,6 +22,7 @@ import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
+import static net.sf.groovyMonkey.util.ListUtils.array;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.removeStart;
@@ -29,14 +31,16 @@ import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import net.sf.groovyMonkey.ScriptMetadata;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -59,7 +63,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
-public class PasteScriptFromClipboardAction 
+public class PasteScriptFromClipboardAction
 implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
 {
     class TextAndRTF
@@ -70,7 +74,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     private IStructuredSelection selection = null;
     private Shell shell;
     private IWorkbenchWindow window;
-    
+
     public PasteScriptFromClipboardAction() {}
 
     public void run( final IAction action )
@@ -78,6 +82,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         final TextAndRTF text = getTextFromClipboard();
         final Collection< String > scripts = extractScriptsFromText( text );
         for( final String script : scripts )
+        {
             try
             {
                 final String scriptText = collapseEscapedNewlines( script );
@@ -95,17 +100,18 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             {
                 openInformation( shell, "Groovy Monkey", "Unable to create the " + SCRIPTS_PROJECT + " project or create a Monkey script due to " + x );
             }
+        }
         if( scripts.isEmpty() )
             openInformation( shell, "Groovy Monkey", "Can't find any scripts on clipboard - make sure you include the Jabberwocky-inspired markers at the beginning and ending of the script" );
     }
-    public String collapseEscapedNewlines( final String input )
+    public static String collapseEscapedNewlines( final String input )
     {
         final Pattern pattern = compile( "\\\\(\n|(\r\n?))" );
         final Matcher match = pattern.matcher( input );
         final String result = match.replaceAll( "" );
         return result;
     }
-    private void highlightNewScriptInNavigator( final IFile file ) 
+    private void highlightNewScriptInNavigator( final IFile file )
     throws PartInitException
     {
         if( window == null )
@@ -122,14 +128,14 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             }
         }
     }
-    private IProject getProject( final String fullPathString ) 
+    private IProject getProject( final String fullPathString )
     throws CoreException
     {
         final String pathString = removeStart( fullPathString, "/" );
         final String path = pathString.indexOf( "/" ) != -1 ? pathString.substring( 0, pathString.indexOf( "/" ) ) : pathString;
         return getProject( getWorkspace().getRoot().getProject( path ) );
     }
-    private IProject getProject( final IResource resource ) 
+    private IProject getProject( final IResource resource )
     throws CoreException
     {
         final IProject project = resource.getProject();
@@ -139,7 +145,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             project.open( null );
         return project;
     }
-    private IFolder findDestinationFor( final ScriptMetadata metadata ) 
+    private IFolder findDestinationFor( final ScriptMetadata metadata )
     throws CoreException
     {
         if( selection != null && selection.getFirstElement() instanceof IFolder )
@@ -165,9 +171,9 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             folder.create( IResource.NONE, true, null );
         return folder;
     }
-    private IFile createScriptFile( final IFolder destination, 
+    private IFile createScriptFile( final IFolder destination,
                                     final ScriptMetadata metadata,
-                                    final String script ) 
+                                    final String script )
     throws CoreException, IOException
     {
         final String defaultName = substringAfterLast( metadata.scriptPath(), "/" );
@@ -200,11 +206,11 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                         }
                     }
                     if( match.group( 2 ) == null )
-                        maxsuffix = Math.max( maxsuffix, 0 );
+                        maxsuffix = max( maxsuffix, 0 );
                     else
                     {
                         final int n = Integer.parseInt( match.group( 2 ) );
-                        maxsuffix = Math.max( maxsuffix, n );
+                        maxsuffix = max( maxsuffix, n );
                     }
                 }
             }
@@ -235,9 +241,9 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     }
     private List< String > extractScriptsFromText( final TextAndRTF text )
     {
-        final List< String > result = new ArrayList< String >();
-        final Pattern pattern = Pattern.compile( PUBLISH_BEFORE_MARKER + "\\s*(.*?)\\s*" + PUBLISH_AFTER_MARKER, DOTALL );
-        final Pattern crpattern = Pattern.compile( "\r\n?" );
+        final List< String > result = array();
+        final Pattern pattern = compile( PUBLISH_BEFORE_MARKER + "\\s*(.*?)\\s*" + PUBLISH_AFTER_MARKER, DOTALL );
+        final Pattern crpattern = compile( "\r\n?" );
         if( text.text != null )
         {
             final Matcher matcher = pattern.matcher( text.text );
@@ -268,7 +274,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         }
         return result;
     }
-    public void selectionChanged( final IAction action, 
+    public void selectionChanged( final IAction action,
                                   final ISelection selection )
     {
         this.selection = ( IStructuredSelection )selection;
@@ -279,7 +285,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         shell = window.getShell();
         this.window = window;
     }
-    public void setActivePart( final IAction action, 
+    public void setActivePart( final IAction action,
                                final IWorkbenchPart targetPart )
     {
         shell = targetPart.getSite().getShell();
