@@ -14,7 +14,7 @@ import static java.util.regex.Pattern.compile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PublishScriptForEmail 
+public class PublishScriptForEmail
 extends PublishScript
 {
     @Override
@@ -23,7 +23,7 @@ extends PublishScript
         final String munged = breakIntoShorterLines( contents );
         return super.decorateText( munged );
     }
-    public String breakIntoShorterLines( final String contents )
+    public static String breakIntoShorterLines( final String contents )
     {
         final Pattern pattern = compile( "([^\n\r]{50})(?![\n\r])" );
         final Matcher matcher = pattern.matcher( contents );
