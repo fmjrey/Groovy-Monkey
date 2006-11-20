@@ -54,6 +54,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewReference;
@@ -150,7 +151,14 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     {
     	// Need to add a dialog here to show the user the Folder path and ask him/her
     	//  if that is indeed where they wish to put the script.
-    	return findDestinationFor( metadata );
+    	final IFolder folder = findDestinationFor( metadata );
+    	final FileDialog dialog = new FileDialog( shell() );
+    	dialog.setFileName( folder.getFullPath().toString() );
+    	dialog.setText( "Save Script To" );
+    	final String path = dialog.open();
+    	if( isBlank( path ) )
+    		return folder;
+    	return getFolderForPath( path );
     }
     private IFolder findDestinationFor( final ScriptMetadata metadata )
     throws CoreException
@@ -164,20 +172,24 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             return folder;
         }
         if( isNotBlank( metadata.scriptPath() ) )
-        {
-            final String path = substringBeforeLast( metadata.scriptPath(), "/" );
-            final IProject project = getProject( path );
-            final String folderPath = substringAfter( removeStart( path, "/" ), "/" );
-            if( isBlank( folderPath ) )
-                return ( IFolder )project.getAdapter( IFolder.class );
-            return project.getFolder( folderPath );
-        }
+            return getFolderForPath( metadata.scriptPath() );
         final IProject project = getProject( getWorkspace().getRoot().getProject( SCRIPTS_PROJECT ) );
         final IFolder folder = project.getFolder( MONKEY_DIR );
         if( !folder.exists() )
             folder.create( IResource.NONE, true, null );
         return folder;
     }
+
+	private IFolder getFolderForPath( final String scriptPath )
+	throws CoreException
+	{
+		final String path = substringBeforeLast( scriptPath, "/" );
+		final IProject project = getProject( path );
+		final String folderPath = substringAfter( removeStart( path, "/" ), "/" );
+		if( isBlank( folderPath ) )
+		    return ( IFolder )project.getAdapter( IFolder.class );
+		return project.getFolder( folderPath );
+	}
     private IFile createScriptFile( final IFolder destination,
                                     final ScriptMetadata metadata,
                                     final String script )
