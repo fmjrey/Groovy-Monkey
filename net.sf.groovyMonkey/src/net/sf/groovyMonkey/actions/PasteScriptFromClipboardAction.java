@@ -87,7 +87,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             {
                 final String scriptText = collapseEscapedNewlines( script );
                 final ScriptMetadata metadata = getScriptMetadata( scriptText );
-                final IFolder destination = findDestinationFor( metadata );
+                final IFolder destination = getDestinationFor( metadata );
                 final IFile file = createScriptFile( destination, metadata, scriptText );
                 highlightNewScriptInNavigator( file );
                 openEditor( file );
@@ -144,6 +144,13 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         if( !project.isOpen() )
             project.open( null );
         return project;
+    }
+    private IFolder getDestinationFor( final ScriptMetadata metadata )
+    throws CoreException
+    {
+    	// Need to add a dialog here to show the user the Folder path and ask him/her
+    	//  if that is indeed where they wish to put the script.
+    	return findDestinationFor( metadata );
     }
     private IFolder findDestinationFor( final ScriptMetadata metadata )
     throws CoreException
