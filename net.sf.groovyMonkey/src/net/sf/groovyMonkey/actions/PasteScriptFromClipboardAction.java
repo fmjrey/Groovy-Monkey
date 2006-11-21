@@ -23,6 +23,7 @@ import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.util.ListUtils.array;
+import static org.apache.commons.lang.ArrayUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.StringUtils.removeStart;
@@ -31,16 +32,13 @@ import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import net.sf.groovyMonkey.ScriptMetadata;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -51,10 +49,10 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.dnd.RTFTransfer;
 import org.eclipse.swt.dnd.TextTransfer;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IViewReference;
@@ -62,6 +60,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
+import org.eclipse.ui.model.WorkbenchContentProvider;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
 
 public class PasteScriptFromClipboardAction
@@ -152,13 +153,17 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     	// Need to add a dialog here to show the user the Folder path and ask him/her
     	//  if that is indeed where they wish to put the script.
     	final IFolder folder = findDestinationFor( metadata );
-    	final FileDialog dialog = new FileDialog( shell() );
-    	dialog.setFileName( folder.getFullPath().toString() );
-    	dialog.setText( "Save Script To" );
-    	final String path = dialog.open();
-    	if( isBlank( path ) )
-    		return folder;
-    	return getFolderForPath( path );
+    	final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog( shell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider() );
+    	dialog.setTitle( "Save Script To" );
+        dialog.setInput( getWorkspace().getRoot() );
+        dialog.setAllowMultiple( false );
+        final int returnCode = dialog.open();
+        if( returnCode != Window.OK )
+            return folder;
+        final Object[] results = dialog.getResult();
+        if( isEmpty( results ) )
+        	return folder;
+    	return getFolderForPath( (( IResource )results[ 0 ]).getFullPath().toString() );
     }
     private IFolder findDestinationFor( final ScriptMetadata metadata )
     throws CoreException
