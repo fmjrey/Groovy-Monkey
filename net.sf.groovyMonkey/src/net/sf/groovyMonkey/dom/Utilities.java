@@ -414,7 +414,6 @@ public class Utilities
     public static void createFolder( final IFolder folder )
     throws CoreException
     {
-    	System.out.println( "createFolder(): folder: " + folder );
     	if( folder.exists() )
     		return;
     	if( !folder.getParent().exists() && folder.getParent() instanceof IFolder )

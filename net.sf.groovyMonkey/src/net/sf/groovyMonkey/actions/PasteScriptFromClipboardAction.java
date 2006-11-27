@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.groovyMonkey.ScriptMetadata;
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -156,7 +155,6 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         if( returnCode != Window.OK )
             return folder;
         final Object[] results = dialog.getResult();
-        System.out.println( "getDestinationFor(): results: " + ArrayUtils.toString( results ) );
         if( isEmpty( results ) )
         	return folder;
         final IFile result = ( IFile )results[ 0 ];

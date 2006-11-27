@@ -84,7 +84,6 @@ implements ISelectionChangedListener, ModifyListener
 								   final IFile initialFileSelected )
 	{
 		super( parent, labelProvider, contentProvider );
-		System.out.println( "SelectScriptPathDialog" );
 		setAllowMultiple( false );
 		validator = new Validator();
 		setValidator( validator );
@@ -116,7 +115,6 @@ implements ISelectionChangedListener, ModifyListener
     public void selectionChanged( final SelectionChangedEvent event )
     {
     	final Object select = (( IStructuredSelection )event.getSelection()).getFirstElement();
-    	System.out.println( "selectionChanged(): event: " + event.toString() );
     	if( !validator.validate( new Object[] { select } ).isOK() )
     		return;
 		if( !( select instanceof IFile ) && !( select instanceof IFolder ) && !( select instanceof IProject ) )
