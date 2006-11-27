@@ -36,6 +36,8 @@ import net.sf.groovyMonkey.ScriptMetadata;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
@@ -54,17 +56,17 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.osgi.framework.Bundle;
 
-public class Utilities 
+public class Utilities
 {
     public static final String SCRIPT_NAME = "scriptName";
     public static final String DOM_EXTENSION_POINT_ID = PLUGIN_ID + ".dom";
-    
-    public static String contents( final IFile file ) 
+
+    public static String contents( final IFile file )
     throws CoreException, IOException
     {
         return getContents( file );
     }
-    public static String getContents( final IFile file ) 
+    public static String getContents( final IFile file )
     throws CoreException, IOException
     {
         if( file == null )
@@ -82,13 +84,13 @@ public class Utilities
             closeQuietly( contents );
         }
     }
-    public static List< String > readLines( final Reader input ) 
-    throws IOException 
+    public static List< String > readLines( final Reader input )
+    throws IOException
     {
         final BufferedReader reader = new BufferedReader( input );
         final List< String > list = list();
         String line;
-        while( ( line = reader.readLine() ) != null ) 
+        while( ( line = reader.readLine() ) != null )
             list.add( line );
         return list;
     }
@@ -103,8 +105,8 @@ public class Utilities
             throw new RuntimeException( e );
         }
     }
-    public static void setContents( final String contents, 
-                                    final IFile file ) 
+    public static void setContents( final String contents,
+                                    final IFile file )
     throws CoreException
     {
         if( file == null )
@@ -144,7 +146,7 @@ public class Utilities
                 set.add( bundle.getSymbolicName() );
         return set;
     }
-    public static Map< String, Object > getExtensionGlobalVariables( final ScriptMetadata metadata ) 
+    public static Map< String, Object > getExtensionGlobalVariables( final ScriptMetadata metadata )
     {
         final IExtensionPoint point = getDOMExtensionPoint();
         final Map< String, Object > vars = new LinkedHashMap< String, Object >();
@@ -165,8 +167,8 @@ public class Utilities
         getExtensionGlobalVariables( metadata, point, vars );
         return vars;
     }
-    private static void getExtensionGlobalVariables( final ScriptMetadata metadata, 
-                                                     final IExtensionPoint point, 
+    private static void getExtensionGlobalVariables( final ScriptMetadata metadata,
+                                                     final IExtensionPoint point,
                                                      final Map< String, Object > vars )
     {
         final IExtension[] extensions = point.getExtensions();
@@ -220,7 +222,7 @@ public class Utilities
             plugins.add( extension.getContributor().getName() );
         return plugins;
     }
-    public static Map< String, Class > getDOMInfo( final String pluginID ) 
+    public static Map< String, Class > getDOMInfo( final String pluginID )
     {
         final IExtensionPoint point = getDOMExtensionPoint();
         final Map< String, Class > vars = new LinkedHashMap< String, Class >();
@@ -273,7 +275,7 @@ public class Utilities
         }
         return vars;
     }
-    public static Map< String, Object > getDOM( final String pluginID ) 
+    public static Map< String, Object > getDOM( final String pluginID )
     {
         final IExtensionPoint point = getDOMExtensionPoint();
         final Map< String, Object > vars = new LinkedHashMap< String, Object >();
@@ -313,7 +315,7 @@ public class Utilities
         }
         return vars;
     }
-    public static String getUpdateSiteForDOMPlugin( final String pluginID ) 
+    public static String getUpdateSiteForDOMPlugin( final String pluginID )
     {
         final IExtensionPoint point = getDOMExtensionPoint();
         if( point == null )
@@ -340,20 +342,20 @@ public class Utilities
         final IExtensionRegistry registry = getExtensionRegistry();
         return registry.getExtensionPoint( DOM_EXTENSION_POINT_ID );
     }
-    public static void error( final String title, 
+    public static void error( final String title,
                               final String message,
                               final Throwable exception )
     {
         showDialog( title, message, exception, ERROR );
     }
-    public static void warning( final String title, 
+    public static void warning( final String title,
                                 final String message,
                                 final Throwable exception )
     {
         showDialog( title, message, exception, WARNING );
     }
-    private static void showDialog( final String title, 
-                                    final String message, 
+    private static void showDialog( final String title,
+                                    final String message,
                                     final Throwable exception,
                                     final int type )
     {
@@ -369,9 +371,9 @@ public class Utilities
             getDefault().syncExec( runnable );
             return;
         }
-        final ErrorDialog dialog = new ErrorDialog( getWorkbench().getActiveWorkbenchWindow().getShell(), 
-                                                    title, 
-                                                    message, 
+        final ErrorDialog dialog = new ErrorDialog( getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                                    title,
+                                                    message,
                                                     new Status( type, PLUGIN_ID, type, defaultString( message ), exception ),
                                                     OK | INFO | WARNING | ERROR );
         dialog.open();
@@ -401,12 +403,22 @@ public class Utilities
             return;
         activePage().closeEditor( editorPart, true );
     }
-    public static void openEditor( final IFile file ) 
+    public static void openEditor( final IFile file )
     throws PartInitException
     {
         if( file == null )
             return;
         final IEditorDescriptor descriptor = getWorkbench().getEditorRegistry().getDefaultEditor( file.getName() );
         activePage().openEditor( new FileEditorInput( file ), descriptor.getId() );
+    }
+    public static void createFolder( final IFolder folder )
+    throws CoreException
+    {
+    	System.out.println( "createFolder(): folder: " + folder );
+    	if( folder.exists() )
+    		return;
+    	if( !folder.getParent().exists() && folder.getParent() instanceof IFolder )
+    		createFolder( ( IFolder )folder.getParent() );
+    	folder.create( IResource.NONE, true, null );
     }
 }

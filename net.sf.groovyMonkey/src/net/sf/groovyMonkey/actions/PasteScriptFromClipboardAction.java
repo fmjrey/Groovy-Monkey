@@ -1,14 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
 package net.sf.groovyMonkey.actions;
 import static java.lang.Math.max;
 import static java.util.regex.Pattern.DOTALL;
@@ -20,6 +9,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
+import static net.sf.groovyMonkey.dom.Utilities.createFolder;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.util.ListUtils.array;
@@ -30,6 +20,7 @@ import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.substringAfter;
 import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
+import static org.eclipse.core.resources.IResource.NONE;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import java.io.ByteArrayInputStream;
@@ -39,6 +30,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.groovyMonkey.ScriptMetadata;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -60,7 +52,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceNavigator;
@@ -147,23 +138,31 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             project.open( null );
         return project;
     }
+    /**
+     * This method will potentially modify the scriptPath and file attributes of the passed metadata object.
+     * @param metadata
+     * @return
+     * @throws CoreException
+     */
     private IFolder getDestinationFor( final ScriptMetadata metadata )
     throws CoreException
     {
-    	// Need to add a dialog here to show the user the Folder path and ask him/her
-    	//  if that is indeed where they wish to put the script.
     	final IFolder folder = findDestinationFor( metadata );
-    	final ElementTreeSelectionDialog dialog = new ElementTreeSelectionDialog( shell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider() );
-    	dialog.setTitle( "Save Script To" );
-        dialog.setInput( getWorkspace().getRoot() );
-        dialog.setAllowMultiple( false );
+    	final IFile file = folder.getFile( substringAfterLast( metadata.scriptPath(), "/" ) );
+    	final SelectScriptPathDialog dialog = new SelectScriptPathDialog( shell(), new WorkbenchLabelProvider(), new WorkbenchContentProvider(), file );
+    	dialog.setInitialSelection( folder );
+    	dialog.setInput( getWorkspace().getRoot() );
         final int returnCode = dialog.open();
         if( returnCode != Window.OK )
             return folder;
         final Object[] results = dialog.getResult();
+        System.out.println( "getDestinationFor(): results: " + ArrayUtils.toString( results ) );
         if( isEmpty( results ) )
         	return folder;
-    	return getFolderForPath( (( IResource )results[ 0 ]).getFullPath().toString() );
+        final IFile result = ( IFile )results[ 0 ];
+        metadata.setScriptPath( result.getFullPath().toString() );
+        metadata.setFile( result );
+    	return getFolderForPath( result.getFullPath().toString() );
     }
     private IFolder findDestinationFor( final ScriptMetadata metadata )
     throws CoreException
@@ -173,7 +172,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
             final IFolder folder = ( IFolder )selection.getFirstElement();
             getProject( folder );
             if( !folder.exists() )
-                folder.create( IResource.NONE, true, null );
+                folder.create( NONE, true, null );
             return folder;
         }
         if( isNotBlank( metadata.scriptPath() ) )
@@ -205,6 +204,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
         final int ix = basename.lastIndexOf( "." );
         if( ix > 0 )
             basename = basename.substring( 0, ix );
+        createFolder( destination );
         final IResource[] members = destination.members( 0 );
         final Pattern suffix = compile( basename + "(-(\\d+))?\\" + FILE_EXTENSION );
         int maxsuffix = -1;
@@ -217,7 +217,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                 final Matcher match = suffix.matcher( filename );
                 if( match.matches() )
                 {
-                    if( file.exists() && file.getName().equals( defaultName ))
+                    if( file.exists() && file.getName().equals( defaultName ) )
                     {
                         final MessageDialog dialog = new MessageDialog( shell(), "Overwrite?", null, "Overwrite existing script: " + file.getName() + " ?", MessageDialog.WARNING, new String[] { "Yes", "No" }, 0 );
                         if( dialog.open() == 0 )
