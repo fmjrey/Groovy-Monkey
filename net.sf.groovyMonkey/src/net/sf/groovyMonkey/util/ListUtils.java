@@ -95,7 +95,7 @@ public class ListUtils
                     list.add( trans.transform( t ) );
                 return super.retainAll( list );
             }
-            
+
         };
         for( final Object object : objects )
             list.add( transformer.transform( object ) );
@@ -123,11 +123,16 @@ public class ListUtils
         add( list, objects );
         return list;
     }
-    public static < T > void add( final List< T > list, 
+    public static < T > void add( final List< T > list,
                                   final T... objects )
     {
         for( final T object : objects )
             list.add( object );
+    }
+    public static < T > void listAdd( final List< T > list,
+            						  final T... objects )
+    {
+    	add( list, objects );
     }
     public static < E extends Object > List< String > caseless( final E... objects )
     {
