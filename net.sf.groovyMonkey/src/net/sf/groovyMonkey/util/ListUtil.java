@@ -150,9 +150,9 @@ public class ListUtil
     {
         return caseless( list.toArray() );
     }
-    public static < T > Vector< T > vector( final T... objects )
+    public static < T > List< T > vector( final T... objects )
     {
-        final Vector< T > vector = new Vector< T >();
+        final List< T > vector = new Vector< T >();
         add( vector, objects );
         return vector;
     }
