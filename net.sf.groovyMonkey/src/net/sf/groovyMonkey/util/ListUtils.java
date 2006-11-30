@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 import org.apache.commons.lang.ObjectUtils;
 
 public class ListUtils
@@ -148,5 +149,11 @@ public class ListUtils
     public static List< String > caseless( final List list )
     {
         return caseless( list.toArray() );
+    }
+    public static < T > Vector< T > vector( final T... objects )
+    {
+        final Vector< T > vector = new Vector< T >();
+        add( vector, objects );
+        return vector;
     }
 }
