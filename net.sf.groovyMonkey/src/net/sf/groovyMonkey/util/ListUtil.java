@@ -108,20 +108,48 @@ public class ListUtil
         add( list, objects );
         return list;
     }
+    public static < T > List< T > array( final Collection< T > collection )
+    {
+        final List< T > list = new ArrayList< T >();
+        if( collection != null && collection.size() > 0 )
+            list.addAll( collection );
+        return list;
+    }
     public static < T > List< T > linked( final T... objects )
     {
         final List< T > list = new LinkedList< T >();
         add( list, objects );
         return list;
     }
+    public static < T > List< T > linked( final Collection< T > collection )
+    {
+        final List< T > list = new LinkedList< T >();
+        if( collection != null && collection.size() > 0 )
+            list.addAll( collection );
+        return list;
+    }
     public static < T > List< T > list( final T... objects )
     {
         return array( objects );
+    }
+    public static < T > List< T > list( final Collection< T > collection )
+    {
+        final List< T > list = new ArrayList< T >();
+        if( collection != null && collection.size() > 0 )
+            list.addAll( collection );
+        return list;
     }
     public static < T extends Comparable< T > > List< T > treeList( final T... objects )
     {
         final List< T > list = new TreeList< T >();
         add( list, objects );
+        return list;
+    }
+    public static < T extends Comparable< T > > List< T > treeList( final Collection< T > collection )
+    {
+        final List< T > list = new TreeList< T >();
+        if( collection != null && collection.size() > 0 )
+            list.addAll( collection );
         return list;
     }
     public static < T > void add( final List< T > list,
@@ -154,6 +182,13 @@ public class ListUtil
     {
         final List< T > vector = new Vector< T >();
         add( vector, objects );
+        return vector;
+    }
+    public static < T > List< T > vector( final Collection< T > collection )
+    {
+        final List< T > vector = new Vector< T >();
+        if( collection != null && collection.size() > 0 )
+            vector.addAll( collection );
         return vector;
     }
 }
