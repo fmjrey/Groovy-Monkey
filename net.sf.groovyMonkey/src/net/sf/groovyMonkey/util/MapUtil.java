@@ -1,6 +1,7 @@
 package net.sf.groovyMonkey.util;
 import static net.sf.groovyMonkey.util.ListUtils.list;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -82,7 +83,13 @@ public class MapUtil
         add( list, objects );
         return list;
     }
-    public static < K, V > Map< K, V > set( final Map.Entry< K, V >... objects )
+    public static < K, V > Map< K, V > table( final Map.Entry< K, V >... objects )
+    {
+        final Map< K, V > list = new Hashtable< K, V >();
+        add( list, objects );
+        return list;
+    }
+    public static < K, V > Map< K, V > map( final Map.Entry< K, V >... objects )
     {
         return hashMap( objects );
     }
@@ -92,7 +99,7 @@ public class MapUtil
     	for( final Map.Entry< K, V > object : objects )
     		set.put( object.getKey(), object.getValue() );
     }
-    public static < K, V > void setAdd( final Map< K, V > set,
+    public static < K, V > void mapAdd( final Map< K, V > set,
                                         final Map.Entry< K, V >... objects )
     {
     	add( set, objects );
