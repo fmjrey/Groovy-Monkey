@@ -1,5 +1,5 @@
 package net.sf.groovyMonkey.editor.actions;
-import static net.sf.groovyMonkey.util.ListUtils.array;
+import static net.sf.groovyMonkey.util.ListUtil.array;
 import java.util.List;
 import net.sf.groovyMonkey.editor.ScriptEditor;
 import org.eclipse.core.resources.IFile;

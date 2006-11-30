@@ -3,7 +3,7 @@ import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PLUGIN_ID;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getAllRequiredBundles;
-import static net.sf.groovyMonkey.util.ListUtils.list;
+import static net.sf.groovyMonkey.util.ListUtil.list;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
@@ -16,7 +16,6 @@ import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,11 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ErrorDialog;
 import net.sf.groovyMonkey.ScriptMetadata;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;

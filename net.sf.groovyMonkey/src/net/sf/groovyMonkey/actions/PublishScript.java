@@ -1,24 +1,11 @@
-/*******************************************************************************
- * Copyright (c) 2005 Eclipse Foundation
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     Bjorn Freeman-Benson - initial implementation
- *     Ward Cunningham - initial implementation
- *******************************************************************************/
 package net.sf.groovyMonkey.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
-import static net.sf.groovyMonkey.util.ListUtils.array;
+import static net.sf.groovyMonkey.util.ListUtil.array;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
-
 import java.io.IOException;
 import java.util.List;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.IAction;

@@ -11,8 +11,8 @@ import static net.sf.groovyMonkey.dom.Utilities.contents;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.readLines;
 import static net.sf.groovyMonkey.dom.Utilities.setContents;
-import static net.sf.groovyMonkey.util.ListUtils.caseless;
-import static net.sf.groovyMonkey.util.ListUtils.list;
+import static net.sf.groovyMonkey.util.ListUtil.caseless;
+import static net.sf.groovyMonkey.util.ListUtil.list;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.chomp;
 import static org.apache.commons.lang.StringUtils.defaultString;
@@ -74,7 +74,7 @@ import org.eclipse.update.search.UpdateSearchScope;
 import org.eclipse.update.ui.UpdateJob;
 import org.osgi.framework.Bundle;
 
-public class ScriptMetadata 
+public class ScriptMetadata
 {
     public static final DOMDescriptor DEFAULT_DOM = new DOMDescriptor( "http://groovy-monkey.sourceforge.net/update/plugins", PLUGIN_ID, null );
     public enum JobModes
@@ -101,7 +101,7 @@ public class ScriptMetadata
     private JobModes jobMode = DEFAULT_JOB;
     private ExecModes execMode = DEFAULT_MODE;
     private final Set< Marker > markers = new HashSet< Marker >();
-    
+
     public static List< String > getMetadataLines( final String contents )
     {
         final String[] lines = split( contents, "\r\n" );
@@ -154,12 +154,12 @@ public class ScriptMetadata
         }
         return join( code.toArray( new String[ 0 ] ), "\n" );
     }
-    public static ScriptMetadata getScriptMetadata( final IFile file ) 
+    public static ScriptMetadata getScriptMetadata( final IFile file )
     throws CoreException, IOException
     {
         return getScriptMetadata( getContents( file ) );
     }
-    public static ScriptMetadata getScriptMetadata( final String contents ) 
+    public static ScriptMetadata getScriptMetadata( final String contents )
     {
         final ScriptMetadata metadata = new ScriptMetadata();
         metadata.addDOM( DEFAULT_DOM );
@@ -281,7 +281,7 @@ public class ScriptMetadata
     {
         refreshScriptMetadata( script, metadata, false );
     }
-    public static void refreshScriptMetadata( final IFile script, 
+    public static void refreshScriptMetadata( final IFile script,
                                               final ScriptMetadata metadata,
                                               final boolean force )
     {
@@ -334,7 +334,7 @@ public class ScriptMetadata
             }
         }.schedule();
 }
-    public static void setMarkers( final IFile script ) 
+    public static void setMarkers( final IFile script )
     throws CoreException
     {
         if( script == null || !script.exists() )
@@ -467,7 +467,7 @@ public class ScriptMetadata
     {
         doms.add( dom );
     }
-	public List< DOMDescriptor > getDOMs() 
+	public List< DOMDescriptor > getDOMs()
     {
 		return doms;
 	}
@@ -575,7 +575,7 @@ public class ScriptMetadata
             openError( null, "Eclipse::PartInitException", "Unable to open editor on " + file.getName() + " due to " + x.toString() );
         }
     }
-	private void launchUpdateInstaller( final URLtoPluginMap missingUrls ) 
+	private void launchUpdateInstaller( final URLtoPluginMap missingUrls )
     {
         if( getCurrent() == null )
         {
@@ -595,10 +595,10 @@ public class ScriptMetadata
             final String id = missingUrls.getPluginNames( url );
             final String plural = id.indexOf( "," ) >= 0 ? "s" : "";
             final String description = "Site providing DOM" + plural + " ( " + id + " )";
-			try 
+			try
             {
 				scope.addSearchSite( description, new URL( url ), new String[ 0 ] );
-			} 
+			}
             catch( final MalformedURLException x ) {}
 		}
 		final UpdateSearchRequest request = new UpdateSearchRequest( createDefaultSiteSearchCategory(), scope );
@@ -624,12 +624,12 @@ public class ScriptMetadata
         final String plural = missingPlugins.indexOf( "\n" ) >= 0 ? "s" : "";
         final String these = isNotBlank( plural ) ? "these" : "this";
         final String[] choices = new String[]{ "Cancel Script", "Edit Script", "Install Plug-in" + plural };
-        final MessageDialog dialog = new MessageDialog( null, 
-                                                        "Missing DOM" + plural, 
-                                                        null, 
+        final MessageDialog dialog = new MessageDialog( null,
+                                                        "Missing DOM" + plural,
+                                                        null,
                                                         "The script " + file.getName() + " requires " + these + " missing DOM plug-in" + plural + ":\n" + missingPlugins,
-                                                        QUESTION, 
-                                                        choices, 
+                                                        QUESTION,
+                                                        choices,
                                                         2 );
         final int result = dialog.open();
         final String choice = choices[ result ];
@@ -645,36 +645,36 @@ public class ScriptMetadata
         buffer.append( "/*" ).append( "\n" );
         if( isNotBlank( getMenuName() ) )
             buffer.append( getTagText( Tags.Type.MENU ) + getMenuName() ).append( "\n" );
-        
+
         if( isNotBlank( scriptPath() ) )
             buffer.append( getTagText( Tags.Type.PATH ) + scriptPath() ).append( "\n" );
-        
+
         buffer.append( getTagText( Tags.Type.KUDOS ) + getKudos() ).append( "\n" );
-        
+
         buffer.append( getTagText( Tags.Type.LICENSE ) + getLicense() ).append( "\n" );
         if( !getLang().equals( DEFAULT_LANG ) )
             buffer.append( getTagText( Tags.Type.LANG ) + getLang() ).append( "\n" );
-        
+
         if( !getJobMode().equals( DEFAULT_JOB ) )
             buffer.append( getTagText( Tags.Type.JOB ) + getJobMode() ).append( "\n" );
-        
+
         if( !getExecMode().equals( DEFAULT_MODE ) )
             buffer.append( getTagText( Tags.Type.EXEC_MODE ) + getExecMode() ).append( "\n" );
-        
+
         for( final DOMDescriptor dom : getDOMs() )
             if( !dom.equals( DEFAULT_DOM ) )
                 buffer.append( getTagText( Tags.Type.DOM ) + dom ).append( "\n" );
-        
+
         for( final String include : getIncludes() )
             buffer.append( getTagText( Tags.Type.INCLUDE ) + include ).append( "\n" );
-        
+
         for( final String include : getIncludedBundles() )
             if( !include.equals( PLUGIN_ID ) )
                 buffer.append( getTagText( Tags.Type.INCLUDE_BUNDLE ) + include ).append( "\n" );
-        
+
         for( final Subscription subscription : getSubscriptions() )
             buffer.append( getTagText( Tags.Type.LISTENER ) + subscription.getFilter() ).append( "\n" );
-        
+
         buffer.append( " */" ).append( "\n" );
         buffer.append( "\n" );
         return buffer.toString();
@@ -689,11 +689,11 @@ public class ScriptMetadata
         for( final Subscription subscription : subscriptions )
             subscription.unsubscribe();
     }
-	public String getLang() 
+	public String getLang()
     {
 		return lang;
 	}
-	public void setLang( final String lang ) 
+	public void setLang( final String lang )
     {
 		this.lang = isNotBlank( lang ) ? lang : DEFAULT_LANG;
 	}

@@ -12,7 +12,7 @@ import static net.sf.groovyMonkey.dom.Utilities.closeEditor;
 import static net.sf.groovyMonkey.dom.Utilities.createFolder;
 import static net.sf.groovyMonkey.dom.Utilities.openEditor;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
-import static net.sf.groovyMonkey.util.ListUtils.array;
+import static net.sf.groovyMonkey.util.ListUtil.array;
 import static org.apache.commons.lang.ArrayUtils.isEmpty;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.isNotBlank;

@@ -47,8 +47,8 @@ public class MapUtil
                                                               final List< V > values )
     {
         if( keys == null || keys.size() == 0 )
-            return ListUtils.list();
-        final List< Map.Entry< K, V > > entries = ListUtils.list();
+            return ListUtil.list();
+        final List< Map.Entry< K, V > > entries = ListUtil.list();
         final Iterator< V > valueIterator = values != null ? values.iterator() : null;
         for( final K key : keys )
         {

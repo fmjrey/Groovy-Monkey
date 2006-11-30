@@ -1,5 +1,5 @@
 package net.sf.groovyMonkey.editor.contentAssist;
-import static net.sf.groovyMonkey.util.ListUtils.list;
+import static net.sf.groovyMonkey.util.ListUtil.list;
 import java.util.List;
 import org.apache.commons.lang.Validate;
 import org.eclipse.core.resources.IFile;
@@ -15,11 +15,11 @@ import org.eclipse.jface.text.quickassist.IQuickAssistProcessor;
 import org.eclipse.jface.text.source.Annotation;
 import org.eclipse.ui.IMarkerResolution;
 
-public class QuickAssistProcessor 
+public class QuickAssistProcessor
 implements IQuickAssistProcessor
 {
     private final IAdaptable adapter;
-    
+
     public QuickAssistProcessor( final IAdaptable adapter )
     {
         Validate.notNull( adapter );

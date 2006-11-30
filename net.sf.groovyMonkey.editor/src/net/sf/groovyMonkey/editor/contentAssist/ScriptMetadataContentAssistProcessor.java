@@ -1,5 +1,5 @@
 package net.sf.groovyMonkey.editor.contentAssist;
-import static net.sf.groovyMonkey.util.ListUtils.list;
+import static net.sf.groovyMonkey.util.ListUtil.list;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import java.util.List;
@@ -14,10 +14,10 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 import org.eclipse.ui.IMarkerResolution;
 
-public class ScriptMetadataContentAssistProcessor 
+public class ScriptMetadataContentAssistProcessor
 implements IContentAssistProcessor
 {
-    public ICompletionProposal[] computeCompletionProposals( final ITextViewer viewer, 
+    public ICompletionProposal[] computeCompletionProposals( final ITextViewer viewer,
                                                              final int offset )
     {
         final IDocument document = viewer.getDocument();
@@ -42,7 +42,7 @@ implements IContentAssistProcessor
             throw new RuntimeException( e );
         }
     }
-    public IContextInformation[] computeContextInformation( final ITextViewer viewer, 
+    public IContextInformation[] computeContextInformation( final ITextViewer viewer,
                                                             final int offset )
     {
         return new IContextInformation[ 0 ];
@@ -133,7 +133,7 @@ implements IContentAssistProcessor
             list.add( ( ICompletionProposal )resolution );
         }
     }
-    private boolean matchAlreadyTyped( final String alreadyTyped, 
+    private boolean matchAlreadyTyped( final String alreadyTyped,
                                        final Tags.Type type )
     {
         final StringBuffer match = new StringBuffer();
