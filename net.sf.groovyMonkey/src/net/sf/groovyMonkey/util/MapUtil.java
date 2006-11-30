@@ -1,6 +1,5 @@
 package net.sf.groovyMonkey.util;
 import static net.sf.groovyMonkey.util.ListUtils.list;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
