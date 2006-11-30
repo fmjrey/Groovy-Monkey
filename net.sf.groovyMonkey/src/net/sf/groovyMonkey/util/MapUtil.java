@@ -93,7 +93,7 @@ public class MapUtil
     		set.put( object.getKey(), object.getValue() );
     }
     public static < K, V > void setAdd( final Map< K, V > set,
-			  				         final Map.Entry< K, V >... objects )
+                                        final Map.Entry< K, V >... objects )
     {
     	add( set, objects );
     }
