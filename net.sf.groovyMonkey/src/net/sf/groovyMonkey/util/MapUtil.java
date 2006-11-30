@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey.util;
-import static net.sf.groovyMonkey.util.ListUtils.list;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -48,8 +47,8 @@ public class MapUtil
                                                               final List< V > values )
     {
         if( keys == null || keys.size() == 0 )
-            return list();
-        final List< Map.Entry< K, V > > entries = list();
+            return ListUtils.list();
+        final List< Map.Entry< K, V > > entries = ListUtils.list();
         final Iterator< V > valueIterator = values != null ? values.iterator() : null;
         for( final K key : keys )
         {
