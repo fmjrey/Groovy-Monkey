@@ -55,11 +55,11 @@ public class MapUtil
             final Map.Entry< K, V > entry;
             if( valueIterator == null || !valueIterator.hasNext() )
             {
-                entry = new Entry( key, null );
+                entry = new Entry< K, V >( key, null );
                 continue;
             }
             else
-                entry = new Entry( key, valueIterator.next() );
+                entry = new Entry< K, V >( key, valueIterator.next() );
             entries.add( entry );
         }
         return entries;
