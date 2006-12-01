@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Decorations;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.FontDialog;
@@ -86,7 +87,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
  * @version $Revision$
  */
-public class SwtBuilder 
+public class SwtBuilder
 extends BuilderSupport
 {
     private final Map< String, SwtFactory > factories = new HashMap< String, SwtFactory >();
@@ -106,8 +107,8 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map, java.lang.Object)
      */
-    protected Object createNode( final Object name, 
-                                 final Map attributes, 
+    protected Object createNode( final Object name,
+                                 final Map attributes,
                                  final Object value )
     {
         return createNode( name, attributes );
@@ -116,7 +117,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map)
      */
-    protected Object createNode( final Object name, 
+    protected Object createNode( final Object name,
                                  final Map attributes )
     {
         final Closure closure = ( Closure )attributes.get( "closure" );
@@ -135,8 +136,8 @@ extends BuilderSupport
      * @param attributes
      * @return
      */
-    protected Object createWidget( final Object name, 
-                                   final Map attributes, 
+    protected Object createWidget( final Object name,
+                                   final Map attributes,
                                    final Object current )
     {
         if( name.equals( "doCall" ) )
@@ -150,7 +151,7 @@ extends BuilderSupport
             }
             catch( final Exception e )
             {
-                log.log( Level.WARNING, "Node " + name + " returned : " + e.toString() );
+                log.log( Level.WARNING, "Node " + name + " returned : " + e.toString(), e );
             }
         else
             log.log( Level.WARNING, "Could not find match for name: " + name );
@@ -160,26 +161,38 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.lang.Object)
      */
-    protected Object createNode( final Object name, 
+    protected Object createNode( final Object name,
                                  final Object parent )
     {
         return createWidget( name, Collections.EMPTY_MAP, parent );
     }
-    protected void registerBeanFactory( final String name, 
+    protected void registerBeanFactory( final String name,
                                         final Class beanClass )
     {
         registerFactory( name, new WidgetFactory( beanClass ) );
     }
-    protected void registerBeanFactory( final String name, 
-                                        final Class beanClass, 
+    protected void registerBeanFactory( final String name,
+                                        final Class beanClass,
                                         final int style )
     {
         registerFactory( name, new WidgetFactory( beanClass, style ) );
     }
-    protected void registerFactory( final String name, 
+    protected void registerFactory( final String name,
                                     final SwtFactory factory )
     {
         factories.put( name, factory );
+    }
+    public static class ConcreteDialog
+    extends Dialog
+    {
+        public ConcreteDialog( final Shell parent )
+        {
+            super( parent );
+        }
+        public ConcreteDialog( final Shell parent, final int style )
+        {
+            super( parent, style );
+        }
     }
     protected void registerWidgets()
     {
@@ -239,6 +252,7 @@ extends BuilderSupport
         registerFactory( "rowData", new LayoutDataFactory( RowData.class ) );
         registerFactory( "formData", new FormLayoutDataFactory() );
         // dialogs
+        registerBeanFactory( "dialog", ConcreteDialog.class );
         registerBeanFactory( "colorDialog", ColorDialog.class );
         registerBeanFactory( "directoryDialog", DirectoryDialog.class );
         registerBeanFactory( "fileDialog", FileDialog.class );
@@ -289,11 +303,11 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#setParent(java.lang.Object,
      *      java.lang.Object)
      */
-    protected void setParent( final Object parent, 
+    protected void setParent( final Object parent,
                               final Object child )
     {
         // TODO implement this
-        // 
+        //
         // if (parent instanceof ScrolledComposite && widget instanceof Control)
         // {
         // ScrolledComposite scrolledComposite = (ScrolledComposite) parent;
@@ -302,7 +316,7 @@ extends BuilderSupport
     }
     /*
      * override to make public
-     * 
+     *
      * @see groovy.util.BuilderSupport#setCurrent(java.lang.Object)
      */
     public void setCurrent( final Object current )
@@ -311,7 +325,7 @@ extends BuilderSupport
     }
     /*
      * override to make public
-     * 
+     *
      * @see groovy.util.BuilderSupport#getCurrent()
      */
     public Object getCurrent()
