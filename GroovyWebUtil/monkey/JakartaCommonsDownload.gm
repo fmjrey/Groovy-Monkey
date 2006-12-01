@@ -1,0 +1,124 @@
+/*
+ * Menu: Download > Jakarta Commons
+ * Script-Path: /GroovyWebUtil/monkey/JakartaCommonsDownload.gm
+ * Kudos: ERVIN
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * Include: /GroovyWebUtil/commons-codec-1.3.jar
+ * Include: /GroovyWebUtil/commons-httpclient-3.0.1.jar
+ * Include: /GroovyWebUtil/commons-logging-1.0.3.jar
+ */
+
+import java.io.*
+import java.net.*
+import org.apache.commons.httpclient.*
+import org.apache.commons.httpclient.auth.*
+import org.apache.commons.httpclient.methods.*
+import org.apache.commons.io.*
+import org.apache.commons.lang.*
+import org.eclipse.core.resources.*
+import org.eclipse.core.runtime.*
+
+class Download
+implements CredentialsProvider
+{
+	public Credentials getCredentials( AuthScheme authscheme, String host, int port, boolean proxy )
+    throws CredentialsNotAvailableException
+    {
+        if( authscheme == null )
+            return null
+        out.println "authScheme: ${authscheme}"
+        def key = authscheme.schemeName + '@' + host + ':' + port
+        out.println "key: ${key}"
+        if( authMap[ key ] != null )
+            return authMap[ key ]
+        try
+        {
+            if( authscheme instanceof NTLMScheme )
+            {
+                out.println host + ":" + port + " requires Windows authentication"
+                return authMap[ key ] = new NTCredentials( proxyUser, proxyPassword, host, proxyDomain )
+            }
+            if( authscheme instanceof RFC2617Scheme )
+            {
+                out.println( host + ":" + port + " requires authentication with the realm '" + authscheme.getRealm() + "'" )
+                return authMap[ key ] = new UsernamePasswordCredentials( proxyUser, proxyPassword )
+            }
+            throw new CredentialsNotAvailableException( 'Unsupported authentication scheme: ' + authscheme.schemeName )
+        }
+        catch( final IOException e )
+        {
+            throw new CredentialsNotAvailableException( e.getMessage(), e )
+        }
+    }
+}
+
+out.clear()
+def baseUrl = 'http://apache.mirrormax.net/jakarta/commons/'
+def fileURLs = []
+def proxyParams = runnerDOM.runScript( 'GroovyWebUtil/monkey/Dialog.gm' )
+
+getFiles( baseUrl, fileURLs, monitor, proxyParams )
+
+def getFiles( url, files, monitor, proxyParams )
+{
+	def proxyUser = proxyParams[ 'user' ]
+	def proxyPassword = proxyParams[ 'password' ]
+	def proxyHost = proxyParams[ 'host' ]
+	def proxyPort = proxyParams[ 'port' ].toInteger()
+
+	def client = new HttpClient()
+	client.params.setParameter( CredentialsProvider.PROVIDER, new Download() )
+	client.httpConnectionManager.params.connectionTimeout = 15000
+	client.hostConfiguration.setProxy( proxyHost, proxyPort )
+	def method = new GetMethod( url )
+	client.executeMethod( method )
+	if( method.statusText != 'OK' )
+	{
+		out.println "url: ${url}"
+		out.println 'status: ' + method.statusText
+		return
+	}
+	def input = method.responseBodyAsStream
+	input.eachLine
+	{ line ->
+		if( line.trim().contains( '<A HREF="' )
+			&& ( line.contains( 'ALT="[' ) )
+			&& !monitor.isCanceled() )
+		{
+			def href = StringUtils.substringBeforeLast( StringUtils.substringAfterLast( line.trim(), '<A HREF="' ).trim(), '"' ).trim()
+			if( line.trim().contains( 'ALT="[DIR]"' ) )
+			{
+				if( !href.startsWith( '/' ) )
+					getFiles( ( url.endsWith( '/' ) ? url + href : url + '/' + href ), files, monitor, proxyParams )
+			}
+			else
+			{
+				if( !href.startsWith( '/' ) )
+					files.add( ( url.endsWith( '/' ) ? url + href : url + '/' + href ) )
+			}
+		}
+	}
+	method.releaseConnection()
+}
+
+out.println().println()
+
+def iproject = metadata.file().getProject()
+monitor.beginTask( 'Starting downloads', 2 * fileURLs.size() + 1 )
+fileURLs.each
+{ fileURL ->
+	def newURL = new URL( fileURL )
+	out.println "downloading: ${newURL}"
+
+	def file = new File( iproject.getFolder( 'downloads/jakarta-commons/' ).getLocation().toString(), fileURL - baseUrl )
+	FileUtils.forceMkdir( file.getParentFile() )
+	Thread.sleep( 1500 )
+	if( !monitor.isCanceled() )
+		FileUtils.copyURLToFile( newURL, file )
+	monitor.worked( 1 )
+	if( !monitor.isCanceled() )
+		iproject.refreshLocal( IResource.DEPTH_INFINITE, new SubProgressMonitor( monitor, 1 ) )
+}
+iproject.refreshLocal( IResource.DEPTH_INFINITE, monitor )
+out.println "Finished"
