@@ -110,9 +110,12 @@ fileURLs.each
 { fileURL ->
 	def newURL = new URL( fileURL )
 	out.println "downloading: ${newURL}"
-
+	if( monitor.canceled )
+		return
 	def file = new File( iproject.getFolder( 'downloads/jakarta-commons/' ).getLocation().toString(), fileURL - baseUrl )
 	FileUtils.forceMkdir( file.getParentFile() )
+	if( monitor.canceled )
+		return
 	Thread.sleep( 1500 )
 	if( !monitor.isCanceled() )
 		FileUtils.copyURLToFile( newURL, file )
