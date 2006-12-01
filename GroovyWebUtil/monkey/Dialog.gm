@@ -95,8 +95,6 @@ dialog.open()
 while( !closed && !monitor.canceled )
 	Thread.sleep( 500 )
 
-println "${map}"
-println "finished"
 if( cancelled )
 	return [:]
 return map
