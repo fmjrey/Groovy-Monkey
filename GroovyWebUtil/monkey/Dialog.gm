@@ -1,0 +1,102 @@
+/*
+ * Menu: Login Dialog
+ * Script-Path: /GroovyWebUtil/monkey/Dialog.gm
+ * Kudos: ERVIN
+ * License: EPL 1.0
+ * Job: Job
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ */
+import org.eclipse.swt.*
+import org.eclipse.swt.widgets.*
+
+def map = [ user:'', password:'', host:'', port:'' ]
+def dialog
+def closed = false
+def cancelled = false
+
+jface.syncExec
+{
+dialog = jface.shell( text: "Proxy Login", window.getShell() )
+{
+	def console = out
+ 	gridLayout()
+    group()
+    {
+    	gridLayout()
+    	composite()
+    	{
+    		rowLayout()
+        	label( text:"proxyUser:     " )
+	        text()
+	        {
+	        	gridLayout()
+	        	onEvent( type: 'Modify', closure: { event -> map['user'] = event.widget.text } )
+	        }
+	    }
+	    composite()
+	    {
+	    	rowLayout()
+        	label( text:"proxyPassword: " )
+	        text( style: 'PASSWORD' )
+	        {
+	        	gridLayout()
+	        	onEvent( type: 'Modify', closure: { event -> map['password'] = event.widget.text } )
+	        }
+	    }
+	    composite()
+	    {
+	    	rowLayout()
+			label( text:"proxyHost:     " )
+			text( style: 'NONE' )
+			{
+				gridLayout()
+				onEvent( type: 'Modify', closure:
+	        	{ event ->
+	        		map['host'] = event.widget.text
+	        	} )
+			}
+		}
+		composite()
+	    {
+	    	rowLayout()
+			label( text:"proxyPort:     " )
+			text( style: 'NONE' )
+			{
+				gridLayout()
+				onEvent( type: 'Modify', closure: { event -> map['port'] = event.widget.text } )
+			}
+		}
+		composite()
+		{
+			rowLayout()
+			button( text: 'Ok' )
+			{
+				onEvent( type: 'Selection', closure:
+				{
+					dialog.close()
+					closed = true
+				} )
+			}
+			button( text: 'Cancel' )
+			{
+				onEvent( type: 'Selection', closure:
+				{
+					dialog.close()
+					closed = true
+					cancelled = true
+				} )
+			}
+		}
+    }
+}
+dialog.pack()
+dialog.open()
+}
+while( !closed && !monitor.canceled )
+	Thread.sleep( 500 )
+
+println "${map}"
+println "finished"
+if( cancelled )
+	return [:]
+return map
