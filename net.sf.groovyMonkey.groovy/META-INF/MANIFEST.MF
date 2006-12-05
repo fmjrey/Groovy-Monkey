@@ -7,7 +7,7 @@ Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/commons-logging-1.0.3.jar,
- lib/groovy-all-1.0-JSR-06.jar
+ lib/groovy-all-1.0-RC-01.jar
 Require-Bundle: org.eclipse.ui.forms,
  org.apache.ant
 Export-Package: groovy.inspect,
@@ -19,6 +19,8 @@ Export-Package: groovy.inspect,
  groovy.mock,
  groovy.mock.interceptor,
  groovy.model,
+ groovy.net.http,
+ groovy.net.xmlrpc,
  groovy.security,
  groovy.servlet,
  groovy.sql,
@@ -68,9 +70,17 @@ Export-Package: groovy.inspect,
  org.codehaus.groovy.control.io,
  org.codehaus.groovy.control.messages,
  org.codehaus.groovy.runtime,
+ org.codehaus.groovy.runtime.typehandling,
  org.codehaus.groovy.runtime.wrappers,
  org.codehaus.groovy.sandbox.ui,
  org.codehaus.groovy.syntax,
  org.codehaus.groovy.tools,
  org.codehaus.groovy.tools.xml,
- org.codehaus.groovy.wiki
+ org.codehaus.groovy.wiki,
+ uk.co.wilson.net,
+ uk.co.wilson.net.http,
+ uk.co.wilson.net.xmlrpc,
+ uk.co.wilson.smackx.packet,
+ uk.co.wilson.smackx.providers,
+ uk.co.wilson.xml,
+ uk.org.xml.sax
