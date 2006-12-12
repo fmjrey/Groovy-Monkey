@@ -2,6 +2,7 @@ package net.sf.groovyMonkey.actions;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_AFTER_MARKER;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.PUBLISH_BEFORE_MARKER;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
+import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.util.ListUtil.array;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
 import java.io.IOException;
@@ -60,7 +61,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
                 openInformation( shell, "Groovy Monkey", x.toString() + " while trying to copy script for publication" );
             }
         }
-        final Clipboard clipboard = new Clipboard( shell.getDisplay() );
+        final Clipboard clipboard = new Clipboard( shell != null ? shell.getDisplay() : shell().getDisplay() );
         try
         {
             final TextTransfer textTransfer = TextTransfer.getInstance();
