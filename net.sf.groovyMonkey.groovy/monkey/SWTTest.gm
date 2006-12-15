@@ -4,14 +4,13 @@
  * Kudos: James E. Ervin
  * License: EPL 1.0
  * Job: UIJob
- * DOM: http://groovy-monkey.sourceforge.net/update/plugins/groovy.swt
  */
 
- 
- def subapp = jface.shell( window.getShell() ) 
- {	
+
+ def subapp = jface.shell( window.getShell() )
+ {
  	gridLayout()
-    group( text:"Groovy SWT", background:[255, 255, 255] ) 
+    group( text:"Groovy SWT", background:[255, 255, 255] )
     {
     	gridLayout()
         label( text:"groove fun !" ,background:[255, 255, 255] )
