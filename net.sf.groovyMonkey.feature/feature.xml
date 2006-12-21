@@ -6,7 +6,21 @@
       provider-name="James E. Ervin">
 
    <copyright>
-      Copyright 2005-2006 by Eclipse Foundation Inc.
+      I, James E. Ervin, have made available all content in the Groovy Monkey feature 
+(&quot;Content&quot;). Unless otherwise indicated below, the Content is provided to you 
+under the terms and conditions of the Eclipse Public License Version 1.0 
+(&quot;EPL&quot;). A copy of the EPL is available at &lt;A 
+href=&quot;http://www.eclipse.org/legal/epl-v10.html&quot;&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/A&gt;. 
+For purposes of the EPL, &quot;Program&quot; will mean the Content.&lt;/P&gt;
+
+&lt;P&gt;If you did not receive this Content directly from James Ervin or the Groovy Monkey
+Sourceforge site &lt;a href=&quot;http://sourceforge.net/projects/groovy-monkey&quot;&gt;http://sourceforge.net/projects/groovy-monkey&lt;/a&gt;, 
+the Content is being redistributed by another party (&quot;Redistributor&quot;) and different 
+terms and conditions may apply to your use of any object code in the Content. 
+Check the Redistributor&apos;s license that was provided with the Content. If no such 
+license exists, contact the Redistributor. Unless otherwise indicated below, the 
+terms and conditions of the EPL still apply to any source code in the Content 
+and such source code may be obtained at &lt;A href=&quot;http://sourceforge.net/projects/groovy-monkey&quot;&gt;http://sourceforge.net/projects/groovy-monkey&lt;/A&gt;.
    </copyright>
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
