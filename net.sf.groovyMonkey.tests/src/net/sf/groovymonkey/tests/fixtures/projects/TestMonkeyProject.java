@@ -9,11 +9,11 @@ import net.sf.groovyMonkey.RunMonkeyScript;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 
-public class TestMonkeyProject 
+public class TestMonkeyProject
 extends TestProject
 {
-    public static String MONKEY_PATH = MONKEY_DIR + "/";
-    public static String MONKEY_EXT = FILE_EXTENSION;
+    public static final String MONKEY_PATH = MONKEY_DIR + "/";
+    public static final String MONKEY_EXT = FILE_EXTENSION;
 
     public static Object runMonkeyScript( final IFile script )
     {
@@ -26,7 +26,7 @@ extends TestProject
         final RunMonkeyScript monkeyScript = new RunMonkeyScript( script, activeWindow(), map, true );
         return monkeyScript.runScript( null );
     }
-    public TestMonkeyProject( final String name ) 
+    public TestMonkeyProject( final String name )
     throws CoreException
     {
         super( name );
@@ -34,16 +34,16 @@ extends TestProject
     }
     public void runMonkeyScript( final String projectPath )
     {
-        runMonkeyScript( MONKEY_PATH + project().getFile( projectPath ) );
+        runMonkeyScript( project().getFile( projectPath ) );
     }
-    public IFile makeMonkeyScript( final String scriptName, 
-                                   final InputStream input ) 
+    public IFile makeMonkeyScript( final String scriptName,
+                                   final InputStream input )
     throws CoreException
     {
         return makeFile( MONKEY_PATH, scriptName.endsWith( MONKEY_EXT ) ? scriptName : scriptName + MONKEY_EXT, input );
     }
-    public IFile makeMonkeyScript( final String scriptName, 
-                                   final String contents ) 
+    public IFile makeMonkeyScript( final String scriptName,
+                                   final String contents )
     throws CoreException
     {
         return makeMonkeyScript( scriptName, toInputStream( contents ) );

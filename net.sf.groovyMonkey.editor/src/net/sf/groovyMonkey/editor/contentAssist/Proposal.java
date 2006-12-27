@@ -43,7 +43,7 @@ implements ICompletionProposal, ICompletionProposalExtension, ICompletionProposa
     }
     public void apply( final IDocument document )
     {
-        apply( null, '\0', 0, fOffset );
+        apply( document, '\0', fOffset );
     }
     public Point getSelection( final IDocument document )
     {

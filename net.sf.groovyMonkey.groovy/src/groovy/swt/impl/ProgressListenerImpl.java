@@ -8,7 +8,7 @@ import org.eclipse.swt.browser.ProgressListener;
 
 /**
  * This implementation adds a ProgressListener to a browser widget
- * 
+ *
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
  */
 public class ProgressListenerImpl implements ProgressListener, ClosureSupport {
@@ -37,9 +37,9 @@ public class ProgressListenerImpl implements ProgressListener, ClosureSupport {
      */
     public void changed(ProgressEvent event) {
 
-        if (closure == null) { 
+        if (closure == null) {
             throw new NullPointerException(
-                "No closure has been configured for this Listener"); 
+                "No closure has been configured for this Listener");
         }
 
         if ("changed".equals(type)) {
@@ -53,9 +53,9 @@ public class ProgressListenerImpl implements ProgressListener, ClosureSupport {
      * @see org.eclipse.swt.browser.ProgressListener#completed(org.eclipse.swt.browser.ProgressEvent)
      */
     public void completed(ProgressEvent event) {
-        if (closure == null) { 
+        if (closure == null) {
             throw new NullPointerException(
-                "No closure has been configured for this Listener"); 
+                "No closure has been configured for this Listener");
         }
 
         if ("completed".equals(type)) {
@@ -65,7 +65,7 @@ public class ProgressListenerImpl implements ProgressListener, ClosureSupport {
 
     }
 
-    public class CustomProgressEvent {
+    public static class CustomProgressEvent {
 
         private ProgressEvent event;
 

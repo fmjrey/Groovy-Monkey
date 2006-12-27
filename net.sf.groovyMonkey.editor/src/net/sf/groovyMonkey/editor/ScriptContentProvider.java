@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
@@ -53,7 +54,7 @@ import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PluginModelManager;
 
-public class ScriptContentProvider 
+public class ScriptContentProvider
 implements ITreeContentProvider
 {
     public static class Descriptor
@@ -206,8 +207,8 @@ implements ITreeContentProvider
         public final String localName;
         public final Class type;
         private final String toString;
-        
-        public VarDescriptor( final DOMDescriptor parent, 
+
+        public VarDescriptor( final DOMDescriptor parent,
                               final String varName,
                               final Class type )
         {
@@ -236,7 +237,7 @@ implements ITreeContentProvider
         public final Method method;
         public MethodDescriptor( final Method method )
         {
-            this.method = method;   
+            this.method = method;
         }
         @Override
         public String toString()
@@ -260,9 +261,36 @@ implements ITreeContentProvider
         }
         public int compareTo( final MethodDescriptor descriptor )
         {
-            if( method.getName().compareTo( descriptor.method.getName() ) != 0 )
+            if( !method.getName().equals( descriptor.method.getName() ) )
                 return method.getName().compareTo( descriptor.method.getName() );
             return method.toGenericString().compareTo( descriptor.method.toGenericString() );
+        }
+        @Override
+        public int hashCode()
+        {
+            final int PRIME = 31;
+            int result = 1;
+            result = PRIME * result + ( ( method == null ) ? 0 : method.toGenericString().hashCode() );
+            return result;
+        }
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( this == obj )
+                return true;
+            if( obj == null )
+                return false;
+            if( getClass() != obj.getClass() )
+                return false;
+            final MethodDescriptor other = ( MethodDescriptor )obj;
+            if( method == null )
+            {
+                if( other.method != null )
+                    return false;
+            }
+            else if( compareTo( other ) != 0 )
+                return false;
+            return true;
         }
     }
     public static final class FieldDescriptor
@@ -272,7 +300,7 @@ implements ITreeContentProvider
         public final Field field;
         public FieldDescriptor( final Field field )
         {
-            this.field = field;   
+            this.field = field;
         }
         @Override
         public String toString()
@@ -317,7 +345,7 @@ implements ITreeContentProvider
     private final List< BundleDescriptor > bundles = new TreeList< BundleDescriptor >();
     private ScriptMetadata data = null;
     private boolean flat = false;
-    
+
     public Object[] getChildren( final Object parentElement )
     {
         if( parentElement instanceof DOMDescriptor )
@@ -325,11 +353,11 @@ implements ITreeContentProvider
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
             final Map< String, Class > dom = getDOMInfo( descriptor.pluginName );
             final List< VarDescriptor > list = new TreeList< VarDescriptor >();
-            for( final String var : dom.keySet() )
+            for( final Entry< String, Class > entry : dom.entrySet() )
             {
-                if( dom.get( var ) == null )
+                if( entry.getValue() == null )
                     continue;
-                list.add( new VarDescriptor( descriptor, var, dom.get( var ) ) );
+                list.add( new VarDescriptor( descriptor, entry.getKey(), entry.getValue() ) );
             }
             return list.toArray( new VarDescriptor[ 0 ] );
         }
@@ -486,8 +514,8 @@ implements ITreeContentProvider
     public void dispose()
     {
     }
-    public void inputChanged( final Viewer viewer, 
-                              final Object oldInput, 
+    public void inputChanged( final Viewer viewer,
+                              final Object oldInput,
                               final Object newInput )
     {
         if( !( newInput instanceof IAdaptable ) )

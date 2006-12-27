@@ -12,14 +12,14 @@ import org.eclipse.jface.text.quickassist.QuickAssistAssistant;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewerConfiguration;
 
-public class Configuration 
+public class Configuration
 extends SourceViewerConfiguration
 {
     public static final String METADATA_PARTITION = "__groovymonkey_metadata";
-    public static final String[] LEGAL_TYPES = { METADATA_PARTITION };
+    static final String[] LEGAL_TYPES = { METADATA_PARTITION };
     private final IAdaptable adapter;
-    
-    public Configuration( final IAdaptable adapter ) 
+
+    public Configuration( final IAdaptable adapter )
     {
         Validate.notNull( adapter );
         this.adapter = adapter;

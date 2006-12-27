@@ -17,12 +17,12 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.osgi.framework.Bundle;
 
-public class VarNameDeconflictTest 
+public class VarNameDeconflictTest
 extends TestCaseAbstract
 {
     private final String DEPLOY_DIR = "/tmp/PDEJUnit/" + getClass().getSimpleName() + "/" + getName();
-    private final String TESTING_DOM = "net.sf.testing.dom";
-    private final String ANOTHER_DOM = "net.sf.testing.anotherDom";
+    private static final String TESTING_DOM = "net.sf.testing.dom";
+    private static final String ANOTHER_DOM = "net.sf.testing.anotherDom";
     private InputStream installTestingDOMScriptInput = null;
     private IFile installTestingDOMScript = null;
     private InputStream installAnotherDOMScriptInput = null;
@@ -30,13 +30,13 @@ extends TestCaseAbstract
     private InputStream uninstallScriptInput = null;
     private InputStream scriptFileInput = null;
     private IFile script = null;
-    
+
     public VarNameDeconflictTest( final String name )
     {
         super( name );
     }
     @Override
-    protected void setUp() 
+    protected void setUp()
     throws Exception
     {
         super.setUp();
@@ -52,7 +52,7 @@ extends TestCaseAbstract
         monkeyProject.makeFile( "/lib", "uninstall" + MONKEY_EXT, uninstallScriptInput );
     }
     @Override
-    protected void tearDown() 
+    protected void tearDown()
     throws Exception
     {
         super.tearDown();
@@ -72,7 +72,7 @@ extends TestCaseAbstract
     {
         deployBundle( ANOTHER_DOM + "_1.0.0.jar" );
     }
-    private void deployBundle( final String bundleName ) 
+    private void deployBundle( final String bundleName )
     throws Exception
     {
         final InputStream input = bundle().getResource( MONKEY_TEST_SCRIPTS + VarNameDeconflictTest.class.getSimpleName() + "/" + bundleName ).openStream();
@@ -91,7 +91,7 @@ extends TestCaseAbstract
     {
         final List< Bundle > bundles = new ArrayList< Bundle >();
         for( final Bundle bundle : context().getBundles() )
-            if( bundle.getSymbolicName().trim().equals( TESTING_DOM ) 
+            if( bundle.getSymbolicName().trim().equals( TESTING_DOM )
                 || bundle.getSymbolicName().trim().equals( ANOTHER_DOM ) )
                 bundles.add( bundle );
         return bundles;
@@ -111,7 +111,7 @@ extends TestCaseAbstract
         runMonkeyScript( installAnotherDOMScript, map );
     }
     /**
-     * This unit test deploys and installs two test doms called net.sf.testing.dom and 
+     * This unit test deploys and installs two test doms called net.sf.testing.dom and
      * net.sf.testing.anotherDom, that have two distinct dom objects that are both mapped
      * to the binding variable name testingDOM, the script remaps it for the variable from
      * the AnotherDOM plugin and checks that both DOM objects are called appropriately.
@@ -127,6 +127,6 @@ extends TestCaseAbstract
         installTestingDOM( "1.0.0" );
         deployAnotherDOM();
         installAnotherDOM( "1.0.0" );
-        runMonkeyScript( script );      
+        runMonkeyScript( script );
     }
 }

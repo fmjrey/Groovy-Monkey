@@ -8,7 +8,7 @@ import org.eclipse.swt.browser.StatusTextListener;
 
 /**
  * This implementation adds a StatusTextListener to a browser widget
- * 
+ *
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster</a>
  */
 public class StatusTextListenerImpl implements StatusTextListener, ClosureSupport {
@@ -30,29 +30,29 @@ public class StatusTextListenerImpl implements StatusTextListener, ClosureSuppor
      */
     public void changed(StatusTextEvent event)
     {
-        if (closure == null) { 
+        if (closure == null) {
             throw new NullPointerException(
-                "No closure has been configured for this Listener"); 
+                "No closure has been configured for this Listener");
         }
-        
+
         closure.setProperty("event", new CustomStatusTextEvent(event));
         closure.call(event);
     }
 
-	public class CustomStatusTextEvent
+	public static class CustomStatusTextEvent
 	{
 		private StatusTextEvent event;
-		
+
 		public CustomStatusTextEvent(StatusTextEvent event)
 		{
 			this.event = event;
 		}
-		
+
 		public String getText()
 		{
 			return event.text;
 		}
 	}
 
-	
+
 }

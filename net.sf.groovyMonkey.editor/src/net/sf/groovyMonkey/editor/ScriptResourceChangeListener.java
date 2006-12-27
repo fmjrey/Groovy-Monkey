@@ -15,12 +15,12 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.TreeViewer;
 
-public class ScriptResourceChangeListener 
+public class ScriptResourceChangeListener
 implements IResourceChangeListener
 {
     private final TreeViewer viewer;
     private final ScriptContentProvider provider;
-    
+
     public ScriptResourceChangeListener( final TreeViewer viewer,
                                          final ScriptContentProvider provider )
     {
@@ -30,13 +30,13 @@ implements IResourceChangeListener
     public void resourceChanged( final IResourceChangeEvent event )
     {
         final Boolean changes[] = new Boolean[ 1 ];
-        changes[ 0 ] = new Boolean( false );
+        changes[ 0 ] = Boolean.FALSE;
         final IFile[] changedFile = new IFile[ 1 ];
         final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
         {
             private void found_a_change( final IFile file )
             {
-                changes[ 0 ] = new Boolean( true );
+                changes[ 0 ] = Boolean.TRUE;
                 changedFile[ 0 ] = file;
             }
             public boolean visit( final IResourceDelta delta )
@@ -90,7 +90,7 @@ implements IResourceChangeListener
             getDefault().asyncExec( runnable );
             return;
         }
-        // This is how I get it to bloody well redraw, it is an ugly hack aint it?        
+        // This is how I get it to bloody well redraw, it is an ugly hack aint it?
         viewer.setInput( viewer.getInput() );
     }
     private boolean diff( final IFile changedScript )

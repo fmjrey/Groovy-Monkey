@@ -1,6 +1,6 @@
 /*
  * Created on Feb 15, 2004
- *  
+ *
  */
 package groovy.swt.factory;
 
@@ -29,7 +29,7 @@ public abstract class AbstractSwtFactory {
 
     /**
      * set the properties
-     * 
+     *
      * @param bean
      * @param properties
      */
@@ -79,6 +79,7 @@ public abstract class AbstractSwtFactory {
                 }
 
             } catch (Exception e) {
+                throw new RuntimeException( e );
             }
             if (field == null) {
                 InvokerHelper.setProperty(bean, property, value);

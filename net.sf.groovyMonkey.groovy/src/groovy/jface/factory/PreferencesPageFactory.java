@@ -6,15 +6,12 @@ import groovy.lang.MissingPropertyException;
 import groovy.swt.InvalidParentException;
 import groovy.swt.factory.AbstractSwtFactory;
 import groovy.swt.factory.SwtFactory;
-
 import java.io.IOException;
 import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -38,7 +35,7 @@ public class PreferencesPageFactory extends AbstractSwtFactory implements
             throws GroovyException {
 
         // check location
-        if (!(parent instanceof PreferenceDialog)) { throw new InvalidParentException(
+        if (!(parent instanceof PreferenceDialogImpl)) { throw new InvalidParentException(
                 "preferenceDialog"); }
 
         PreferenceDialogImpl preferenceDialogImpl = (PreferenceDialogImpl) parent;
@@ -58,7 +55,7 @@ public class PreferencesPageFactory extends AbstractSwtFactory implements
         FieldEditorPreferencePage page = new PreferencePageFieldEditorImpl(
                 title);
         PreferenceStore preferenceStore = new PreferenceStore(filename);
-        
+
         try {
             preferenceStore.load();
         } catch (IOException e) {

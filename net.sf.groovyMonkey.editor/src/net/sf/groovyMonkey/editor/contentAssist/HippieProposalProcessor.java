@@ -53,7 +53,7 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
         }
 
         public void apply(IDocument document) {
-            apply(null, '\0', 0, fOffset);
+            apply(document, '\0', fOffset);
         }
 
         public Point getSelection(IDocument document) {
@@ -114,7 +114,7 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
                 return offset >= fOffset && offset < fOffset + fString.length() && document.get(prefixStart, offset - (prefixStart)).equals((fPrefix + fString).substring(0, offset - prefixStart));
             } catch (BadLocationException x) {
                 return false;
-            } 
+            }
         }
 
         public IInformationControlCreator getInformationControlCreator() {
@@ -151,18 +151,18 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
             String prefix= getPrefix(viewer, offset);
             if (prefix == null || prefix.length() == 0)
                 return NO_PROPOSALS;
-            
+
             List suggestions= getSuggestions(viewer, offset, prefix);
-            
+
             List result= new ArrayList();
             for (Iterator it= suggestions.iterator(); it.hasNext();) {
                 String string= (String) it.next();
                 if (string.length() > 0)
                     result.add(createProposal(string, prefix, offset));
             }
-            
+
             return (ICompletionProposal[]) result.toArray(new ICompletionProposal[result.size()]);
-            
+
         } catch (BadLocationException x) {
             // ignore and return no proposals
             return NO_PROPOSALS;
@@ -173,11 +173,11 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
         IDocument doc= viewer.getDocument();
         if (doc == null || offset > doc.getLength())
             return null;
-        
+
         int length= 0;
         while (--offset >= 0 && Character.isJavaIdentifierPart(doc.getChar(offset)))
             length++;
-        
+
         return doc.get(offset + 1, length);
     }
 
@@ -192,21 +192,21 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
         // no context informations for hippie completions
         return NO_CONTEXTS;
     }
-    
+
     /*
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
      */
     public char[] getCompletionProposalAutoActivationCharacters() {
         return null;
     }
-    
+
     /*
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationAutoActivationCharacters()
      */
     public char[] getContextInformationAutoActivationCharacters() {
         return null;
     }
-    
+
     /*
      * @see org.eclipse.jface.text.contentassist.IContentAssistProcessor#getContextInformationValidator()
      */
@@ -217,9 +217,9 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
     /**
      * Return the list of suggestions from the current document. First the
      * document is searched backwards from the caret position and then forwards.
-     * 
-     * @param offset 
-     * @param viewer 
+     *
+     * @param offset
+     * @param viewer
      * @param prefix the completion prefix
      * @return all possible completions that were found in the current document
      * @throws BadLocationException if accessing the document fails
@@ -237,9 +237,9 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
      * Create the array of suggestions. It scans all open text editors and
      * prefers suggestions from the currently open editor. It also adds the
      * empty suggestion at the end.
-     * 
-     * @param viewer 
-     * @param offset 
+     *
+     * @param viewer
+     * @param offset
      * @param prefix the prefix to search for
      * @return the list of all possible suggestions in the currently open
      *         editors

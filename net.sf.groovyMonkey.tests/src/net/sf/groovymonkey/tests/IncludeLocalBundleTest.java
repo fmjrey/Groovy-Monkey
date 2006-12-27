@@ -18,23 +18,23 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.osgi.framework.Bundle;
 
-public class IncludeLocalBundleTest 
+public class IncludeLocalBundleTest
 extends TestCaseAbstract
 {
     private final String DEPLOY_DIR = "/tmp/PDEJUnit/" + getClass().getSimpleName() + "/" + getName();
-    private final String TEST_DOM = "net.sf.test.dom";
+    private static final String TEST_DOM = "net.sf.test.dom";
     private InputStream installScriptInput = null;
     private IFile installScript = null;
     private InputStream uninstallScriptInput = null;
     private InputStream scriptFileInput = null;
     private IFile script = null;
-    
+
     public IncludeLocalBundleTest( final String name )
     {
         super( name );
     }
     @Override
-    protected void setUp() 
+    protected void setUp()
     throws Exception
     {
         super.setUp();
@@ -48,7 +48,7 @@ extends TestCaseAbstract
         monkeyProject.makeFile( "/lib", "uninstall" + MONKEY_EXT, uninstallScriptInput );
     }
     @Override
-    protected void tearDown() 
+    protected void tearDown()
     throws Exception
     {
         super.tearDown();
@@ -62,7 +62,7 @@ extends TestCaseAbstract
     {
         deployBundle( TEST_DOM + "_1.0.0.jar" );
     }
-    private void deployBundle( final String bundleName ) 
+    private void deployBundle( final String bundleName )
     throws Exception
     {
         final InputStream input = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeLocalBundleTest.class.getSimpleName() + "/" + bundleName ).openStream();

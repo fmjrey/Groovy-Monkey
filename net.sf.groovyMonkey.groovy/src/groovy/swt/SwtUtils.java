@@ -7,7 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -20,7 +19,7 @@ import org.eclipse.ui.forms.widgets.Section;
 
 /**
  * A helper class for working with SWT.
- * 
+ *
  * @author <a href="mailto:jstrachan@apache.org">James Strachan</a>
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
  * @version 1.1
@@ -32,15 +31,15 @@ public class SwtUtils
     /**
      * Parses the comma delimited String of style codes which are or'd together.
      * The given class describes the integer static constants
-     * 
+     *
      * @param constantClass
      *            is the type to look for static fields
      * @param text
      *            is a comma delimited text value such as "border, resize"
      * @return the int code
      */
-    public static int parseStyle( final Class constantClass, 
-                                  final String text ) 
+    public static int parseStyle( final Class constantClass,
+                                  final String text )
     throws GroovyException
     {
         return parseStyle( constantClass, text, true );
@@ -48,7 +47,7 @@ public class SwtUtils
     /**
      * Parses the comma delimited String of style codes which are or'd together.
      * The given class describes the integer static constants
-     * 
+     *
      * @param constantClass
      *            is the type to look for static fields
      * @param text
@@ -58,9 +57,9 @@ public class SwtUtils
      *            its compared against the reflection fields
      * @return the int code
      */
-    public static int parseStyle( final Class constantClass, 
-                                  String text, 
-                                  final boolean toUpperCase ) 
+    public static int parseStyle( final Class constantClass,
+                                  String text,
+                                  final boolean toUpperCase )
     throws GroovyException
     {
         int answer = 0;
@@ -81,8 +80,8 @@ public class SwtUtils
      * @return the code for the given word or zero if the word doesn't match a
      *         valid style
      */
-    public static int getStyleCode( final Class constantClass, 
-                                    final String text ) 
+    public static int getStyleCode( final Class constantClass,
+                                    final String text )
     throws GroovyException
     {
         try
@@ -106,7 +105,7 @@ public class SwtUtils
     }
     /**
      * dispose all children
-     * 
+     *
      * @param parent
      */
     public static void disposeChildren( final Composite parent )
@@ -119,13 +118,13 @@ public class SwtUtils
     }
     /**
      * return the parent shell
-     * 
+     *
      * @param parent
      * @return
      */
     public static Shell getParentShell( final Object parent )
     {
-        if( parent instanceof ApplicationWindow )
+        if( parent instanceof ApplicationWindowImpl )
             return ( ( ApplicationWindowImpl )parent ).getShell();
         else if( parent instanceof Shell )
             return ( Shell )parent;
@@ -134,11 +133,11 @@ public class SwtUtils
     }
     /**
      * return the parent widget
-     * 
+     *
      * @param parent
      * @return
      */
-    public static Object getParentWidget( final Object parent, 
+    public static Object getParentWidget( final Object parent,
                                           final Map properties )
     {
         if( parent == null && properties.containsKey( "parent" ) )
@@ -151,7 +150,7 @@ public class SwtUtils
                 return parentWidget;
             }
         }
-        if( parent instanceof ApplicationWindow )
+        if( parent instanceof ApplicationWindowImpl )
             return ( ( ApplicationWindowImpl )parent ).getContents();
         else if( parent instanceof Form )
             return ( ( Form )parent ).getBody();

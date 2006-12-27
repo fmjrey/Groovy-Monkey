@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
 
-    public class FieldEditorCreator {
+    public static class FieldEditorCreator {
 
         private Class beanClass;
 
@@ -47,6 +47,7 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
                             .newInstance(arguments);
                 }
             } catch (Exception e) {
+                throw new RuntimeException( e );
             }
 
             return fieldEditor;

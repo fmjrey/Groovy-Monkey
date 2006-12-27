@@ -26,12 +26,12 @@ import org.eclipse.ui.forms.widgets.Section;
  * @author <a href:ckl at dacelo.nl">Christiaan ten Klooster </a>
  * @version $Revision$
  */
-public class FormFactory 
-extends AbstractSwtFactory 
+public class FormFactory
+extends AbstractSwtFactory
 implements SwtFactory
 {
     /** static is evil, too many toolkits is evil */
-    protected static FormToolkit toolkit;
+    static FormToolkit toolkit;
     /**
      * @return Returns the toolkit.
      */
@@ -58,8 +58,8 @@ implements SwtFactory
      *      java.lang.Object)
      */
     @Override
-    public Object newInstance( final Map properties, 
-                               final Object parent ) 
+    public Object newInstance( final Map properties,
+                               final Object parent )
     throws GroovyException
     {
         // boolean shouldLayout = properties.containsKey("parent");
@@ -90,10 +90,10 @@ implements SwtFactory
      * @param text
      * @return
      */
-    private Object getFormWidget( final Composite parentComposite, 
-                                  final Map properties, 
-                                  final int style, 
-                                  final String text ) 
+    private Object getFormWidget( final Composite parentComposite,
+                                  final Map properties,
+                                  final int style,
+                                  final String text )
     throws GroovyException
     {
         if( "form".equals( type ) )
@@ -144,7 +144,7 @@ implements SwtFactory
                     pageBook.registerPage( key, page );
                     return page;
                 }
-                throw new GroovyException( "attribute \"key\" is " + key );
+                throw new GroovyException( "attribute \"key\" is null" );
             }
             throw new InvalidParentException( "formPageBook" );
         }

@@ -42,7 +42,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
-public class DOMView 
+public class DOMView
 extends ViewPart
 implements IRegistryChangeListener
 {
@@ -52,7 +52,7 @@ implements IRegistryChangeListener
     private Action action2;
     private Action doubleClickAction;
 
-    class NameSorter 
+    static class NameSorter
     extends ViewerSorter
     {
         @Override
@@ -65,7 +65,7 @@ implements IRegistryChangeListener
             if( element instanceof MethodDescriptor )
                 return 2;
             return super.category( element );
-        }   
+        }
     }
 
     public DOMView()
@@ -92,8 +92,8 @@ implements IRegistryChangeListener
                 return doms.toArray( new DOMDescriptor[ 0 ] );
             }
             @Override
-            public void inputChanged( final Viewer viewer, 
-                                      final Object oldInput, 
+            public void inputChanged( final Viewer viewer,
+                                      final Object oldInput,
                                       final Object newInput )
             {
             }

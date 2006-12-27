@@ -10,12 +10,9 @@ import groovy.lang.MissingPropertyException;
 import groovy.swt.InvalidParentException;
 import groovy.swt.factory.AbstractSwtFactory;
 import groovy.swt.factory.SwtFactory;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.jface.wizard.WizardPage;
 
 /**
@@ -32,14 +29,14 @@ public class WizardPageFactory extends AbstractSwtFactory implements SwtFactory 
     throws GroovyException {
 
         // check location
-        if (!(parent instanceof WizardDialog)) {
+        if (!(parent instanceof WizardDialogImpl)) {
             throw new InvalidParentException("wizardDialog");
         }
 
         // check for missing attributes
         String title = (String) properties.get("title");
         if (title == null) {
-            throw new MissingPropertyException("title", 
+            throw new MissingPropertyException("title",
             WizardPage.class);
         }
 

@@ -64,7 +64,7 @@ public class LayoutDataFactory extends AbstractSwtFactory implements SwtFactory{
             try {
                 Constructor constructor = beanClass.getConstructor(types);
                 if (constructor != null) {
-                    Object[] values = { new Integer(style)};
+                    Object[] values = { Integer.valueOf( style )};
                     bean = constructor.newInstance(values);
                 }
             } catch (NoSuchMethodException e) {

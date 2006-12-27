@@ -1,6 +1,6 @@
 /*
  * Created on Feb 15, 2004
- *  
+ *
  */
 package groovy.swt.factory;
 
@@ -81,7 +81,7 @@ public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
                 Class[] types = { int.class };
                 Constructor constructor = beanClass.getConstructor(types);
                 if (constructor != null) {
-                    Object[] arguments = { new Integer(style) };
+                    Object[] arguments = { Integer.valueOf( style ) };
                     return constructor.newInstance(arguments);
                 }
             } else {
@@ -94,7 +94,7 @@ public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
                         Class[] types = constructor.getParameterTypes();
                         if (types.length == 2 && types[1].isAssignableFrom(int.class)) {
                             if (types[0].isAssignableFrom(parent.getClass())) {
-                                Object[] arguments = { parent, new Integer(style) };
+                                Object[] arguments = { parent, Integer.valueOf( style ) };
                                 return constructor.newInstance(arguments);
                             }
                             // lets try to find the constructor with 1
