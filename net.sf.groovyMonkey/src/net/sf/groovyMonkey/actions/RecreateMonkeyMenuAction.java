@@ -43,23 +43,23 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
-public class RecreateMonkeyMenuAction 
+public class RecreateMonkeyMenuAction
 implements IWorkbenchWindowActionDelegate
 {
-    class MonkeyMenuStruct
+    static class MonkeyMenuStruct
     {
         String key;
         IMenuManager menu;
         MonkeyMenuStruct submenu;
     }
-    class Association 
+    static class Association
     implements Comparable< Association >
     {
         final String key;
         final IFile file;
         final int uniqueId;
 
-        Association( final String k, 
+        Association( final String k,
                      final IFile f )
         {
             key = k;
@@ -75,12 +75,42 @@ implements IWorkbenchWindowActionDelegate
                 return -1;
             return 1;
         }
+        @Override
+        public int hashCode()
+        {
+            final int PRIME = 31;
+            int result = 1;
+            result = PRIME * result + ( ( key == null ) ? 0 : key.hashCode() );
+            result = PRIME * result + uniqueId;
+            return result;
+        }
+        @Override
+        public boolean equals( Object obj )
+        {
+            if( this == obj )
+                return true;
+            if( obj == null )
+                return false;
+            if( getClass() != obj.getClass() )
+                return false;
+            final Association other = ( Association )obj;
+            if( key == null )
+            {
+                if( other.key != null )
+                    return false;
+            }
+            else if( !key.equals( other.key ) )
+                return false;
+            if( uniqueId != other.uniqueId )
+                return false;
+            return true;
+        }
     }
-    
+
     private final Pattern submenu_pattern = compile( "^(.+?)>(.*)$" );
     private static int id = 0;
     private IWorkbenchWindow window;
-    
+
     public RecreateMonkeyMenuAction() {}
 
     public void run( final IAction action )
@@ -103,7 +133,7 @@ implements IWorkbenchWindowActionDelegate
         }
         return result;
     }
-    private void createTheMenu( final List< Association > menuData, 
+    private void createTheMenu( final List< Association > menuData,
                                 final IAction action )
     {
         final MenuManager outerManager = ( ( WorkbenchWindow )window ).getMenuManager();
@@ -153,8 +183,8 @@ implements IWorkbenchWindowActionDelegate
             addNestedMenuEditAction( current, association.key, association.file );
         outerManager.updateAll(  true );
     }
-    private void addNestedMenuAction( final MonkeyMenuStruct current, 
-                                      final String menuString, 
+    private void addNestedMenuAction( final MonkeyMenuStruct current,
+                                      final String menuString,
                                       final IFile scriptFile )
     {
         if( menuString == null )
@@ -177,8 +207,8 @@ implements IWorkbenchWindowActionDelegate
         else
             current.menu.add( menuAction( menuString, scriptFile ) );
     }
-    private void addNestedMenuEditAction( final MonkeyMenuStruct current, 
-                                          final String menuString, 
+    private void addNestedMenuEditAction( final MonkeyMenuStruct current,
+                                          final String menuString,
                                           final IFile scriptFile )
     {
         if( menuString == null )
@@ -201,7 +231,7 @@ implements IWorkbenchWindowActionDelegate
         else
             current.menu.add( editAction( menuString, scriptFile ) );
     }
-    private Action editAction( final String key, 
+    private Action editAction( final String key,
                                final IFile script )
     {
         final Action action = new Action( key )
@@ -223,7 +253,7 @@ implements IWorkbenchWindowActionDelegate
             action.setAccelerator( SWT.ALT | SWT.CONTROL | 'E' );
         return action;
     }
-    private Action menuAction( final String key, 
+    private Action menuAction( final String key,
                                final IFile script )
     {
         final RunMonkeyScript runner = new RunMonkeyScript( script, window );

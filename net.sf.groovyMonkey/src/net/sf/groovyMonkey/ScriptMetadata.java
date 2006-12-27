@@ -553,7 +553,7 @@ public class ScriptMetadata
     {
         return reflectionHashCode( this );
     }
-    class URLtoPluginMap
+    static class URLtoPluginMap
     {
         final Map< String, Set< String > > map = new HashMap< String, Set< String > >();
 

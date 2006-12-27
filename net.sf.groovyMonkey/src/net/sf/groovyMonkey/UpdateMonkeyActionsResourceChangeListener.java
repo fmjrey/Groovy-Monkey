@@ -41,18 +41,18 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.IWorkbenchWindow;
 
-public class UpdateMonkeyActionsResourceChangeListener 
+public class UpdateMonkeyActionsResourceChangeListener
 implements IResourceChangeListener
 {
     public void resourceChanged( final IResourceChangeEvent event )
     {
         final Boolean changes[] = new Boolean[ 1 ];
-        changes[ 0 ] = new Boolean( false );
+        changes[ 0 ] = Boolean.FALSE;
         final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
         {
             private void foundAChange()
             {
-                changes[ 0 ] = new Boolean( true );
+                changes[ 0 ] = Boolean.TRUE;
             }
             public boolean visit( final IResourceDelta delta )
             {
@@ -113,7 +113,7 @@ implements IResourceChangeListener
         if( anyMatches )
             createTheMonkeyMenu();
     }
-    private void processNewOrChangedScript( final String name, 
+    private void processNewOrChangedScript( final String name,
                                             final IFile file )
     {
         ScriptMetadata metadata;
@@ -149,7 +149,7 @@ implements IResourceChangeListener
         {
             final IResourceVisitor visitor = new IResourceVisitor()
             {
-                public boolean visit( final IResource resource ) 
+                public boolean visit( final IResource resource )
                 throws CoreException
                 {
                     if( !( resource instanceof IFile ) )
@@ -159,7 +159,7 @@ implements IResourceChangeListener
                         processNewOrChangedScript( file.getFullPath().toString(), file );
                     return true;
                 }
-                
+
             };
             try
             {
@@ -171,7 +171,7 @@ implements IResourceChangeListener
             }
         }
     }
-    private ScriptMetadata getMetadataFrom( final IFile script ) 
+    private ScriptMetadata getMetadataFrom( final IFile script )
     throws CoreException, IOException
     {
         final ScriptMetadata metadata = getScriptMetadata( script );

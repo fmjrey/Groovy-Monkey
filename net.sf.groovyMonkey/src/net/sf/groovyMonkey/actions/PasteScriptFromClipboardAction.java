@@ -69,7 +69,7 @@ import org.eclipse.ui.views.navigator.ResourceNavigator;
 public class PasteScriptFromClipboardAction
 implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
 {
-    class TextAndRTF
+    static class TextAndRTF
     {
         String text;
         String rtf;

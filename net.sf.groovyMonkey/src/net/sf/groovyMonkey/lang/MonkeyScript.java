@@ -1,5 +1,6 @@
 package net.sf.groovyMonkey.lang;
 import static java.lang.Thread.currentThread;
+import static java.security.AccessController.doPrivileged;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
 import static net.sf.groovyMonkey.ScriptMetadata.stripMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
@@ -19,11 +20,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import net.sf.groovyMonkey.BundleClassLoaderAdapter;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.MonkeyClassLoader;
@@ -38,7 +41,7 @@ public class MonkeyScript
 implements IMonkeyScript
 {
     private final Map< String, Object > binding = new LinkedHashMap< String, Object >();
-    private MonkeyClassLoader loader = new MonkeyClassLoader();
+    private MonkeyClassLoader loader = null;
     protected ScriptMetadata metadata;
     protected final String languageName;
     protected final String fileNameExtension;
@@ -46,12 +49,19 @@ implements IMonkeyScript
     protected final boolean stripMetadata;
     protected final Map< String, Object > map = new HashMap< String, Object >();
     private String toString;
-    
+
     public MonkeyScript( final String languageName,
                          final String fileNameExtension,
                          final IFile scriptFile,
                          final boolean stripMetadata )
     {
+        this.loader = doPrivileged( new PrivilegedAction< MonkeyClassLoader >()
+        {
+            public MonkeyClassLoader run()
+            {
+                return new MonkeyClassLoader();
+            }
+        } );
         noNullElements( new Object[] { languageName, fileNameExtension, scriptFile } );
         this.languageName = languageName;
         this.scriptFile = scriptFile;
@@ -83,15 +93,15 @@ implements IMonkeyScript
         this.map.clear();
         if( map != null )
         {
-            for( final String varName : map.keySet() )
+            for( final Entry< String, Object > entry : map.entrySet() )
             {
-                String resolvedName = varName;
+                String resolvedName = entry.getKey();
                 for( final DOMDescriptor descriptor : metadata.getDOMs() )
                 {
-                    if( descriptor.map.containsKey( varName ) )
-                        resolvedName = descriptor.map.get( varName );
+                    if( descriptor.map.containsKey( entry.getKey() ) )
+                        resolvedName = descriptor.map.get( entry.getKey() );
                 }
-                this.map.put( resolvedName, map.get( varName ) );
+                this.map.put( resolvedName, entry.getValue() );
             }
         }
         setBinding();
@@ -110,15 +120,31 @@ implements IMonkeyScript
         addIncludes( loader, metadata );
         return;
     }
-    public static void addIncludes( final MonkeyClassLoader loader, 
+    public static void addIncludes( final MonkeyClassLoader loader,
                                     final ScriptMetadata metadata )
     {
         final List< URL > includes = getIncludes( metadata );
         if( includes.size() > 0 )
-            loader.add( new URLClassLoader( includes.toArray( new URL[ 0 ] ), loader ) );
+        {
+            loader.add( doPrivileged( new PrivilegedAction< URLClassLoader > ()
+            {
+                public URLClassLoader run()
+                {
+                    return new URLClassLoader( includes.toArray( new URL[ 0 ] ), loader );
+                }
+            } ) );
+        }
         final List< Bundle > includedBundles = getIncludedBundles( metadata );
         if( includedBundles.size() > 0 )
-            loader.add( new BundleClassLoaderAdapter( loader, includedBundles.toArray( new Bundle[ 0 ] ) ) );
+        {
+            loader.add( doPrivileged( new PrivilegedAction< BundleClassLoaderAdapter > ()
+            {
+                public BundleClassLoaderAdapter run()
+                {
+                    return new BundleClassLoaderAdapter( loader, includedBundles.toArray( new Bundle[ 0 ] ) );
+                }
+            } ) );
+        }
     }
     public static List< URL > getIncludes( final ScriptMetadata metadata  )
     {
@@ -173,7 +199,7 @@ implements IMonkeyScript
         final String workspaceURI = getWorkspace().getRoot().getLocationURI().toString();
         return removeEnd( workspaceURI, "/" );
     }
-    public Object run() 
+    public Object run()
     throws BSFException
     {
         notNull( metadata );

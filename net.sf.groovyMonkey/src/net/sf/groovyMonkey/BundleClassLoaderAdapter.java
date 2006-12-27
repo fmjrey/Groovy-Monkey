@@ -5,22 +5,22 @@ import java.util.Enumeration;
 import org.apache.commons.lang.ArrayUtils;
 import org.osgi.framework.Bundle;
 
-public class BundleClassLoaderAdapter 
+public class BundleClassLoaderAdapter
 extends ClassLoader
 {
     private final Bundle[] bundles;
     public BundleClassLoaderAdapter( final Bundle... bundles )
     {
-        this.bundles = bundles;
+        this.bundles = ( Bundle[] )ArrayUtils.clone( bundles );
     }
     public BundleClassLoaderAdapter( final ClassLoader parent,
                                      final Bundle... bundles )
     {
         super( parent );
-        this.bundles = bundles;
+        this.bundles = ( Bundle[] )ArrayUtils.clone( bundles );
     }
     @Override
-    public Class< ? > loadClass( final String name ) 
+    public Class< ? > loadClass( final String name )
     throws ClassNotFoundException
     {
         try
@@ -30,7 +30,7 @@ extends ClassLoader
         catch( final ClassNotFoundException cnfe ) {}
         return super.loadClass( name );
     }
-    private Class< ? > askBundles( final String name ) 
+    private Class< ? > askBundles( final String name )
     throws ClassNotFoundException
     {
         for( final Bundle bundle: bundles )
@@ -41,10 +41,10 @@ extends ClassLoader
             }
             catch( final ClassNotFoundException cnfe ) {}
         }
-        throw new ClassNotFoundException( "Class " + name + " not found in bundles: " + bundles );
+        throw new ClassNotFoundException( "Class " + name + " not found in bundles: " + ArrayUtils.toString( bundles ) );
     }
     @Override
-    protected Class< ? > findClass( final String name ) 
+    protected Class< ? > findClass( final String name )
     throws ClassNotFoundException
     {
         return askBundles( name );
@@ -62,7 +62,7 @@ extends ClassLoader
     }
     @SuppressWarnings("unchecked")
     @Override
-    protected Enumeration< URL > findResources( final String name ) 
+    protected Enumeration< URL > findResources( final String name )
     throws IOException
     {
         for( final Bundle bundle : bundles )

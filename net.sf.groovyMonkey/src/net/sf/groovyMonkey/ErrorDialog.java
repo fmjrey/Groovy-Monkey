@@ -36,7 +36,7 @@ extends IconAndMessageDialog
     /**
     Static to prevent opening of error dialogs for automated testing.
     */
-   public static boolean AUTOMATED_MODE = false;
+   public static final boolean AUTOMATED_MODE = false;
 
    /**
     * Reserve room for this many list items.
@@ -94,7 +94,7 @@ extends IconAndMessageDialog
     * displayed contains child items <it>and </it> you need to specify a mask
     * which will be used to filter the displaying of these children.
     * </p>
-    * 
+    *
     * @param parentShell
     *            the shell under which to create this dialog
     * @param dialogTitle
@@ -230,7 +230,7 @@ extends IconAndMessageDialog
 
    /**
     * Create this dialog's drop-down list component.
-    * 
+    *
     * @param parent
     *            the parent composite
     * @return the drop-down list component
@@ -292,7 +292,7 @@ extends IconAndMessageDialog
     * Opens an error dialog to display the given error. Use this method if the
     * error object being displayed does not contain child items, or if you wish
     * to display all such items without filtering.
-    * 
+    *
     * @param parent
     *            the parent shell of the dialog, or <code>null</code> if none
     * @param dialogTitle
@@ -321,7 +321,7 @@ extends IconAndMessageDialog
     * to specify a mask which will be used to filter the displaying of these
     * children. The error dialog will only be displayed if there is at least
     * one child status matching the mask.
-    * 
+    *
     * @param parentShell
     *            the parent shell of the dialog, or <code>null</code> if none
     * @param title
@@ -372,7 +372,7 @@ extends IconAndMessageDialog
     */
    private void populateList(List listToPopulate, IStatus buildingStatus,
            int nesting, boolean includeStatus) {
-       
+
        if (!buildingStatus.matches(displayMask)) {
            return;
        }
@@ -380,7 +380,7 @@ extends IconAndMessageDialog
        Throwable t = buildingStatus.getException();
        boolean isCoreException= t instanceof CoreException;
        boolean incrementNesting= false;
-       
+
         if (includeStatus) {
             StringBuffer sb = new StringBuffer();
             for (int i = 0; i < nesting; i++) {
@@ -391,7 +391,7 @@ extends IconAndMessageDialog
             listToPopulate.add(sb.toString());
             incrementNesting= true;
         }
-        
+
        if (!isCoreException && t != null) {
         // Include low-level exception message
             StringBuffer sb = new StringBuffer();
@@ -402,18 +402,18 @@ extends IconAndMessageDialog
             if (message == null) {
                 message = t.toString();
             }
-                
+
             sb.append(message);
             listToPopulate.add(sb.toString());
             for( final String line : getStackTrace( t ) )
-                listToPopulate.add( new String( NESTING_INDENT + StringUtils.strip( line ) ) );
+                listToPopulate.add( NESTING_INDENT + StringUtils.strip( line ) );
             incrementNesting= true;
        }
-       
+
        if (incrementNesting) {
             nesting++;
         }
-       
+
        // Look for a nested core exception
        if (isCoreException) {
            CoreException ce = (CoreException)t;
@@ -424,7 +424,7 @@ extends IconAndMessageDialog
            }
        }
 
-       
+
        // Look for child status
        IStatus[] children = buildingStatus.getChildren();
        for (int i = 0; i < children.length; i++) {
@@ -446,7 +446,7 @@ extends IconAndMessageDialog
 
    /**
     * Returns whether the given status object should be displayed.
-    * 
+    *
     * @param status
     *            a status object
     * @param mask
@@ -492,7 +492,7 @@ extends IconAndMessageDialog
 
    /**
     * Put the details of the status of the error onto the stream.
-    * 
+    *
     * @param buildingStatus
     * @param buffer
     * @param nesting
@@ -518,7 +518,7 @@ extends IconAndMessageDialog
            CoreException ce = (CoreException)t;
            populateCopyBuffer(ce.getStatus(), buffer, nesting + 1);
        }
-       
+
        IStatus[] children = buildingStatus.getChildren();
        for (int i = 0; i < children.length; i++) {
            populateCopyBuffer(children[i], buffer, nesting + 1);
@@ -541,7 +541,7 @@ extends IconAndMessageDialog
 
    /*
     * (non-Javadoc)
-    * 
+    *
     * @see org.eclipse.jface.window.Window#close()
     */
    public boolean close() {
@@ -550,7 +550,7 @@ extends IconAndMessageDialog
         }
        return super.close();
    }
-   
+
    /**
     * Show the details portion of the dialog if it is not already visible.
     * This method will only work when it is invoked after the control of the dialog
@@ -568,7 +568,7 @@ extends IconAndMessageDialog
             }
        }
    }
-   
+
    /**
     * Return whether the Details button should be included.
     * This method is invoked once when the dialog is built.
@@ -582,7 +582,7 @@ extends IconAndMessageDialog
    protected boolean shouldShowDetailsButton() {
        return status.isMultiStatus() || status.getException() != null;
    }
-   
+
    /**
     * Set the status displayed by this error dialog to the given status.
     * This only affects the status displayed by the Details list.
@@ -600,7 +600,7 @@ extends IconAndMessageDialog
            repopulateList();
        }
    }
-   
+
    /**
     * Repopulate the supplied list widget.
     */
@@ -610,9 +610,9 @@ extends IconAndMessageDialog
             populateList(list);
        }
    }
-   
-   class StringPrintWriter extends PrintWriter {
-       
+
+   static class StringPrintWriter extends PrintWriter {
+
        /**
         * Constructs a new instance.
         */
@@ -647,6 +647,6 @@ extends IconAndMessageDialog
            flush();
            return ((StringWriter) this.out).toString();
        }
-       
+
    }
 }

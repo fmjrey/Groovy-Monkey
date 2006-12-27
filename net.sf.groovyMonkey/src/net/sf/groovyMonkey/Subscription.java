@@ -57,12 +57,12 @@ public class Subscription
     {
         source.removeResourceChangeListener( listener );
     }
-    class ResourceChangeListener
+    static class ResourceChangeListener
     implements IResourceChangeListener
     {
         private final ScriptMetadata metadata;
         private final String filter;
-        
+
         public ResourceChangeListener( final ScriptMetadata metadata,
                                 final String filter )
         {
@@ -86,7 +86,7 @@ public class Subscription
                 final Boolean[] found = { false };
                 final IResourceDeltaVisitor visitor = new IResourceDeltaVisitor()
                 {
-                    public boolean visit( final IResourceDelta delta ) 
+                    public boolean visit( final IResourceDelta delta )
                     throws CoreException
                     {
                         if( found[ 0 ] )

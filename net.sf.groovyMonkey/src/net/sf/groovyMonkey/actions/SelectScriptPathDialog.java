@@ -34,7 +34,7 @@ public class SelectScriptPathDialog
 extends ElementTreeSelectionDialog
 implements ISelectionChangedListener, ModifyListener
 {
-	public class Validator
+	public static class Validator
 	implements ISelectionStatusValidator
 	{
 		public IStatus validate( final Object[] selection )

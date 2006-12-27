@@ -24,6 +24,7 @@ import static org.eclipse.swt.widgets.Display.getCurrent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.dom.Utilities;
@@ -46,46 +47,46 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.progress.UIJob;
 
-public class RunMonkeyScript 
+public class RunMonkeyScript
 {
     public static ScriptMetadata LAST_RUN = null;
 	private final IWorkbenchWindow window;
 	private final IFile file;
-    private final boolean throwError;    
+    private final boolean throwError;
     private final Map< String, Object > map = new HashMap< String, Object >();
     private ScriptMetadata metadata = null;
     private boolean synchronous = true;
-    
+
     public RunMonkeyScript( final IFile file )
     {
         this( file, activeWindow(), false );
     }
-	public RunMonkeyScript( final IFile file, 
-                            final IWorkbenchWindow window ) 
+	public RunMonkeyScript( final IFile file,
+                            final IWorkbenchWindow window )
     {
 	    this( file, window, false );
 	}
-    public RunMonkeyScript( final IFile file, 
-                            final boolean throwError ) 
+    public RunMonkeyScript( final IFile file,
+                            final boolean throwError )
     {
         this( file, activeWindow(), null, throwError );
     }
-    public RunMonkeyScript( final IFile file, 
-                            final IWorkbenchWindow window, 
-                            final boolean throwError ) 
+    public RunMonkeyScript( final IFile file,
+                            final IWorkbenchWindow window,
+                            final boolean throwError )
     {
         this( file, window, null, throwError );
     }
-    public RunMonkeyScript( final IFile file, 
+    public RunMonkeyScript( final IFile file,
                             final Map< String, Object > map,
-                            final boolean throwError ) 
+                            final boolean throwError )
     {
         this( file, activeWindow(), map, throwError );
     }
-    public RunMonkeyScript( final IFile file, 
+    public RunMonkeyScript( final IFile file,
                             final IWorkbenchWindow window,
                             final Map< String, Object > map,
-                            final boolean throwError ) 
+                            final boolean throwError )
     {
         this.window = window;
         this.file = file;
@@ -228,12 +229,11 @@ public class RunMonkeyScript
                 return null;
             final String scriptLang = metadata.getLang();
             final Map< String, IMonkeyScriptFactory > factories = getScriptFactories();
-            for( final String language : factories.keySet() )
+            for( final Entry< String, IMonkeyScriptFactory > entry : factories.entrySet() )
             {
-                final IMonkeyScriptFactory factory = factories.get( language );
-                if( !factory.isLang( scriptLang ) )
+                if( !entry.getValue().isLang( scriptLang ) )
                     continue;
-                return factory.runner( metadata, map ).run();
+                return entry.getValue().runner( metadata, map ).run();
             }
             error( "No factory for language: " + scriptLang,
                    scriptLang + " not found. Available are: " + factories.keySet(),
@@ -250,7 +250,7 @@ public class RunMonkeyScript
         }
         return null;
     }
-    
+
     public static Map< String, IMonkeyScriptFactory > getScriptFactories()
     {
         final Map< String, IMonkeyScriptFactory > factories = new HashMap< String, IMonkeyScriptFactory >();
@@ -276,17 +276,17 @@ public class RunMonkeyScript
                 {
                     // Ignoring bad extensions
                     continue;
-                }   
+                }
             }
         }
         return factories;
     }
-	private void error( final Throwable x, 
-                        final String string ) 
+	private void error( final Throwable x,
+                        final String string )
     {
         error( x.getClass().getName(), string, x.getCause() != null ? x.getCause() : x );
 	}
-	private void error( final String title, 
+	private void error( final String title,
                         final String message,
                         final Throwable exception )
     {
