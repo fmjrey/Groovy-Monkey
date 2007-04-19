@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="antlr-2.7.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="asm-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="asm-tree-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="groovy-1.0.jar" sourcepath="groovy-1.0-src.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
