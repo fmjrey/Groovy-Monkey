@@ -52,6 +52,7 @@ implements IStartup
     private static BundleContext context;
     private static final Map< String, ScriptMetadata > scriptStore = synchronizedMap( new HashMap< String, ScriptMetadata >() );
     private ServiceTracker tracker = null;
+    private boolean started = false;
     
     public static Map< String, ScriptMetadata > getScriptStore()
     {
@@ -70,6 +71,7 @@ implements IStartup
     throws Exception
     {
         super.start( context );
+        earlyStartup();
         GroovyMonkeyPlugin.context = context;
         tracker = new ServiceTracker( context, PlatformAdmin.class.getName(), null );
         tracker.open();
@@ -93,6 +95,9 @@ implements IStartup
     }
     public void earlyStartup()
     {
+    	if( started )
+    		return;
+    	started = true;
         final UpdateMonkeyActionsResourceChangeListener listener = new UpdateMonkeyActionsResourceChangeListener();
         getWorkspace().addResourceChangeListener( listener, POST_CHANGE );
         listener.rescanAllFiles();
