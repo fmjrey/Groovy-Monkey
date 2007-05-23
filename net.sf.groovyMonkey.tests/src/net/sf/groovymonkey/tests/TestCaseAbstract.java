@@ -40,7 +40,7 @@ extends TestCase
          super.setUp();
          monkeyProject = new TestMonkeyProject( "TestMonkeyProject" );
          javaProject = new TestJavaProject( "TestJavaProject" );
-         bundleLocation = new File( ".", removeStart( bundle().getLocation(), "update@" ) ).getCanonicalPath();
+         bundleLocation = new File( removeStart( bundle().getLocation(), "update@" ) ).getCanonicalPath();
     }
     protected void setUpJavaProject() 
     throws Exception
