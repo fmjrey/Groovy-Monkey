@@ -25,14 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
-
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Subscription;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.util.TreeList;
-
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
@@ -437,9 +435,9 @@ implements ITreeContentProvider
     public static IJavaProject getSearchableProject( final String projectName )
     {
         final PluginModelManager manager = PDECore.getDefault().getModelManager();
-        final IJavaProject javaProject = manager.getSearchablePluginsManager().getProxyProject();
-        if( javaProject != null )
-            return javaProject;
+//        final IJavaProject javaProject = manager.getSearchablePluginsManager().getProxyProject();
+//        if( javaProject != null )
+//            return javaProject;
         for( final IPluginModelBase base : manager.getWorkspaceModels() )
         {
             final IProject project = base.getUnderlyingResource().getProject();
