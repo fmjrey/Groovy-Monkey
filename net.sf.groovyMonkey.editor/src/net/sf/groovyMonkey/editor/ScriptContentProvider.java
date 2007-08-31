@@ -203,12 +203,12 @@ implements ITreeContentProvider
         public final DOMDescriptor parent;
         public final String varName;
         public final String localName;
-        public final Class type;
+        public final Class<?> type;
         private final String toString;
 
         public VarDescriptor( final DOMDescriptor parent,
                               final String varName,
-                              final Class type )
+                              final Class<?> type )
         {
             this.parent = parent;
             this.varName = varName;
@@ -240,12 +240,12 @@ implements ITreeContentProvider
         @Override
         public String toString()
         {
-            final Class[] parameters = method.getParameterTypes();
+            final Class<?>[] parameters = method.getParameterTypes();
             final StringBuffer buffer = new StringBuffer();
             buffer.append( "(" );
             for( int i = 0; i < parameters.length; i++ )
             {
-                final Class type = parameters[ i ];
+                final Class<?> type = parameters[ i ];
                 if( i == 0 )
                     buffer.append( " " ).append( type.getSimpleName() );
                 else
@@ -314,9 +314,9 @@ implements ITreeContentProvider
     extends Descriptor
     implements Comparable< ClassDescriptor >
     {
-        public final Class clase;
+        public final Class<?> clase;
         public final Object parent;
-        public ClassDescriptor( final Class clase,
+        public ClassDescriptor( final Class<?> clase,
                                 final Object parent )
         {
             this.clase = clase;
@@ -349,9 +349,9 @@ implements ITreeContentProvider
         if( parentElement instanceof DOMDescriptor )
         {
             final DOMDescriptor descriptor = ( DOMDescriptor )parentElement;
-            final Map< String, Class > dom = getDOMInfo( descriptor.pluginName );
+            final Map< String, Class<?> > dom = getDOMInfo( descriptor.pluginName );
             final List< VarDescriptor > list = new TreeList< VarDescriptor >();
-            for( final Entry< String, Class > entry : dom.entrySet() )
+            for( final Entry< String, Class<?> > entry : dom.entrySet() )
             {
                 if( entry.getValue() == null )
                     continue;
@@ -362,7 +362,7 @@ implements ITreeContentProvider
         if( parentElement instanceof VarDescriptor )
         {
             final VarDescriptor descriptor = ( VarDescriptor )parentElement;
-            final Class type = descriptor.type;
+            final Class<?> type = descriptor.type;
             return new ClassDescriptor[] { new ClassDescriptor( type, descriptor ) };
         }
         if( parentElement instanceof ClassDescriptor )

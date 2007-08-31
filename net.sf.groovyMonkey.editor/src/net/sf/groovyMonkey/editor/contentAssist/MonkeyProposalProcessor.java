@@ -48,7 +48,7 @@ implements IContentAssistProcessor
     													   final int offset )
     {
         final ScriptMetadata metadata = getScriptMetadata( viewer.getDocument().get() );
-        final Map< String, Class > varBinding = new LinkedHashMap< String, Class >();
+        final Map< String, Class<?> > varBinding = new LinkedHashMap< String, Class<?> >();
         for( final DOMDescriptor descriptor : metadata.getDOMs() )
             varBinding.putAll( getDOMInfo( descriptor.pluginName ) );
         final IDocument document = viewer.getDocument();
@@ -76,7 +76,7 @@ implements IContentAssistProcessor
                 if( prefix.trim().equals( var + "." ) || prefix.trim().startsWith( var + "." ) )
                 {
                 	final String methodPrefix = substringAfterLast( prefix.trim(), "." ).trim();
-                	final Class clase = varBinding.get( varName );
+                	final Class<?> clase = varBinding.get( varName );
                 	for( final Method method : clase.getMethods() )
                 	{
                 		if( method.getName().equals( methodPrefix ) || method.getName().startsWith( methodPrefix ) )
@@ -84,10 +84,10 @@ implements IContentAssistProcessor
                 			final StringBuffer suggestion = new StringBuffer();
                 			suggestion.append( method.getName() );
                 			suggestion.append( '(' );
-                			final Class[] types = method.getParameterTypes();
+                			final Class<?>[] types = method.getParameterTypes();
                 			for( int i = 0; i < types.length; i++ )
                 			{
-								final Class type = types[ i ];
+								final Class<?> type = types[ i ];
 								suggestion.append( ' ' ).append( type.getSimpleName() );
 								if( i < types.length - 1 )
 									suggestion.append( ',' );

@@ -49,6 +49,7 @@ extends AbstractDecoratedTextEditor
         setAction( "publishForText", new PublishScriptForText( this ) );
         setAction( "publishForWiki", new PublishScriptForWiki( this ) );
     }
+    @SuppressWarnings("unchecked")
     @Override
     public Object getAdapter( final Class adapter )
     {
