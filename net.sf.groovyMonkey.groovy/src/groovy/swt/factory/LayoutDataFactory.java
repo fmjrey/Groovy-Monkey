@@ -20,12 +20,12 @@ import org.eclipse.swt.widgets.Control;
  */
 public class LayoutDataFactory extends AbstractSwtFactory implements SwtFactory{
 
-    private Class beanClass;
+    private Class<?> beanClass;
 
     /**
      * @param class1
      */
-    public LayoutDataFactory(Class beanClass) {
+    public LayoutDataFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
@@ -33,7 +33,7 @@ public class LayoutDataFactory extends AbstractSwtFactory implements SwtFactory{
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *           java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 
         Object bean = createWidget(properties, parent);
@@ -50,7 +50,7 @@ public class LayoutDataFactory extends AbstractSwtFactory implements SwtFactory{
         return bean;
     }
 
-    private Object createWidget(Map properties, Object parent)
+    private Object createWidget(Map<?,?> properties, Object parent)
             throws GroovyException {
         Object bean = null;
 
@@ -59,10 +59,10 @@ public class LayoutDataFactory extends AbstractSwtFactory implements SwtFactory{
             int style = SwtUtils.parseStyle(beanClass, styleText);
 
             // now lets try invoke a constructor
-            Class[] types = { int.class};
+            Class<?>[] types = { int.class};
 
             try {
-                Constructor constructor = beanClass.getConstructor(types);
+                Constructor<?> constructor = beanClass.getConstructor(types);
                 if (constructor != null) {
                     Object[] values = { Integer.valueOf( style )};
                     bean = constructor.newInstance(values);

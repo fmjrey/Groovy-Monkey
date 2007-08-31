@@ -21,7 +21,7 @@ public class PointConverter {
         return instance;
     }
 
-    public Point parse(List list) {
+    public Point parse(List<?> list) {
         if (list.size() != 2) {
             log.log(Level.WARNING, "size attribute must [x,y]");
             return null;	

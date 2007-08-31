@@ -22,7 +22,7 @@ implements SwtFactory
      *      java.lang.Object)
      */
     @Override
-    public Object newInstance( final Map properties, 
+    public Object newInstance( final Map<String,Object> properties, 
                                final Object parent )
     {
         return new WizardDialogImpl( getParentShell( parent ), new WizardImpl() );

@@ -23,13 +23,14 @@ public class FormLayoutDataFactory extends AbstractSwtFactory implements
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     public Object newInstance(Map properties, Object parent)
             throws GroovyException {
         // get attachment properties
-        List left = (List) properties.remove("left");
-        List right = (List) properties.remove("right");
-        List top = (List) properties.remove("top");
-        List bottom = (List) properties.remove("bottom");
+        List<?> left = (List<?>) properties.remove("left");
+        List<?> right = (List<?>) properties.remove("right");
+        List<?> top = (List<?>) properties.remove("top");
+        List<?> bottom = (List<?>) properties.remove("bottom");
 
         // build new formdata
         FormData formData = new FormData();
@@ -64,11 +65,11 @@ public class FormLayoutDataFactory extends AbstractSwtFactory implements
      * @return @throws
      *         GroovyException
      */
-    private FormAttachment getFormAttachment(List list) throws GroovyException {
+    private FormAttachment getFormAttachment(List<?> list) throws GroovyException {
         FormAttachment formAttachment = null;
         try {
             // get constructor
-            Class[] types = new Class[list.size()];
+            Class<?>[] types = new Class[list.size()];
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getClass() == Integer.class) {
                     types[i] = int.class;
@@ -80,8 +81,7 @@ public class FormLayoutDataFactory extends AbstractSwtFactory implements
                                     + list.get(i));
                 }
             }
-            Constructor constructor = FormAttachment.class
-                    .getConstructor(types);
+            Constructor<?> constructor = FormAttachment.class.getConstructor(types);
 
             // invoke constructor
             if (constructor != null) {

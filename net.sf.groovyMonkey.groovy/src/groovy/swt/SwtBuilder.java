@@ -107,6 +107,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map, java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Map attributes,
                                  final Object value )
@@ -117,6 +118,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map)
      */
+    @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Map attributes )
     {
@@ -137,7 +139,7 @@ extends BuilderSupport
      * @return
      */
     protected Object createWidget( final Object name,
-                                   final Map attributes,
+                                   final Map<String,Object> attributes,
                                    final Object current )
     {
         if( name.equals( "doCall" ) )
@@ -161,18 +163,19 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Object parent )
     {
         return createWidget( name, Collections.EMPTY_MAP, parent );
     }
     protected void registerBeanFactory( final String name,
-                                        final Class beanClass )
+                                        final Class<?> beanClass )
     {
         registerFactory( name, new WidgetFactory( beanClass ) );
     }
     protected void registerBeanFactory( final String name,
-                                        final Class beanClass,
+                                        final Class<?> beanClass,
                                         final int style )
     {
         registerFactory( name, new WidgetFactory( beanClass, style ) );

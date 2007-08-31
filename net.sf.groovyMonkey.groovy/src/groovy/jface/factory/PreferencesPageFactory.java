@@ -31,7 +31,7 @@ public class PreferencesPageFactory extends AbstractSwtFactory implements
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *           java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 
         // check location

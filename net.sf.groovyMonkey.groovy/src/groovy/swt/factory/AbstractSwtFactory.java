@@ -23,9 +23,11 @@ import org.eclipse.swt.widgets.Control;
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
  * @version $Revision$
  */
-public abstract class AbstractSwtFactory {
+public abstract class AbstractSwtFactory 
+implements SwtFactory
+{
 
-    public abstract Object newInstance(Map properties, Object parent) throws GroovyException;
+    public abstract Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException;
 
     /**
      * set the properties
@@ -33,7 +35,7 @@ public abstract class AbstractSwtFactory {
      * @param bean
      * @param properties
      */
-    protected void setBeanProperties(Object bean, Map properties) {
+    protected void setBeanProperties(Object bean, Map<?,?> properties) {
 
         if (bean instanceof Control) {
             Control control = (Control) bean;
@@ -59,8 +61,8 @@ public abstract class AbstractSwtFactory {
             }
         }
 
-        for (Iterator iter = properties.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        for (Iterator<?> iter = properties.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry<?,?> entry = (Map.Entry<?,?>) iter.next();
             String property = entry.getKey().toString();
             Object value = entry.getValue();
             Field field = null;
@@ -94,7 +96,7 @@ public abstract class AbstractSwtFactory {
             if (colorValue instanceof Color) {
                 color = (Color) colorValue;
             } else if (colorValue instanceof List) {
-                rgb = ColorConverter.getInstance().parse((List) colorValue);
+                rgb = ColorConverter.getInstance().parse((List<?>) colorValue);
                 color = new Color(control.getDisplay(), rgb);
             } else {
                 rgb = ColorConverter.getInstance().parse(colorValue.toString());
@@ -110,7 +112,7 @@ public abstract class AbstractSwtFactory {
             if (size instanceof Point) {
                 point = (Point) size;
             } else if (size instanceof List) {
-                point = PointConverter.getInstance().parse((List) size);
+                point = PointConverter.getInstance().parse((List<?>) size);
             }
             control.setSize(point);
         }

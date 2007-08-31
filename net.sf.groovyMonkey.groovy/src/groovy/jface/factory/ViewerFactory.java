@@ -25,14 +25,14 @@ public class ViewerFactory extends WidgetFactory implements SwtFactory {
      * @param beanClass
      * @param style
      */
-    public ViewerFactory(Class beanClass, int style) {
+    public ViewerFactory(Class<?> beanClass, int style) {
         super(beanClass, style);
     }
 
     /**
      * @param class1
      */
-    public ViewerFactory(Class beanClass) {
+    public ViewerFactory(Class<?> beanClass) {
         super(beanClass);
     }
 
@@ -40,6 +40,7 @@ public class ViewerFactory extends WidgetFactory implements SwtFactory {
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     public Object newInstance(Map properties, Object parent) throws GroovyException {
         Object bean;
 

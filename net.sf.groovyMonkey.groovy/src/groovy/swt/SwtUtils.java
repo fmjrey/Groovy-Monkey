@@ -38,7 +38,7 @@ public class SwtUtils
      *            is a comma delimited text value such as "border, resize"
      * @return the int code
      */
-    public static int parseStyle( final Class constantClass,
+    public static int parseStyle( final Class<?> constantClass,
                                   final String text )
     throws GroovyException
     {
@@ -57,7 +57,7 @@ public class SwtUtils
      *            its compared against the reflection fields
      * @return the int code
      */
-    public static int parseStyle( final Class constantClass,
+    public static int parseStyle( final Class<?> constantClass,
                                   String text,
                                   final boolean toUpperCase )
     throws GroovyException
@@ -80,7 +80,7 @@ public class SwtUtils
      * @return the code for the given word or zero if the word doesn't match a
      *         valid style
      */
-    public static int getStyleCode( final Class constantClass,
+    public static int getStyleCode( final Class<?> constantClass,
                                     final String text )
     throws GroovyException
     {
@@ -138,7 +138,7 @@ public class SwtUtils
      * @return
      */
     public static Object getParentWidget( final Object parent,
-                                          final Map properties )
+                                          final Map<?,?> properties )
     {
         if( parent == null && properties.containsKey( "parent" ) )
         {

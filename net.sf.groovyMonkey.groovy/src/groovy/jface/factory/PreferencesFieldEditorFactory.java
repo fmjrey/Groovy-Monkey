@@ -19,13 +19,13 @@ import org.eclipse.jface.preference.PreferencePage;
 public class PreferencesFieldEditorFactory extends AbstractSwtFactory implements
         SwtFactory {
 
-    private Class beanClass;
+    private Class<?> beanClass;
 
-    public PreferencesFieldEditorFactory(Class beanClass) {
+    public PreferencesFieldEditorFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 
         if (beanClass == null) { throw new GroovyException(

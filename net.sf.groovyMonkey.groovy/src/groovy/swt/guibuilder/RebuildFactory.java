@@ -35,7 +35,7 @@ public class RebuildFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent) throws GroovyException {
+    public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
         // get parent
         if( properties.containsKey("parent") ) {
             parent = properties.remove("parent");

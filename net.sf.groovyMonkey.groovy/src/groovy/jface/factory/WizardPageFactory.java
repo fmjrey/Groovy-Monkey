@@ -25,7 +25,7 @@ public class WizardPageFactory extends AbstractSwtFactory implements SwtFactory 
      * @see groovy.swt.factory.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
     throws GroovyException {
 
         // check location

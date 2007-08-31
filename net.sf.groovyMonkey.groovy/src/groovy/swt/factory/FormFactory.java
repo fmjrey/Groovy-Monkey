@@ -58,7 +58,7 @@ implements SwtFactory
      *      java.lang.Object)
      */
     @Override
-    public Object newInstance( final Map properties,
+    public Object newInstance( final Map<String,Object> properties,
                                final Object parent )
     throws GroovyException
     {
@@ -91,7 +91,7 @@ implements SwtFactory
      * @return
      */
     private Object getFormWidget( final Composite parentComposite,
-                                  final Map properties,
+                                  final Map<String,Object> properties,
                                   final int style,
                                   final String text )
     throws GroovyException

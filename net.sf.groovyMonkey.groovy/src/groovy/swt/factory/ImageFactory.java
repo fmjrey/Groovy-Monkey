@@ -30,7 +30,7 @@ public class ImageFactory extends AbstractSwtFactory implements SwtFactory {
     /*
      * @see groovy.swt.impl.Factory#newInstance(java.util.Map, java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent) throws GroovyException {
+    public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
         String src = (String) properties.remove("src");
         if (src == null) {
             throw new MissingPropertyException("src", Image.class);

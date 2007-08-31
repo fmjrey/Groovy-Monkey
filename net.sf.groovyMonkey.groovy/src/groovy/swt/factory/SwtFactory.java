@@ -17,7 +17,7 @@ public interface SwtFactory {
     /**
      * Create a new instance
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException;
 
 }

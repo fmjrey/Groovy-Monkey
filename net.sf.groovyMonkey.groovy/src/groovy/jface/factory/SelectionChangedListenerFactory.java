@@ -33,7 +33,7 @@ public class SelectionChangedListenerFactory extends AbstractSwtFactory
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *           java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 
         if (parent instanceof Viewer) {

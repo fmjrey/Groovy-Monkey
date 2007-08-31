@@ -19,12 +19,12 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class LayoutFactory extends AbstractSwtFactory implements SwtFactory {
 
-    private Class beanClass;
+    private Class<?> beanClass;
 
     /**
      * @param beanClass
      */
-    public LayoutFactory(Class beanClass) {
+    public LayoutFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
@@ -32,7 +32,7 @@ public class LayoutFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 
         Layout layout;

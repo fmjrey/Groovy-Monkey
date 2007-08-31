@@ -16,7 +16,7 @@ import org.eclipse.jface.action.IContributionManager;
  */
 public class ContributionManagerFactory extends WidgetFactory implements SwtFactory {
 
-    public ContributionManagerFactory(Class beanClass) {
+    public ContributionManagerFactory( final Class< ? > beanClass ) {
         super(beanClass);
     }
 
@@ -24,7 +24,7 @@ public class ContributionManagerFactory extends WidgetFactory implements SwtFact
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent) throws GroovyException {
+    public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
 
         Object bean = createWidget(parent);
 

@@ -88,7 +88,7 @@ public class ColorConverter {
         }
     }
 
-    public RGB parse(List list) {
+    public RGB parse(List<?> list) {
         if (list.size() != 3) {
             log.log(Level.WARNING, "color attribute must [x,y,z]");
             return null;
@@ -99,7 +99,7 @@ public class ColorConverter {
         return new RGB(red, green, blue);
     }
 
-    public Object convert(Class type, Object value) {
+    public Object convert(Class<?> type, Object value) {
         Object answer = null;
         if (value != null) {
             String text = value.toString();

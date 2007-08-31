@@ -43,7 +43,7 @@ implements SwtFactory
      *      java.lang.Object)
      */
     @Override
-    public Object newInstance( final Map properties, 
+    public Object newInstance( final Map<String,Object> properties, 
                                final Object parent ) 
     throws GroovyException
     {

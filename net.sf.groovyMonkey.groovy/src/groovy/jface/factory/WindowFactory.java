@@ -24,7 +24,7 @@ implements SwtFactory
     /**
      * @param beanClass
      */
-    public WindowFactory( final Class beanClass )
+    public WindowFactory( final Class<?> beanClass )
     {
         super( beanClass );
     }
@@ -32,6 +32,7 @@ implements SwtFactory
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     @Override
     public Object newInstance( final Map properties, Object parent ) 
     throws GroovyException

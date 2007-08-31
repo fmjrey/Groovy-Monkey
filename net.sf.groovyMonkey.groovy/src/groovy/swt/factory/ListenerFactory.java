@@ -32,12 +32,12 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
  */
 public class ListenerFactory extends AbstractSwtFactory implements SwtFactory {
 
-    private Class beanClass;
+    private Class<?> beanClass;
 
     /**
      * @param class1
      */
-    public ListenerFactory(Class beanClass) {
+    public ListenerFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
@@ -45,7 +45,7 @@ public class ListenerFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent)
+    public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
         final String type = (String) properties.remove("type");
         if (parent instanceof Browser) {

@@ -21,13 +21,13 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
 
     public static class FieldEditorCreator {
 
-        private Class beanClass;
+        private Class<?> beanClass;
 
         private String propertyName;
 
         private String title;
 
-        public FieldEditorCreator(Class beanClass, String propertyName,
+        public FieldEditorCreator(Class<?> beanClass, String propertyName,
                 String title) {
             this.beanClass = beanClass;
             this.propertyName = propertyName;
@@ -39,8 +39,8 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
             FieldEditor fieldEditor = null;
 
             try {
-                Class[] types = { String.class, String.class, Composite.class};
-                Constructor constructor = beanClass.getConstructor(types);
+                Class<?>[] types = { String.class, String.class, Composite.class};
+                Constructor<?> constructor = beanClass.getConstructor(types);
                 if (constructor != null) {
                     Object[] arguments = { propertyName, title, parent};
                     fieldEditor = (FieldEditor) constructor
@@ -60,14 +60,14 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
         super(title, FieldEditorPreferencePage.GRID);
     }
 
-    public void addFieldCreator(Class beanClass, String propertyName,
+    public void addFieldCreator(Class<?> beanClass, String propertyName,
             String title) {
         creatorFieldsfields.add(new FieldEditorCreator(beanClass, propertyName,
                 title));
     }
 
     protected void createFieldEditors() {
-        Iterator i = creatorFieldsfields.iterator();
+        Iterator<?> i = creatorFieldsfields.iterator();
         while (i.hasNext()) {
             FieldEditorCreator creator = (FieldEditorCreator) i.next();
             FieldEditor fieldEditor = creator

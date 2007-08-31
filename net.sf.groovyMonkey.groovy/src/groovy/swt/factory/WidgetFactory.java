@@ -26,11 +26,11 @@ import org.eclipse.swt.widgets.TabItem;
  */
 public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
 
-    protected Class beanClass;
+    protected Class<?> beanClass;
 
     protected int style = SWT.NONE;
 
-    public WidgetFactory(Class beanClass) {
+    public WidgetFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
@@ -38,7 +38,7 @@ public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
      * @param beanClass2
      * @param style
      */
-    public WidgetFactory(Class beanClass, int style) {
+    public WidgetFactory(Class<?> beanClass, int style) {
         this.beanClass = beanClass;
         this.style = style;
     }
@@ -46,7 +46,7 @@ public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
     /*
      * @see groovy.swt.impl.Factory#newInstance(java.util.Map, java.lang.Object)
      */
-    public Object newInstance(Map properties, Object parent) throws GroovyException {
+    public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
         String styleProperty = (String) properties.remove("style");
         if (styleProperty != null) {
             style = SwtUtils.parseStyle(SWT.class, styleProperty);
