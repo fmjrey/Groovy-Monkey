@@ -230,10 +230,10 @@ public class Utilities
             plugins.add( extension.getContributor().getName() );
         return plugins;
     }
-    public static Map< String, Class > getDOMInfo( final String pluginID )
+    public static Map< String, Class<?> > getDOMInfo( final String pluginID )
     {
         final IExtensionPoint point = getDOMExtensionPoint();
-        final Map< String, Class > vars = new LinkedHashMap< String, Class >();
+        final Map< String, Class<?> > vars = new LinkedHashMap< String, Class<?> >();
         if( point == null )
             return vars;
         final IExtension[] extensions = point.getExtensions();

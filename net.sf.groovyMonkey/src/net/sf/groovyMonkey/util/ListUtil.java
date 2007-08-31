@@ -9,7 +9,7 @@ import org.apache.commons.lang.ObjectUtils;
 public class ListUtil
 {
     public static < T > List< T > transformed( final Transformer< T > transformer,
-                                               final List list )
+                                               final List<?> list )
     {
         return transformed( transformer, list.toArray() );
     }
@@ -175,7 +175,7 @@ public class ListUtil
         };
         return transformed( transformer, objects );
     }
-    public static List< String > caseless( final List list )
+    public static List< String > caseless( final List<?> list )
     {
         return caseless( list.toArray() );
     }

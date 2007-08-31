@@ -43,6 +43,7 @@ public class MapUtil
             throw new IllegalAccessError( "value is final" );
         }
     }
+    @SuppressWarnings("unchecked")
     public static < K, V > List< Map.Entry< K, V > > entries( final List< K > keys,
                                                               final List< V > values )
     {

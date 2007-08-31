@@ -25,6 +25,7 @@ public class File
     {
         return file;
     }
+    @SuppressWarnings("unchecked")
     public List< Line > getLines()
     {
         InputStream input = null;

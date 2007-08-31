@@ -99,12 +99,13 @@ implements IWorkbenchWindowActionDelegate
         findEntries( bundle, list, "/" + MONKEY_DIR, FILE_EXTENSION_WILDCARD );
         return list;
     }
+    @SuppressWarnings("unchecked")
     private void findEntries( final Bundle bundle, 
                               final List< URL > list,
                               final String directory,
                               final String namePattern )
     {
-        final Enumeration enumeration = bundle.findEntries( directory, namePattern, true );
+        final Enumeration<URL> enumeration = ( Enumeration<URL> )bundle.findEntries( directory, namePattern, true );
         if( enumeration == null )
             return;
         while( enumeration.hasMoreElements() )

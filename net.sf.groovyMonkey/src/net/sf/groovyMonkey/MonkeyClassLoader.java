@@ -26,7 +26,7 @@ public class MonkeyClassLoader
 extends ClassLoader 
 {
 	private final List< ClassLoader > loaders = new ArrayList< ClassLoader >();
-	private final Map< String, Class > clases = new HashMap< String, Class >();
+	private final Map< String, Class<?> > clases = new HashMap< String, Class<?> >();
     
 	public MonkeyClassLoader()
     {
@@ -52,7 +52,7 @@ extends ClassLoader
             {
                 if( loader == null )
                     continue;
-                final Class clase = loader.loadClass( name );
+                final Class<?> clase = loader.loadClass( name );
                 if( clase != null )
                 {
                     clases.put( name, clase );
@@ -68,7 +68,7 @@ extends ClassLoader
                 throw new RuntimeException( e );
             }
 		}
-        final Class clase = super.loadClass( name );
+        final Class<?> clase = super.loadClass( name );
         if( clase != null )
             return clase;
 		throw new ClassNotFoundException( name );
@@ -86,7 +86,7 @@ extends ClassLoader
             {
                 if( loader == null )
                     continue;
-                final Class clase = invoke( loader, "loadClass", name, resolve );
+                final Class<?> clase = invoke( loader, "loadClass", name, resolve );
                 if( clase != null )
                 {
                     clases.put( name, clase );
@@ -98,7 +98,7 @@ extends ClassLoader
                 throw new RuntimeException( e );
             }
         }
-        final Class clase = super.loadClass( name, resolve );
+        final Class<?> clase = super.loadClass( name, resolve );
         if( clase != null )
             return clase;
         throw new ClassNotFoundException( name );
@@ -134,12 +134,12 @@ extends ClassLoader
     {
         try
         {
-            final Method method = loader.getClass().getDeclaredMethod( methodName, new Class[] { String.class } );
+            final Method method = loader.getClass().getDeclaredMethod( methodName, new Class<?>[] { String.class } );
             setAccessible( new Method[] { method }, true );
             final Object object = method.invoke( loader, name );
             if( object == null || !( object instanceof Class ) )
                 return null;
-            return ( Class )object;
+            return ( Class<?> )object;
         }
         catch( final SecurityException se )
         {
@@ -165,12 +165,12 @@ extends ClassLoader
     {
         try
         {
-            final Method method = loader.getClass().getDeclaredMethod( methodName, new Class[]{ String.class, boolean.class } );
+            final Method method = loader.getClass().getDeclaredMethod( methodName, new Class<?>[]{ String.class, boolean.class } );
             setAccessible( new Method[]{ method }, true );
             final Object object = method.invoke( loader, name, resolve );
             if( object == null || !( object instanceof Class ) )
                 return null;
-            return ( Class )object;
+            return ( Class<?> )object;
         }
         catch( final SecurityException se )
         {
