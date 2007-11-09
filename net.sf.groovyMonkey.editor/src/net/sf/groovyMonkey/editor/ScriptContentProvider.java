@@ -393,8 +393,9 @@ implements ITreeContentProvider
         {
             final BundleDescriptor descriptor = ( BundleDescriptor )parentElement;
             final Set< PackageDescriptor > packages = new TreeSet< PackageDescriptor >();
-            for( final ExportPackageDescription description : bundleDescription( descriptor.name ).getExportPackages() )
-                packages.add( new PackageDescriptor( description.getName(), descriptor ) );
+            if( StringUtils.isNotBlank( descriptor.name ) && bundleDescription( descriptor.name ) != null )
+                for( final ExportPackageDescription description : bundleDescription( descriptor.name ).getExportPackages() )
+                    packages.add( new PackageDescriptor( description.getName(), descriptor ) );
             return packages.toArray();
         }
         if( parentElement instanceof PackageDescriptor )

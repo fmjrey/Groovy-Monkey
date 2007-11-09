@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import net.sf.groovyMonkey.util.SetUtil;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -220,6 +222,10 @@ implements IStartup
     }
     public static Set< String > getAllReexportedBundles( final String name )
     {
+        if( StringUtils.isBlank( name ) )
+            return SetUtil.set();
+        if( bundleDescription( name ) == null )
+            return SetUtil.set();
         return getAllReexportedBundles( bundleDescription( name ).getBundleId() );
     }
     private static void addRequiredBundles( final Set< String > set, 
