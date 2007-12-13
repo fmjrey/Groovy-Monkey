@@ -1,4 +1,7 @@
 package net.sf.groovyMonkey.editor.actions;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.bundleDescription;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.context;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.icon;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.ScriptMetadata.refreshScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
@@ -7,26 +10,35 @@ import static net.sf.groovyMonkey.dom.Utilities.getAllAvailableBundles;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.editor.ScriptContentProvider.getBundles;
-import static net.sf.groovyMonkey.editor.actions.AddDialog.createAddBundleDialog;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 import net.sf.groovyMonkey.ScriptMetadata;
+import net.sf.groovyMonkey.dom.Utilities;
 import net.sf.groovyMonkey.editor.ScriptEditor;
+import net.sf.groovyMonkey.util.SetUtil;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.window.Window;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.dialogs.TwoPaneElementSelector;
 import org.eclipse.ui.part.FileEditorInput;
 
 public class AddBundle 
@@ -92,12 +104,88 @@ implements IObjectActionDelegate
     private Set< String > openSelectBundlesDialog( final Set< String > availablePlugins )
     {
         if( availablePlugins == null || availablePlugins.size() == 0 )
-            return new TreeSet< String >();
-        final AddDialog dialog = createAddBundleDialog( shell(), availablePlugins );
-        final int returnCode = dialog.open();
-        if( returnCode != Window.OK )
-            return new TreeSet< String >();
-        return dialog.selected();
+            return SetUtil.treeSet();
+        
+        final ILabelProvider elementRenderer = new LabelProvider()
+        {
+            @Override
+            public Image getImage( final Object element )
+            {
+                final String bundleName = ObjectUtils.toString( element, "" );
+                if( StringUtils.isBlank( bundleName ) )
+                    return icon( "plugin_obj.gif" );
+                final BundleDescription description = bundleDescription( bundleName );
+                if( description != null && description.getHost() != null )
+                    return icon( "frgmt_obj.gif" );
+                return icon( "plugin_obj.gif" );
+            }            
+        };
+        final ILabelProvider qualifierRenderer = new LabelProvider()
+        {
+            @Override
+            public Image getImage( final Object element )
+            {
+                final String bundleName = ObjectUtils.toString( element, "" );
+                if( StringUtils.isBlank( bundleName ) )
+                    return icon( "plugin_obj.gif" );
+                final BundleDescription description = bundleDescription( bundleName );
+                if( description != null && description.getHost() != null )
+                    return icon( "frgmt_obj.gif" );
+                return icon( "plugin_obj.gif" );
+            }
+            @Override
+            public String getText( final Object element )
+            {
+                final String bundleName = ObjectUtils.toString( element, "" );
+                if( StringUtils.isBlank( bundleName ) )
+                    return "<Blank>";
+                final BundleDescription description = bundleDescription( bundleName );
+                if( description == null )
+                    return super.getText( element );
+                if( description.getHost() != null )
+                {
+                    final BundleDescription hostDescription = bundleDescription( description.getHost().getName() );
+                    try
+                    {
+                        return ObjectUtils.toString( description ) + " -> " + ObjectUtils.toString( hostDescription ) + " - " + FileLocator.toFileURL( context().getBundle( hostDescription.getBundleId() ).getResource( "/" ) );
+                    }
+                    catch( final Exception e )
+                    {
+                        throw new RuntimeException( e );
+                    }
+                }
+                try
+                {
+                    return ObjectUtils.toString( description ) + " - " + FileLocator.toFileURL( context().getBundle( description.getBundleId() ).getResource( "/" ) );
+                }
+                catch( final Exception e )
+                {
+                    throw new RuntimeException( e );
+                }
+            }            
+        };
+        final TwoPaneElementSelector selector = new TwoPaneElementSelector( Utilities.shell(), elementRenderer, qualifierRenderer );
+        selector.setTitle( "Select Bundle to add:" );
+        try
+        {
+            selector.setElements( availablePlugins.toArray() );
+        }
+        catch( final Exception e )
+        {
+            throw new RuntimeException( e );
+        }
+        if( selector.open() != Window.OK )
+            return SetUtil.treeSet();
+        final String selectedBundle = ObjectUtils.toString( selector.getFirstResult(), "" );
+        if( StringUtils.isBlank( selectedBundle ) )
+            return SetUtil.treeSet();
+        return SetUtil.treeSet( selectedBundle );
+        
+//        final AddDialog dialog = createAddBundleDialog( shell(), availablePlugins );
+//        final int returnCode = dialog.open();
+//        if( returnCode != Window.OK )
+//            return new TreeSet< String >();
+//        return dialog.selected();
     }
     private Set< String > getUnusedBundles( final IFile script ) 
     throws CoreException, IOException
