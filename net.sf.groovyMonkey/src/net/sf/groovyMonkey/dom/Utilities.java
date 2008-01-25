@@ -82,8 +82,6 @@ public class Utilities
         InputStream contents = null;
         try
         {
-            if( !file.isSynchronized( DEPTH_ONE ) )
-                file.refreshLocal( DEPTH_ONE, null );
             contents = file.getContents( true );
             return IOUtils.toString( contents );
         }
