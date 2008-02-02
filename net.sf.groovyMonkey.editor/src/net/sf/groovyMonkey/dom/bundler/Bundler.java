@@ -17,6 +17,7 @@ import org.eclipse.pde.internal.core.exports.FeatureExportInfo;
 import org.eclipse.pde.internal.ui.build.PluginExportJob;
 import org.eclipse.ui.progress.IProgressService;
 
+@SuppressWarnings("restriction")
 public class Bundler
 {
     public static final String DEPLOY_DIR = "/tmp/deployedBundles";
@@ -42,7 +43,10 @@ public class Bundler
         {
             Thread.sleep( 1000 );
         }
-        catch( final InterruptedException e ) {}
+        catch( final InterruptedException e ) 
+        {
+            Thread.currentThread().interrupt();
+        }
         deployDir.mkdir();
         return this;
     }

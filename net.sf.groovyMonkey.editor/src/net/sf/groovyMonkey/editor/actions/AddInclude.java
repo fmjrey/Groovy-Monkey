@@ -196,7 +196,10 @@ implements IObjectActionDelegate
             {
                 Thread.sleep( 500 );
             }
-            catch( final InterruptedException e ) {}
+            catch( final InterruptedException e ) 
+            {
+                Thread.currentThread().interrupt();
+            }
         }
     }
     private IEditorPart getEditor( final IFile script )

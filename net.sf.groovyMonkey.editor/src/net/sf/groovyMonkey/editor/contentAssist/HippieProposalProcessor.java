@@ -1,13 +1,10 @@
 package net.sf.groovyMonkey.editor.contentAssist;
 
 
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logExceptionWarning;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.Point;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
 import org.eclipse.jface.text.IDocument;
@@ -21,7 +18,8 @@ import org.eclipse.jface.text.contentassist.ICompletionProposalExtension4;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
-
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -35,11 +33,8 @@ import org.eclipse.ui.texteditor.ITextEditor;
  */
 // TODO: Once we goto Eclipse 3.2 for real, get rid of this class, it is just a copy.
 @SuppressWarnings( "unchecked" )
-public final class HippieProposalProcessor implements IContentAssistProcessor {
-
-    private static final ICompletionProposal[] NO_PROPOSALS= new ICompletionProposal[0];
-    private static final IContextInformation[] NO_CONTEXTS= new IContextInformation[0];
-
+public final class HippieProposalProcessor implements IContentAssistProcessor 
+{
     private static final class Proposal implements ICompletionProposal, ICompletionProposalExtension, ICompletionProposalExtension2, ICompletionProposalExtension3, ICompletionProposalExtension4 {
 
         private final String fString;
@@ -82,7 +77,7 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
                 document.replace(offset, 0, replacement);
             } catch (BadLocationException x) {
                 // TODO Auto-generated catch block
-                x.printStackTrace();
+                logExceptionWarning( x );
             }
         }
 
@@ -150,7 +145,7 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
         try {
             String prefix= getPrefix(viewer, offset);
             if (prefix == null || prefix.length() == 0)
-                return NO_PROPOSALS;
+                return new ICompletionProposal[ 0 ];
 
             List suggestions= getSuggestions(viewer, offset, prefix);
 
@@ -165,11 +160,13 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
 
         } catch (BadLocationException x) {
             // ignore and return no proposals
-            return NO_PROPOSALS;
+            return  new ICompletionProposal[ 0 ];
         }
     }
 
-    private String getPrefix(ITextViewer viewer, int offset) throws BadLocationException {
+    private String getPrefix(ITextViewer viewer, int off) throws BadLocationException 
+    {
+        int offset = off;
         IDocument doc= viewer.getDocument();
         if (doc == null || offset > doc.getLength())
             return null;
@@ -190,7 +187,7 @@ public final class HippieProposalProcessor implements IContentAssistProcessor {
      */
     public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
         // no context informations for hippie completions
-        return NO_CONTEXTS;
+        return new IContextInformation[ 0 ];
     }
 
     /*

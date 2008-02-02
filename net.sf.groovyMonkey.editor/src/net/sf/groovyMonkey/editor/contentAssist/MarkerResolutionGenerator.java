@@ -16,6 +16,7 @@ import org.eclipse.ui.IMarkerResolutionGenerator;
 public class MarkerResolutionGenerator
 implements IMarkerResolutionGenerator
 {
+    @SuppressWarnings("incomplete-switch")
     public IMarkerResolution[] getResolutions( final IMarker marker )
     {
         final List< IMarkerResolution > list = list();

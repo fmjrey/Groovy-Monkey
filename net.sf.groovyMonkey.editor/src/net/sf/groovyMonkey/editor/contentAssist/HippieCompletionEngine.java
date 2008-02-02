@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.FindReplaceDocumentAdapter;
 import org.eclipse.jface.text.IDocument;
@@ -127,8 +126,13 @@ public final class HippieCompletionEngine {
      * @throws BadLocationException if there is some error scanning the
      *         document.
      */
-    public List getCompletionsForward(IDocument document, CharSequence prefix, 
-            int firstPosition, boolean currentWordLast) throws BadLocationException {
+    public List getCompletionsForward( final IDocument document, 
+                                       final CharSequence prefix, 
+                                       final int position, 
+                                       final boolean currentWordLast ) 
+    throws BadLocationException 
+    {
+        int firstPosition = position;
         ArrayList res= new ArrayList();
         String currentWordCompletion= null; // fix bug 132533
         

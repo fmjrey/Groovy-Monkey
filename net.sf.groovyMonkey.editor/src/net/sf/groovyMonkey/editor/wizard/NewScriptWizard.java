@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor.wizard;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logExceptionWarning;
 import static net.sf.groovyMonkey.dom.Utilities.activePage;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
@@ -138,6 +139,7 @@ implements INewWizard
         }
         catch( final IOException e )
         {
+            logExceptionWarning( e );
         }
         monitor.worked( 1 );
         monitor.setTaskName( "Opening file for editing..." );
@@ -151,6 +153,7 @@ implements INewWizard
                 }
                 catch( final PartInitException e )
                 {
+                    logExceptionWarning( e );
                 }
             }
         } );

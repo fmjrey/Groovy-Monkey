@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logExceptionWarning;
 import static net.sf.groovyMonkey.dom.Utilities.error;
 import static org.apache.commons.lang.StringUtils.join;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -145,7 +146,7 @@ implements IDoubleClickListener
                                 }
                                 catch( final JavaModelException e )
                                 {
-                                    e.printStackTrace();
+                                    logExceptionWarning( e );
                                 }
                             }
                             return super.getText( element );

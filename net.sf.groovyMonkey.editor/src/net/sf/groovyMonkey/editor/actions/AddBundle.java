@@ -10,7 +10,6 @@ import static net.sf.groovyMonkey.dom.Utilities.getAllAvailableBundles;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.shell;
 import static net.sf.groovyMonkey.editor.ScriptContentProvider.getBundles;
-
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
@@ -225,7 +224,10 @@ implements IObjectActionDelegate
             {
                 Thread.sleep( 500 );
             }
-            catch( final InterruptedException e ) {}
+            catch( final InterruptedException e ) 
+            {
+                Thread.currentThread().interrupt();
+            }
         }
     }
     private IEditorPart getEditor( final IFile script )

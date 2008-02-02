@@ -201,7 +201,6 @@ extends WizardPage
         dialogChanged();
         setControl( container );
     }
-    @SuppressWarnings("unchecked")
     public Map< String, IMonkeyScriptFactory > getScriptLanguages()
     {
         return new CaseInsensitiveMap( getScriptFactories() );

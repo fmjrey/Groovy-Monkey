@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logExceptionWarning;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.dom.Utilities.getContents;
 import static net.sf.groovyMonkey.dom.Utilities.isMonkeyScript;
@@ -70,7 +71,7 @@ implements IResourceChangeListener
         catch( final CoreException x )
         {
             // log an error in the error log
-            x.printStackTrace();
+            logExceptionWarning( x );
         }
         final boolean anyMatches = changes[ 0 ].booleanValue();
         if( anyMatches && diff( changedFile[ 0 ] ) )
@@ -99,7 +100,10 @@ implements IResourceChangeListener
         {
             return provider.diff( getScriptMetadata( getContents( changedScript ) ) );
         }
-        catch( final Exception e ) {}
+        catch( final Exception e ) 
+        {
+            logExceptionWarning( e );
+        }
         return true;
     }
 }

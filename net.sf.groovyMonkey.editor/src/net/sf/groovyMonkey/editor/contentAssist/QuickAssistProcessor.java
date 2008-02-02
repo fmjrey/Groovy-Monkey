@@ -1,4 +1,5 @@
 package net.sf.groovyMonkey.editor.contentAssist;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logWarning;
 import static net.sf.groovyMonkey.util.ListUtil.list;
 import java.util.List;
 import org.apache.commons.lang.Validate;
@@ -27,12 +28,12 @@ implements IQuickAssistProcessor
     }
     public boolean canAssist( final IQuickAssistInvocationContext invocationContext )
     {
-        System.out.println( "QuickAssistProcessor.canAssist(): invocationContext: " + invocationContext );
+        logWarning( "invocationContext: " + invocationContext );
         return false;
     }
     public boolean canFix( final Annotation annotation )
     {
-        System.out.println( "QuickAssistProcessor.canFix(): annotation: " + annotation );
+        logWarning( "annotation: " + annotation );
         return false;
     }
     public ICompletionProposal[] computeQuickAssistProposals( final IQuickAssistInvocationContext context )

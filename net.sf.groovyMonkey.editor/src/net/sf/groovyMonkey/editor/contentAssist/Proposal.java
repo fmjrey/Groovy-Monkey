@@ -1,6 +1,6 @@
 package net.sf.groovyMonkey.editor.contentAssist;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.icon;
-
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.DocumentEvent;
@@ -80,8 +80,7 @@ implements ICompletionProposal, ICompletionProposalExtension, ICompletionProposa
         }
         catch( final BadLocationException x )
         {
-            // TODO Auto-generated catch block
-            x.printStackTrace();
+            GroovyMonkeyPlugin.logExceptionWarning( x );
         }
     }
     public boolean isValidFor( final IDocument document,

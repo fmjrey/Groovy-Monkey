@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.editor.ScriptContentProvider;
 import net.sf.groovyMonkey.editor.ScriptLabelProvider;
+import net.sf.groovyMonkey.util.SetUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -63,7 +64,7 @@ implements ISelectionChangedListener
         super( parentShell );
         this.text = text;
         dialogSettingsSection = DIALOG_SETTINGS_SECTION + "." + text.name();
-        this.available = available;
+        this.available = SetUtil.treeSet( available );
         setShellStyle( getShellStyle() | SWT.RESIZE );
     }
     @Override
@@ -140,7 +141,7 @@ implements ISelectionChangedListener
     }
     public Set< String > selected()
     {
-        return selected;
+        return SetUtil.treeSet( selected );
     }
     public void selectionChanged( final SelectionChangedEvent event )
     {

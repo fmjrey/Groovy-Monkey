@@ -8,15 +8,12 @@ import static net.sf.groovyMonkey.util.SetUtil.treeSet;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.apache.commons.lang.StringUtils.remove;
 import static org.apache.commons.lang.StringUtils.substringAfterLast;
-
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-
 import net.sf.groovyMonkey.DOMDescriptor;
 import net.sf.groovyMonkey.ScriptMetadata;
-
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITextViewer;
@@ -137,9 +134,10 @@ implements IContentAssistProcessor
     	return false;
     }
     public static String getPrefix( final ITextViewer viewer,
-                                    int offset )
+                                    int off )
     throws BadLocationException
     {
+        int offset = off;
         final IDocument doc= viewer.getDocument();
         if( doc == null || offset > doc.getLength() )
             return "";

@@ -14,7 +14,6 @@ import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.apache.commons.lang.builder.EqualsBuilder.reflectionEquals;
 import static org.apache.commons.lang.builder.HashCodeBuilder.reflectionHashCode;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -52,6 +51,7 @@ import org.eclipse.pde.core.plugin.IPluginModelBase;
 import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PluginModelManager;
 
+@SuppressWarnings("restriction")
 public class ScriptContentProvider
 implements ITreeContentProvider
 {
@@ -71,7 +71,7 @@ implements ITreeContentProvider
     public static class ListenerDescriptor
     extends Descriptor
     {
-        public String filter;
+        public final String filter;
         public ListenerDescriptor( final String filter )
         {
             this.filter = filter;
@@ -85,71 +85,111 @@ implements ITreeContentProvider
     public static class LangDescriptor
     extends Descriptor
     {
-        public String lang;
+        private String lang;
         public LangDescriptor( final String lang )
         {
-            this.lang = lang;
+            this.setLang( lang );
         }
         @Override
         public String toString()
         {
-            return "LANG: " + lang;
+            return "LANG: " + getLang();
+        }
+        public void setLang( String lang )
+        {
+            this.lang = lang;
+        }
+        public String getLang()
+        {
+            return lang;
         }
     }
     public static class JobDescriptor
     extends Descriptor
     {
-        public JobModes mode;
+        private JobModes mode;
         public JobDescriptor( final JobModes mode )
         {
-            this.mode = mode;
+            this.setMode( mode );
         }
         @Override
         public String toString()
         {
-            return "Job: " + mode;
+            return "Job: " + getMode();
+        }
+        public void setMode( JobModes mode )
+        {
+            this.mode = mode;
+        }
+        public JobModes getMode()
+        {
+            return mode;
         }
     }
     public static class ExecDescriptor
     extends Descriptor
     {
-        public ExecModes mode;
+        private ExecModes mode;
         public ExecDescriptor( final ExecModes mode )
         {
-            this.mode = mode;
+            this.setMode( mode );
         }
         @Override
         public String toString()
         {
-            return "Exec-Mode: " + mode;
+            return "Exec-Mode: " + getMode();
+        }
+        public void setMode( ExecModes mode )
+        {
+            this.mode = mode;
+        }
+        public ExecModes getMode()
+        {
+            return mode;
         }
     }
     public static class MenuDescriptor
     extends Descriptor
     {
-        public String menu;
+        private String menu;
         public MenuDescriptor( final String menu )
         {
-            this.menu = menu;
+            this.setMenu( menu );
         }
         @Override
         public String toString()
         {
-            return "Menu: " + menu;
+            return "Menu: " + getMenu();
+        }
+        public void setMenu( String menu )
+        {
+            this.menu = menu;
+        }
+        public String getMenu()
+        {
+            return menu;
         }
     }
     public static class ScriptPathDescriptor
     extends Descriptor
     {
-        public String path;
+        private String path;
         public ScriptPathDescriptor( final String path )
         {
-            this.path = path;
+            this.setPath( path );
         }
         @Override
         public String toString()
         {
-            return "Script-Path: " + path;
+            return "Script-Path: " + getPath();
+        }
+        public void setPath( String path )
+        {
+            this.path = path;
+        }
+        public String getPath()
+        {
+            return path;
         }
     }
     public static class BundleDescriptor
@@ -421,12 +461,10 @@ implements ITreeContentProvider
             }
             catch( final ClassNotFoundException e )
             {
-                e.printStackTrace();
                 throw new RuntimeException( e );
             }
             catch( final JavaModelException e )
             {
-                e.printStackTrace();
                 throw new RuntimeException( e );
             }
             return clases.toArray();
@@ -478,9 +516,9 @@ implements ITreeContentProvider
     public Object[] getElements( final Object inputElement )
     {
         final List< Object > elements = new ArrayList< Object >();
-        if( isNotBlank( path.path ) )
+        if( isNotBlank( path.getPath() ) )
             elements.add( path );
-        if( isNotBlank( menu.menu ) )
+        if( isNotBlank( menu.getMenu() ) )
             elements.add( menu );
         elements.add( lang );
         elements.add( job );
@@ -525,11 +563,11 @@ implements ITreeContentProvider
         try
         {
             data = getScriptMetadata( getContents( script ) );
-            menu.menu = defaultString( data.getMenuName() );
-            path.path = defaultString( data.scriptPath() );
-            lang.lang = data.getLang();
-            job.mode = data.getJobMode();
-            exec.mode = data.getExecMode();
+            menu.setMenu( defaultString( data.getMenuName() ) );
+            path.setPath( defaultString( data.scriptPath() ) );
+            lang.setLang( data.getLang() );
+            job.setMode( data.getJobMode() );
+            exec.setMode( data.getExecMode() );
             listeners.clear();
             for( final Subscription subscription : data.getSubscriptions() )
                 listeners.add( new ListenerDescriptor( subscription.getFilter() ) );
@@ -541,12 +579,10 @@ implements ITreeContentProvider
         }
         catch( final IOException ioe )
         {
-            ioe.printStackTrace();
             throw new RuntimeException( ioe );
         }
         catch( final CoreException e )
         {
-            e.printStackTrace();
             throw new RuntimeException( e );
         }
     }
