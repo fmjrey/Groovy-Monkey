@@ -19,6 +19,7 @@ public class CustomSwingBuilder extends SwingBuilder {
      * 
      * @see groovy.util.BuilderSupport#getCurrent()
      */
+    @Override
     public Object getCurrent() {
         return super.getCurrent();
     }
@@ -28,8 +29,8 @@ public class CustomSwingBuilder extends SwingBuilder {
      *  
      * @see groovy.util.BuilderSupport#setCurrent(java.lang.Object)
      */
-    public void setCurrent(Object current) {
-        super.setCurrent(current);
-    }
+//    public void setCurrent(Object current) {
+//        super.setCurrent(current);
+//    }
     
 }

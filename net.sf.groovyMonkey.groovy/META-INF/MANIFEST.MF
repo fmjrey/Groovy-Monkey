@@ -6,18 +6,10 @@ Bundle-Version: 0.4.0
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
- lib/commons-logging-1.0.3.jar,
- lib/groovy-all-1.0-RC-01.jar
+ lib/commons-logging-1.0.3.jar
 Require-Bundle: org.eclipse.ui.forms,
  org.apache.ant,
- org.codehaus.groovy
+ org.codehaus.groovy;visibility:=reexport
 Export-Package: net.sf.groovyMonkey.groovy,
  org.apache.commons.logging,
- org.apache.commons.logging.impl,
- uk.co.wilson.net,
- uk.co.wilson.net.http,
- uk.co.wilson.net.xmlrpc,
- uk.co.wilson.smackx.packet,
- uk.co.wilson.smackx.providers,
- uk.co.wilson.xml,
- uk.org.xml.sax
+ org.apache.commons.logging.impl
