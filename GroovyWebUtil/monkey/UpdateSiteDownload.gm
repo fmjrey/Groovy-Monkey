@@ -1,0 +1,92 @@
+/*
+ * Menu: Download > Update Site
+ * Script-Path: /GroovyWebUtil/monkey/UpdateSiteDownload.gm
+ * Kudos: ERVIN
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * Include: /GroovyWebUtil/commons-codec-1.3.jar
+ * Include: /GroovyWebUtil/commons-httpclient-3.0.1.jar
+ * Include: /GroovyWebUtil/commons-logging-1.0.3.jar
+ * Include-Bundle: org.apache.ant
+ */
+
+import java.io.*
+import java.net.*
+import org.apache.commons.httpclient.*
+import org.apache.commons.httpclient.auth.*
+import org.apache.commons.httpclient.methods.*
+import org.apache.commons.io.*
+import org.apache.commons.lang.*
+import org.eclipse.core.resources.*
+import org.eclipse.core.runtime.*
+
+// Set these following 8 parameters
+def featureName = 'Enerjy'
+def baseURL = 'http://update.enerjy.com/eclipse/'
+def siteURL = baseURL + 'site.xml'
+def baseDir = 'c:/plugins/' + featureName + '/eclipse/'
+def proxyHost = 'xxxx'
+def proxyPort = 'xx'
+def proxyUser = 'xxxx'
+def proxyPassword = 'xxxx'
+
+def client = new HttpClient()
+//client.params.setParameter( CredentialsProvider.PROVIDER, this )
+//client.hostConfiguration.setProxy( proxyHost, proxyPort )
+
+FileUtils.forceMkdir( new File( baseDir ) )
+FileUtils.touch( new File( baseDir + '.eclipseextension' ) )
+
+def method = new GetMethod( siteURL )
+client.executeMethod( method )
+out.println 'status: ' + method.statusText + ' -> ' + siteURL
+def input = method.responseBodyAsStream
+
+def siteXML = new XmlSlurper().parse( input )
+def features = siteXML.feature
+def featureURLs = [ : ]
+def versionMap = [ : ]
+features.each
+{ feature ->
+    if( !versionMap.containsKey( feature.@id.text() ) )
+        versionMap[ feature.@id.text() ] = feature.@version.text()
+    if( versionMap[ feature.@id.text() ].compareTo( feature.@version.text() ) > 0 )
+        return
+    featureURLs[ feature.@id.text() ] = feature.@url
+}
+def ant = new AntBuilder()
+def plugins = []
+featureURLs.values().each
+{ featureURL ->
+    if( monitor.isCanceled() )
+        return
+    def newURL = new URL( baseURL + featureURL )
+    def featureFile = baseDir + featureURL
+    def destDir = StringUtils.substringBeforeLast( featureFile, '.' )
+    FileUtils.forceMkdir( new File( destDir ) )
+    FileUtils.copyURLToFile( newURL, new File( featureFile ) )
+    ant.unzip( src: featureFile, dest: destDir )
+    ant.delete( file: featureFile )
+    def featureXMLText = new File( destDir + '/feature.xml' ).text
+    def featureXML = new XmlSlurper().parseText( featureXMLText )
+    featureXML.plugin.depthFirst().collect{ plugins.add( it ) }
+}
+monitor.beginTask( 'Starting downloads', plugins.size() + 1 )
+plugins.each
+{ plugin ->
+    if( monitor.isCanceled() )
+        return
+    def pluginJar = "${plugin.@id}_${plugin.@version}.jar"
+    def newURL = new URL( baseURL + 'plugins/' + pluginJar )
+    def pluginFile = baseDir + 'plugins/' + pluginJar
+    def destDir = StringUtils.substringBeforeLast( pluginFile, '.' )
+    FileUtils.forceMkdir( new File( destDir ) )
+    if( new File( pluginFile ).exists() )
+        return
+    FileUtils.copyURLToFile( newURL, new File( pluginFile ) )
+    if( plugin.@unpack.text().trim().toLowerCase() != 'false' )
+    {
+        ant.unzip( src: pluginFile, dest: destDir )
+        ant.delete( file: pluginFile )
+    }
+}

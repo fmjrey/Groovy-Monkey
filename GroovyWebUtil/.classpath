@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry sourcepath="commons-httpclient-3.0.1-src.zip" kind="lib" path="commons-httpclient-3.0.1.jar"/>
+	<classpathentry kind="lib" path="commons-httpclient-3.0.1.jar" sourcepath="commons-httpclient-3.0.1-src.zip"/>
 	<classpathentry kind="lib" path="commons-logging-1.0.3.jar"/>
 	<classpathentry kind="lib" path="commons-codec-1.3.jar"/>
-	<classpathentry sourcepath="commons-lang-2.1-src.zip" kind="lib" path="commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="commons-lang-2.1.jar" sourcepath="commons-lang-2.1-src.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/net.sf.groovyMonkey.groovy"/>
 	<classpathentry exported="true" kind="lib" path="bin-groovy"/>
 	<classpathentry kind="output" path="bin"/>
