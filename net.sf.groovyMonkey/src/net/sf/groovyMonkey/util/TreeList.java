@@ -15,7 +15,7 @@ extends LinkedList< T >
     @SuppressWarnings("unchecked")
     public TreeList()
     {
-        comparator = ( Comparator< T > )NATURAL_COMPARATOR;
+        comparator = NATURAL_COMPARATOR;
     }
     public TreeList( final Comparator< T > comparator )
     {
@@ -125,7 +125,7 @@ extends LinkedList< T >
     throws UnsupportedOperationException
     {
         error();
-        throw new AssertionError( "Should never be reached" );
+        throw new RuntimeException( "Should never be reached" );
     }
     @Override
     public final void addFirst( final T notUsed ) 
@@ -145,7 +145,7 @@ extends LinkedList< T >
     throws UnsupportedOperationException
     {
         error();
-        throw new AssertionError( "Should never be reached" );
+        throw new RuntimeException( "Should never be reached" );
     }
     private static void error() 
     throws UnsupportedOperationException

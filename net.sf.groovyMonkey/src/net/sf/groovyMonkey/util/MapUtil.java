@@ -40,7 +40,7 @@ public class MapUtil
         }
         public V setValue( V value )
         {
-            throw new IllegalAccessError( "value is final" );
+            throw new IllegalStateException( "value is final" );
         }
     }
     @SuppressWarnings("unchecked")
