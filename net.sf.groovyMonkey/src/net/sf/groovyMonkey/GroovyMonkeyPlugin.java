@@ -21,6 +21,8 @@ import java.util.Map;
 import java.util.Set;
 import net.sf.groovyMonkey.util.SetUtil;
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -240,5 +242,55 @@ implements IStartup
         for( final BundleSpecification required : description.getRequiredBundles() )
             if( required.isExported() )
                 set.add( required.getName() );
+    }
+    public static void logException( final String message, final Throwable throwable )
+    {
+        log( IStatus.ERROR, message, throwable );
+    }
+    public static void logExceptionWarning( final Throwable throwable )
+    {
+        logExceptionWarning( throwable.getMessage(), throwable );
+    }
+    public static void logExceptionWarning( final String message, final Throwable throwable )
+    {
+        log( IStatus.WARNING, message, throwable );
+    }
+    public static void logExceptionInfo( final Throwable throwable )
+    {
+        logExceptionInfo( throwable.getMessage(), throwable );
+    }
+    public static void logExceptionInfo( final String message, final Throwable throwable )
+    {
+        log( IStatus.INFO, message, throwable );
+    }
+    public static void logError( final String message )
+    {
+        log( IStatus.ERROR, message, null );
+    }
+    public static void logError( final String message, final Throwable throwable )
+    {
+        log( IStatus.ERROR, message, throwable );
+    }
+    public static void logWarning( final String message )
+    {
+        log( IStatus.WARNING, message, null );
+    }
+    public static void logWarning( final String message, final Throwable throwable )
+    {
+        log( IStatus.WARNING, message, throwable );
+    }
+    public static void logInfo( final String message )
+    {
+        log( IStatus.INFO, message, null );
+    }
+    public static void logInfo( final String message, final Throwable throwable )
+    {
+        log( IStatus.INFO, message, throwable );
+    }
+    public static void log( final int severity, final String message, final Throwable throwable )
+    {
+        if( getDefault() == null )
+            return;
+        getDefault().getLog().log( new Status( severity, PLUGIN_ID, 0, StringUtils.defaultString( message ), throwable ) );
     }
 }
