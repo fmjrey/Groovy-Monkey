@@ -71,7 +71,7 @@ extends ClassLoader
             {
                 // continue the loop
             }
-            catch( final Throwable e )
+            catch( final Exception e )
             {
                 throw new RuntimeException( e );
             }
@@ -238,7 +238,7 @@ extends ClassLoader
             final Enumeration< URL > enumeration = ( Enumeration< URL > )invoke( loader, "findResources", name );
             while( enumeration.hasMoreElements() )
             {
-                final URL element = ( URL )enumeration.nextElement();
+                final URL element = enumeration.nextElement();
                 if( !resourceMap.containsKey( element.getPath() ) )
                     resourceMap.put( element.getPath(), element );
             }
@@ -246,7 +246,7 @@ extends ClassLoader
         final Enumeration< URL > enumeration = super.findResources( name );
         while( enumeration.hasMoreElements() )
         {
-            final URL element = ( URL )enumeration.nextElement();
+            final URL element = enumeration.nextElement();
             if( !resourceMap.containsKey( element.getPath() ) )
                 resourceMap.put( element.getPath(), element );
         }

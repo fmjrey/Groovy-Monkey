@@ -66,6 +66,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
+import net.sf.groovyMonkey.util.ListUtil;
+import net.sf.groovyMonkey.util.SetUtil;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
@@ -423,7 +425,7 @@ public class ScriptMetadata
     }
 	public Set< String > getIncludes()
     {
-        return includes;
+        return SetUtil.linkedSet( includes );
     }
     public void addIncludedBundle( final String bundleID )
     {
@@ -431,7 +433,7 @@ public class ScriptMetadata
     }
     public Set< String > getIncludedBundles()
     {
-        return includedBundles;
+        return SetUtil.linkedSet( includedBundles );
     }
     public void setMenuName( final String string )
     {
@@ -481,7 +483,7 @@ public class ScriptMetadata
     }
 	public List< DOMDescriptor > getDOMs()
     {
-		return doms;
+		return ListUtil.list( doms );
 	}
 	private String getReasonableFilename()
     {
@@ -541,7 +543,7 @@ public class ScriptMetadata
     }
 	public List< Subscription > getSubscriptions()
     {
-        return subscriptions;
+        return ListUtil.list( subscriptions );
     }
     @Override
     public boolean equals( final Object obj )
@@ -611,7 +613,10 @@ public class ScriptMetadata
             {
 				scope.addSearchSite( description, new URL( url ), new String[ 0 ] );
 			}
-            catch( final MalformedURLException x ) {}
+            catch( final MalformedURLException x ) 
+            {
+                throw new RuntimeException( x );
+            }
 		}
 		final UpdateSearchRequest request = new UpdateSearchRequest( createDefaultSiteSearchCategory(), scope );
 		final UpdateJob job = new UpdateJob( "Install Groovy Monkey DOMs", request );
@@ -727,7 +732,7 @@ public class ScriptMetadata
     }
     public Set< Marker > getMarkers()
     {
-        return markers;
+        return SetUtil.set( markers );
     }
     public Set< Marker > markers()
     {

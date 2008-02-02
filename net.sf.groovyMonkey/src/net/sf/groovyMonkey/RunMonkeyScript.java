@@ -20,16 +20,13 @@ import static net.sf.groovyMonkey.dom.Utilities.key;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.core.runtime.SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK;
 import static org.eclipse.swt.widgets.Display.getCurrent;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
 import net.sf.groovyMonkey.dom.Utilities;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
-
 import org.apache.bsf.BSFException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -199,7 +196,10 @@ public class RunMonkeyScript
         {
             job.join();
         }
-        catch( final InterruptedException e ) {}
+        catch( final InterruptedException e ) 
+        {
+            Thread.currentThread().interrupt();
+        }
     }
     public Object runScript( final IProgressMonitor progressMonitor )
     {
