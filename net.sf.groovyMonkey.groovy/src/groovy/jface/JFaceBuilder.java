@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Display;
  */
 public class JFaceBuilder extends SwtBuilder {
 
+    @Override
     protected void registerWidgets() {
         super.registerWidgets();
 
