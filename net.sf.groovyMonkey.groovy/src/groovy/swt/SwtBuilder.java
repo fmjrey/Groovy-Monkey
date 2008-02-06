@@ -99,6 +99,7 @@ extends BuilderSupport
     /*
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object)
      */
+    @Override
     protected Object createNode( final Object name )
     {
         return createNode( name, Collections.EMPTY_MAP );
@@ -107,6 +108,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map, java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Map attributes,
@@ -118,6 +120,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.util.Map)
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Map attributes )
@@ -163,6 +166,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#createNode(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Object parent )
@@ -306,6 +310,7 @@ extends BuilderSupport
      * @see groovy.util.BuilderSupport#setParent(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     protected void setParent( final Object parent,
                               final Object child )
     {
@@ -322,6 +327,7 @@ extends BuilderSupport
      *
      * @see groovy.util.BuilderSupport#setCurrent(java.lang.Object)
      */
+    @Override
     public void setCurrent( final Object current )
     {
         super.setCurrent( current );
@@ -331,6 +337,7 @@ extends BuilderSupport
      *
      * @see groovy.util.BuilderSupport#getCurrent()
      */
+    @Override
     public Object getCurrent()
     {
         return super.getCurrent();
