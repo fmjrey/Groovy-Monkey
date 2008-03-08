@@ -71,7 +71,7 @@ extends TestCase
             @Override
             public void run() throws Exception
             {
-                assertEquals( getName(), TestDOM.string() );
+                assertEquals( "expected: '" + getName() + "', actual: '" + TestDOM.string() + "'", getName(), TestDOM.string() );
             }
         }.start();
     }

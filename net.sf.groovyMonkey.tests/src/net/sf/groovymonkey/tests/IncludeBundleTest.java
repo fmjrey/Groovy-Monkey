@@ -6,6 +6,8 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
 import java.io.InputStream;
 import net.sf.groovymonkey.tests.fixtures.dom.TestDOM;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.jobs.ILock;
+import org.eclipse.core.runtime.jobs.Job;
 
 /**
  * These unit tests don't pass yet.... haven't figured out how to get BundleClassLoaderAdapter to work.
@@ -13,6 +15,7 @@ import org.eclipse.core.resources.IFile;
 public class IncludeBundleTest 
 extends TestCaseAbstract
 {
+    private static final ILock lock = Job.getJobManager().newLock();
     private InputStream scriptFileInput = null;
     private IFile script = null;
     
@@ -25,6 +28,7 @@ extends TestCaseAbstract
     throws Exception
     {
         super.setUp();
+        lock.acquire();
         scriptFileInput = bundle().getResource( MONKEY_TEST_SCRIPTS + IncludeBundleTest.class.getSimpleName() + "/" + getName() + MONKEY_EXT ).openStream();
         script = monkeyProject.makeMonkeyScript( getName(), scriptFileInput );
         new TestDOM().callDOM( "" );
@@ -33,8 +37,15 @@ extends TestCaseAbstract
     protected void tearDown() 
     throws Exception
     {
-        super.tearDown();
-        closeQuietly( scriptFileInput );
+        try
+        {
+            super.tearDown();
+            closeQuietly( scriptFileInput );
+        }
+        finally
+        {
+            lock.release();
+        }
     }
     public void testIncludeInBundleBeanshell()
     throws Exception
