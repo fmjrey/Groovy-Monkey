@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Groovy Fragment
 Bundle-SymbolicName: net.sf.groovyMonkey.groovy;singleton:=true
-Bundle-Version: 0.4.0
-Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
+Bundle-Version: 0.5.0
+Fragment-Host: net.sf.groovyMonkey;bundle-version="0.4.0"
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/commons-logging-1.0.3.jar
 Require-Bundle: org.eclipse.ui.forms,
- org.apache.ant,
  org.codehaus.groovy;visibility:=reexport
 Export-Package: net.sf.groovyMonkey.groovy,
  org.apache.commons.logging,
