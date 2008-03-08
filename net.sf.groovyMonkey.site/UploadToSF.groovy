@@ -9,7 +9,9 @@ new File( '.' ).eachFile
 		scp = 'scp -p'
 	else
 	    scp = 'scp -r -p'
-	def process = "${scp} ${path} jervin@shell.sourceforge.net:/home/groups/g/gr/groovy-monkey/htdocs/update/${path}".execute()
+	def execString = "${scp} ${path} jervin@shell.sourceforge.net:/home/groups/g/gr/groovy-monkey/htdocs/update/${path}"
+	println "${execString}"
+	def process = execString.execute()
     println '  exitCode: ' + process.waitFor()
 	println '  stdout: ' + process.getText()
 	println '  stderr: ' + process.getErr().getText()
