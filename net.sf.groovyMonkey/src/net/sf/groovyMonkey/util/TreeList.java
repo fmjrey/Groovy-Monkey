@@ -1,23 +1,30 @@
 package net.sf.groovyMonkey.util;
 import static java.util.Collections.binarySearch;
-import static org.apache.commons.collections.ComparatorUtils.NATURAL_COMPARATOR;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import org.apache.commons.collections.comparators.ComparableComparator;
 
 public class TreeList< T extends Comparable< T > > 
 extends LinkedList< T >
 {
+    @SuppressWarnings("unchecked")
+    private static class ComparableSerializableComparator
+    extends ComparableComparator
+    implements SerializableComparator
+    {
+        private static final long serialVersionUID = 7657627371671755222L;   
+    };
     private static final long serialVersionUID = -1353224017415189717L;
-    protected final Comparator< T > comparator;
+    protected final SerializableComparator< T > comparator;
     
     @SuppressWarnings("unchecked")
     public TreeList()
     {
-        comparator = NATURAL_COMPARATOR;
+        comparator = new ComparableSerializableComparator();
     }
-    public TreeList( final Comparator< T > comparator )
+    public TreeList( final SerializableComparator< T > comparator )
     {
         this.comparator = comparator;
     }
