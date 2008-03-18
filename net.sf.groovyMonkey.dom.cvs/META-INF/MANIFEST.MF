@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Cvs Plug-in
 Bundle-SymbolicName: net.sf.groovyMonkey.dom.cvs;singleton:=true
-Bundle-Version: 0.5.0
+Bundle-Version: 0.5.1
 Bundle-Activator: net.sf.groovymonkey.dom.cvsdom.Activator
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
