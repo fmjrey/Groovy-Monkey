@@ -6,12 +6,9 @@ package groovy.swt.factory;
 
 import groovy.swt.convertor.ColorConverter;
 import groovy.swt.convertor.PointConverter;
-
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.eclipse.swt.graphics.Color;
@@ -60,31 +57,19 @@ implements SwtFactory
                 control.setForeground(foreground);
             }
         }
+        for( final Iterator< ? > iter = properties.entrySet().iterator(); iter.hasNext(); ) 
+        {
+            final Map.Entry< ?, ? > entry = ( Map.Entry< ?, ? >) iter.next();
+            final String property = entry.getKey().toString();
+            final Object value = entry.getValue();
+            try 
+            {
+                InvokerHelper.setProperty( bean, property, value );
 
-        for (Iterator<?> iter = properties.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry<?,?> entry = (Map.Entry<?,?>) iter.next();
-            String property = entry.getKey().toString();
-            Object value = entry.getValue();
-            Field field = null;
-            try {
-                field = bean.getClass().getDeclaredField(property);
-                if (value instanceof Boolean) {
-                    field.setBoolean(bean, ((Boolean) value).booleanValue());
-                } else if (value instanceof Integer) {
-                    field.setInt(bean, ((Integer) value).intValue());
-                } else if (value instanceof Double) {
-                    field.setDouble(bean, ((Double) value).doubleValue());
-                } else if (value instanceof Float) {
-                    field.setFloat(bean, ((Float) value).floatValue());
-                } else {
-                    InvokerHelper.setProperty(bean, property, value);
-                }
-
-            } catch (Exception e) {
-                throw new RuntimeException( e );
             }
-            if (field == null) {
-                InvokerHelper.setProperty(bean, property, value);
+            catch( final Exception e ) 
+            {
+                throw new RuntimeException( e );
             }
         }
     }
