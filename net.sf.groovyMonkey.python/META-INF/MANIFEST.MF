@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Python Fragment
 Bundle-SymbolicName: net.sf.groovyMonkey.python;singleton:=true
-Bundle-Version: 0.5.0
+Bundle-Version: 0.5.1
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
