@@ -1,0 +1,31 @@
+/*
+ * Script-Path: /net.sf.groovyMonkey.feature/monkey/getAllBundleInfo.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
+ */
+
+import java.util.jar.Manifest
+import org.apache.commons.lang.Validate
+
+def manifests = [ : ]
+workspace.root.projects.each
+{ project ->
+	if( !project.isAccessible() || !project.hasNature( 'org.eclipse.pde.PluginNature' ) )
+		return
+	out.println "bundle: ${project}"
+	def file = project.getFile( 'META-INF/MANIFEST.MF' )
+	if( !file.exists() )
+	   return
+	def input = file.getContents()
+	try
+	{
+    	def manifest = new Manifest( input )
+    	manifests."${project.name}" =  manifest.getMainAttributes()
+	}
+	finally
+	{
+    	input.close()
+	}
+}
+return manifests

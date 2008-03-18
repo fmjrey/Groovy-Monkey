@@ -1,0 +1,41 @@
+/*
+ * Script-Path: /net.sf.groovyMonkey.feature/monkey/getAllFeatureProjects.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/net.sf.groovyMonkey.dom
+ */
+
+import org.apache.commons.lang.*
+
+Validate.notNull( bsf.lookupBean( 'featureProjects' ), 'featureProjects must be set' )
+
+def map = [ : ]
+
+runnerDOM.runScript( "${metadata.file().project.name}/monkey/getAllBundleInfo.gm", [:] ).each
+{ projName, info ->
+    out.println "projName: ${projName} -> info: ${info}"
+	def symbolicName = StringUtils.substringBeforeLast( "${info.getValue( 'Bundle-SymbolicName' )}", ';' ).trim()
+	map."${symbolicName}" = "${projName}"
+}
+
+out.println "map: ${map}"
+
+def plugins = []
+featureProjects.each
+{ featureProject ->
+	def file = workspace.root.getProject( "${featureProject}" ).getFile( 'feature.xml' )
+	def input = file.getContents()
+	try
+	{
+		def feature = new XmlSlurper().parse( input )
+		feature.plugin.each
+		{ plugin ->
+			plugins << map."${plugin.@id.text()}"
+		}
+	}
+	finally
+	{
+    	input.close()
+	}
+}
+return plugins

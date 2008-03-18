@@ -1,0 +1,221 @@
+/*
+ * Menu: SOAPlugin > Update Version
+ * Script-Path: /net.sf.groovyMonkey.feature/monkey/GroovyMonkey__Update_Version.gm
+ * Kudos: jervin
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * Include-Bundle: org.eclipse.ui.workbench
+ * Include-Bundle: org.eclipse.pde.core
+ * Include-Bundle: org.eclipse.pde.ui
+ * Include-Bundle: org.apache.ant
+ */
+
+import groovy.xml.*
+import java.util.jar.*
+import org.apache.commons.io.*
+import org.apache.commons.lang.*
+import org.eclipse.core.resources.*
+import org.eclipse.core.runtime.*
+import org.eclipse.jdt.core.*
+import org.eclipse.jface.viewers.*
+import org.eclipse.pde.internal.core.*
+import org.eclipse.pde.internal.core.ifeature.*
+import org.eclipse.pde.internal.core.site.*
+import org.eclipse.pde.internal.ui.*
+import org.eclipse.pde.internal.ui.build.*
+import org.eclipse.ui.*
+import org.eclipse.ui.ide.*
+import org.eclipse.ui.preferences.*
+import org.eclipse.ui.progress.*
+
+out.clear()
+out.println "Starting $metadata.menuName"
+def findFile( project )
+{
+	def file = [ 'META-INF/MANIFEST.MF', 'feature.xml', 'site.xml' ].findAll { project.getFile( "${it}" ).exists() }
+										   			     			.collect { project.getFile( "$it" ) }[ 0 ]
+	return file										   			     
+}
+def manifest( file )
+{
+	def contents = file.contents
+	try
+	{
+		return new Manifest( contents )
+	}
+	finally
+	{
+		contents.close()
+	}
+}
+def xml( file )
+{
+	return new XmlParser().parseText( file.location.toFile().text )
+}
+def outputXML( node, file )
+{
+	def output = new StringWriter()
+	def printer = new XmlNodePrinter( new PrintWriter( output ) )
+	printer.print( node )
+	def inputStream = new StringBufferInputStream( "${output}" )
+	file.setContents( inputStream, true, true, null )
+}
+
+def features = [ 'net.sf.groovyMonkey' ]
+def projects = []
+
+if( monitor.canceled )
+	return
+
+runnerDOM.runScript( "${metadata.file().project.name}/monkey/getAllFeatureProjects.gm", [ 'featureProjects' : features ] ).each
+{
+	if( projects.contains( it ) )
+		return
+	projects << it
+}
+if( monitor.canceled )
+	return
+
+projects.addAll( features )
+projects << 'net.sf.groovyMonkey.python'
+projects << 'net.sf.groovyMonkey.tcl'
+projects << 'net.sf.groovyMonkey.tests'
+projects << 'net.sf.groovyMonkey.site'
+
+def files = projects.collect { findFile( workspace.root.getProject( "${it}" ) ) }
+if( monitor.canceled )
+	return
+
+def oldVersion = runnerDOM.runScript( "${metadata.file().project.name}/monkey/getBundleInfo.gm", [ pluginProject:"net.sf.groovyMonkey" ] ).getValue( 'Bundle-Version' )
+if( monitor.canceled )
+	return
+
+out.println "oldVersion: ${oldVersion}"
+def map = runnerDOM.runScript( "${metadata.file().project.name}/monkey/VersionDialog.gm", [ oldVersion : "${oldVersion}" ] )
+if( monitor.canceled )
+	return
+
+def version = map.'newVersion'
+def exportInternalSite = map.'exportInternalSite'
+def exportDevSite = map.'exportDevSite'
+def exportReleaseSite = map.'exportReleaseSite'
+def updateSOAFrameworkJars = map.'updateSOAFrameworkJars'
+out.println "version: ${version}"
+out.println "updateSOAFrameworkJars: ${updateSOAFrameworkJars}"
+out.println "exportInternalSite: ${exportInternalSite}"
+out.println "exportDevSite: ${exportDevSite}"
+out.println "exportReleaseSite: ${exportReleaseSite}"
+if( StringUtils.isBlank( version ) )
+{
+	out.println "Finished $metadata.menuName"
+	return
+}
+files.each 
+{ file ->
+	if( monitor.canceled )
+		return
+	switch( file.name.toLowerCase() )
+	{
+		case 'manifest.mf':
+			def manifest = manifest( file )
+			if( manifest.mainAttributes.get( new Attributes.Name( 'Bundle-Version' ) ) == "${version}" )
+				return
+			manifest.mainAttributes.put( new Attributes.Name( 'Bundle-Version' ), version )
+			out.println "${file}: ${manifest.dump()}"
+			def outputStream = new ByteArrayOutputStream()
+			manifest.write( outputStream )
+			def inputStream = new StringBufferInputStream( outputStream.toString() )
+			file.setContents( inputStream, true, true, null )
+		break
+		case 'feature.xml':
+			def feature = xml( file )
+			feature.attributes().'version' = version
+			def plugins = feature.plugin
+			plugins.each { plugin -> plugin.attributes().'version' = version }
+			outputXML( feature, file )
+		break
+		case 'site.xml':
+			def site = xml( file )
+			features = site.feature
+			features.each
+			{ feature ->
+				feature.attributes().'version' = version
+				def url = StringUtils.substringBeforeLast( feature.attributes().'url', '_' ) + '_' + version + '.jar'
+				feature.attributes().'url' = url
+			}
+			outputXML( site, file )
+		break
+	}
+}
+if( monitor.canceled )
+	return
+	
+// Building SOAPluginUpdateSite
+def siteXML = workspace.root.getProject( 'SOAPluginUpdateSite' ).getFile( 'site.xml' )
+if( monitor.canceled )
+	return
+	
+def siteModel = new WorkspaceSiteModel( siteXML )
+siteModel.load()
+if( monitor.canceled )
+	return
+	
+def siteFeatures = siteModel.getSite().getFeatures()
+siteFeatures[0].getModel().getSite().getFeatures()
+def list = []
+for( siteFeature in siteFeatures )
+{
+	def featureModel = PDECore.getDefault().getFeatureModelManager().findFeatureModelRelaxed( siteFeature.getId(), siteFeature.getVersion() )
+	if( featureModel != null && featureModel.getUnderlyingResource() != null )
+		list.add( featureModel )
+}
+if( monitor.canceled )
+	return
+def job = new BuildSiteJob( list as IFeatureModel[], siteModel )
+job.setUser( true )
+job.schedule()
+job.setProperty( IProgressConstants.ICON_PROPERTY, PDEPluginImages.DESC_SITE_OBJ )
+job.join()
+if( monitor.canceled )
+	return
+// Updating SOAFrameworkJars.zip
+def frameworkJarProj
+if( updateSOAFrameworkJars )
+	frameworkJar = runnerDOM.runScript( "${metadata.file().project.name}/monkey/ImportExternalLibraries.gm", [:] )
+if( monitor.canceled )
+	return
+	
+// Exporting built plugins to web update site.
+out.println "Exporting to internal site"
+if( exportInternalSite )
+{
+	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/soa-internal' ) )
+	if( monitor.canceled )
+		return
+	if( updateSOAFrameworkJars )
+		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa-internal' ) )
+}
+if( monitor.canceled )
+	return
+	
+out.println "Exporting to dev site"
+if( exportDevSite )
+{
+	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/soa-dev' ) )
+	if( monitor.canceled )
+		return
+	if( updateSOAFrameworkJars )
+		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa-dev' ) )
+}
+if( monitor.canceled )
+	return
+out.println "Exporting to release site"
+if( exportReleaseSite )
+{
+	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/' ) )
+	if( monitor.canceled )
+		return
+	if( updateSOAFrameworkJars )
+		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa' ) )
+}
+out.println "Finished $metadata.menuName"

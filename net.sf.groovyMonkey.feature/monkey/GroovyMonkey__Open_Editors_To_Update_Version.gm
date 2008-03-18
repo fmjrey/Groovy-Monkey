@@ -1,0 +1,38 @@
+/*
+ * Menu: GroovyMonkey > Open Editors To Update Version
+ * Script-Path: /net.sf.groovyMonkey.feature/monkey/GroovyMonkey__Open_Editors_To_Update_Version.gm
+ * Kudos: jervin
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ * Include-Bundle: org.eclipse.ui.workbench
+ */
+
+import org.apache.commons.lang.*
+import org.eclipse.core.resources.*
+import org.eclipse.core.runtime.*
+import org.eclipse.jdt.core.*
+import org.eclipse.ui.*
+import org.eclipse.ui.ide.*
+import org.eclipse.ui.preferences.*
+
+def openEditors( project )
+{
+	def activePage = PlatformUI.workbench.activeWorkbenchWindow.activePage
+	[ 'META-INF/MANIFEST.MF', 'feature.xml', 'site.xml' ].findAll { project.getFile( "${it}" ).exists() }
+										   			     .collect { project.getFile( "$it" ) }
+										   			     .each { out.println "file: ${it}" ; IDE.openEditor( activePage, it ) }
+}
+
+def features = [ 'net.sf.groovyMonkey.feature' ]
+def projects = runnerDOM.runScript( "net.sf.groovyMonkey.feature/monkey/getAllFeatureProjects.gm", [ 'featureProjects' : features ] )
+projects << 'net.sf.groovyMonkey.dom.cvs'
+projects << 'net.sf.groovyMonkey.python'
+projects << 'net.sf.groovyMonkey.tcl'
+projects << 'net.sf.groovyMonkey.tests'
+projects << 'net.sf.groovyMonkey.site'
+features.each { projects << it }
+
+jface.syncExec
+{
+	projects.each{ project -> out.println "project: ${project}" ; openEditors( workspace.root.getProject( "${project}" ) ) }
+}
