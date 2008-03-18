@@ -61,12 +61,11 @@ def outputXML( node, file )
 	file.setContents( inputStream, true, true, null )
 }
 
-def features = [ 'net.sf.groovyMonkey' ]
-def projects = []
-
+def features = [ 'net.sf.groovyMonkey.feature' ]
 if( monitor.canceled )
 	return
 
+def projects = []
 runnerDOM.runScript( "${metadata.file().project.name}/monkey/getAllFeatureProjects.gm", [ 'featureProjects' : features ] ).each
 {
 	if( projects.contains( it ) )
@@ -105,11 +104,13 @@ out.println "updateSOAFrameworkJars: ${updateSOAFrameworkJars}"
 out.println "exportInternalSite: ${exportInternalSite}"
 out.println "exportDevSite: ${exportDevSite}"
 out.println "exportReleaseSite: ${exportReleaseSite}"
+
 if( StringUtils.isBlank( version ) )
 {
 	out.println "Finished $metadata.menuName"
 	return
 }
+
 files.each 
 { file ->
 	if( monitor.canceled )
@@ -209,6 +210,7 @@ if( exportDevSite )
 }
 if( monitor.canceled )
 	return
+
 out.println "Exporting to release site"
 if( exportReleaseSite )
 {
