@@ -1,0 +1,147 @@
+/*
+ * Script-Path: /net.sf.groovyMonkey.feature/monkey/VersionDialog.gm
+ * Kudos: ERVIN
+ * License: EPL 1.0
+ * DOM: http://groovy-monkey.sourceforge.net/update/plugins/net.sf.groovyMonkey.dom
+ */
+
+import java.util.Calendar as Cal
+import org.apache.commons.lang.builder.*
+import org.eclipse.swt.*
+import org.eclipse.swt.widgets.*
+import org.osgi.framework.*
+
+def map = [ newVersion: '' ]
+def dialog
+def closed = false
+def cancelled = false
+def oldVersionString = "${oldVersion}"
+def newVersionString = suggestion( "${oldVersion}" )
+
+def suggestion( versionString )
+{
+	def versionObj = Version.parseVersion( "${versionString}" )
+	def year = Calendar.getInstance().get( Calendar.YEAR )
+	def month = Calendar.getInstance().get( Calendar.MONTH ) + 1
+	def day = Calendar.getInstance().get( Calendar.DAY_OF_MONTH )
+	def hour = Calendar.getInstance().get( Calendar.HOUR_OF_DAY ) + 1
+	def qualifier = "${year}${pad( month, 2 )}${pad( day, 2 )}-${pad( hour, 2 )}00"
+	return "${versionObj.major}.${versionObj.minor}.${versionObj.micro}.${qualifier}"
+}
+def pad( str, minsize )
+{
+	string = "${str}"
+	def difference = minsize - string.size()
+	out.println "difference: ${difference}"
+	if( difference <= 0 )
+		return string
+	difference.times { string = "0${string}" }
+	return string
+}
+map[ 'newVersion' ] = newVersionString?.trim()
+map[ 'updateSOAFrameworkJars' ] = false
+map[ 'exportInternalSite' ] = false
+map[ 'exportDevSite' ] = false
+map[ 'exportReleaseSite' ] = false
+jface.syncExec
+{
+	dialog = jface.shell( text: "Build/Deploy Groovy Monkey", window.getShell() )
+	{
+		def console = out
+	 	gridLayout()
+	    group()
+	    {
+	    	gridLayout()
+	    	composite()
+	    	{
+	    		rowLayout()
+	        	label( text: "Old Version:     " )
+		        label( text: "${oldVersionString}" )
+		    }
+		    composite()
+		    {
+		    	rowLayout()
+	        	label( text: "New Version: " )
+		        text( text: "${newVersionString}             " )
+		        {
+		        	gridLayout()
+		        	onEvent( type: 'Modify', closure: { event -> map['newVersion'] = event.widget.text?.trim() } )
+		        }
+		    }
+			composite()
+			{
+				rowLayout()
+				button( text: 'Ok' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						dialog.close()
+						closed = true
+					} )
+				}
+				button( text: 'Cancel' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						dialog.close()
+						closed = true
+						cancelled = true
+					} )
+				}
+			}
+			composite()
+			{
+				rowLayout()
+				button( style: 'check', text: 'Update SOAFrameworkJars.zip?' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						map[ 'updateSOAFrameworkJars' ] = it.widget.selection
+					} )
+				}
+			}
+			composite()
+			{
+				rowLayout()
+				button( style: 'check', text: 'Export Site to SOA-Internal' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						map[ 'exportInternalSite' ] = it.widget.selection
+					} )
+				}
+			}
+			composite()
+			{
+				rowLayout()
+				button( style: 'check', text: 'Export Site to SOA-Dev' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						map[ 'exportDevSite' ] = it.widget.selection
+					} )
+				}
+			}
+			composite()
+			{
+				rowLayout()
+				button( style: 'check', text: 'Export Site to SOA-Release' )
+				{
+					onEvent( type: 'Selection', closure:
+					{
+						map[ 'exportReleaseSite' ] = it.widget.selection
+					} )
+				}
+			}
+	    }
+	}
+	dialog.pack()
+	dialog.setSize( 400, 200 )
+	dialog.open()
+}
+while( !closed && !monitor.canceled )
+	Thread.sleep( 500 )
+	
+if( cancelled )
+	return [:]
+return map
