@@ -1,5 +1,5 @@
 /*
- * Menu: SOAPlugin > Update Version
+ * Menu: GroovyMonkey > Update Version
  * Script-Path: /net.sf.groovyMonkey.feature/monkey/GroovyMonkey__Update_Version.gm
  * Kudos: jervin
  * License: EPL 1.0
@@ -70,6 +70,8 @@ runnerDOM.runScript( "${metadata.file().project.name}/monkey/getAllFeatureProjec
 {
 	if( projects.contains( it ) )
 		return
+	if( 'org.codehaus.groovy' == it )
+	    return
 	projects << it
 }
 if( monitor.canceled )
@@ -95,15 +97,8 @@ if( monitor.canceled )
 	return
 
 def version = map.'newVersion'
-def exportInternalSite = map.'exportInternalSite'
-def exportDevSite = map.'exportDevSite'
-def exportReleaseSite = map.'exportReleaseSite'
-def updateSOAFrameworkJars = map.'updateSOAFrameworkJars'
+
 out.println "version: ${version}"
-out.println "updateSOAFrameworkJars: ${updateSOAFrameworkJars}"
-out.println "exportInternalSite: ${exportInternalSite}"
-out.println "exportDevSite: ${exportDevSite}"
-out.println "exportReleaseSite: ${exportReleaseSite}"
 
 if( StringUtils.isBlank( version ) )
 {
@@ -132,7 +127,7 @@ files.each
 			def feature = xml( file )
 			feature.attributes().'version' = version
 			def plugins = feature.plugin
-			plugins.each { plugin -> plugin.attributes().'version' = version }
+			plugins.each { plugin -> if( plugin.attributes().'id' == 'org.codehaus.groovy' ) return ; plugin.attributes().'version' = version }
 			outputXML( feature, file )
 		break
 		case 'site.xml':
@@ -152,7 +147,7 @@ if( monitor.canceled )
 	return
 	
 // Building SOAPluginUpdateSite
-def siteXML = workspace.root.getProject( 'SOAPluginUpdateSite' ).getFile( 'site.xml' )
+def siteXML = workspace.root.getProject( 'net.sf.groovyMonkey.site' ).getFile( 'site.xml' )
 if( monitor.canceled )
 	return
 	
@@ -177,47 +172,8 @@ job.setUser( true )
 job.schedule()
 job.setProperty( IProgressConstants.ICON_PROPERTY, PDEPluginImages.DESC_SITE_OBJ )
 job.join()
-if( monitor.canceled )
-	return
-// Updating SOAFrameworkJars.zip
-def frameworkJarProj
-if( updateSOAFrameworkJars )
-	frameworkJar = runnerDOM.runScript( "${metadata.file().project.name}/monkey/ImportExternalLibraries.gm", [:] )
-if( monitor.canceled )
-	return
-	
-// Exporting built plugins to web update site.
-out.println "Exporting to internal site"
-if( exportInternalSite )
-{
-	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/soa-internal' ) )
-	if( monitor.canceled )
-		return
-	if( updateSOAFrameworkJars )
-		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa-internal' ) )
-}
-if( monitor.canceled )
-	return
-	
-out.println "Exporting to dev site"
-if( exportDevSite )
-{
-	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/soa-dev' ) )
-	if( monitor.canceled )
-		return
-	if( updateSOAFrameworkJars )
-		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa-dev' ) )
-}
-if( monitor.canceled )
-	return
 
-out.println "Exporting to release site"
-if( exportReleaseSite )
-{
-	FileUtils.copyDirectoryToDirectory( workspace.root.getProject( 'SOAPluginUpdateSite' ).location.toFile(), new File( 'd:/exported/' ) )
-	if( monitor.canceled )
-		return
-	if( updateSOAFrameworkJars )
-		FileUtils.copyFileToDirectory( frameworkJar.location.toFile(), new File( 'd:/exported/soa' ) )
-}
+if( monitor.canceled )
+	return
+	
 out.println "Finished $metadata.menuName"
