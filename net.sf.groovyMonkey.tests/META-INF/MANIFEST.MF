@@ -1,21 +1,15 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Tests Plug-in
-Bundle-SymbolicName: net.sf.groovyMonkey.tests;singleton:=true
-Bundle-Version: 0.5.1
-Bundle-Activator: net.sf.groovymonkey.tests.Activator
+Require-Bundle: net.sf.groovyMonkey,org.eclipse.core.runtime,org.eclip
+ se.core.resources,org.eclipse.ui,net.sf.groovyMonkey.dom,org.eclipse.
+ jdt.core,org.eclipse.jdt.launching,org.junit
 Bundle-Vendor: James E. Ervin
-Bundle-Localization: plugin
-Require-Bundle: net.sf.groovyMonkey,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.ui,
- net.sf.groovyMonkey.dom,
- org.eclipse.jdt.core,
- org.eclipse.jdt.launching,
- org.junit
 Eclipse-LazyStart: true
-Bundle-ClassPath: lib/commons-io-1.2.jar,
- lib/commons-lang-2.1.jar,
- .,
- lib/utmj.jar
+Bundle-ClassPath: lib/commons-io-1.2.jar,lib/commons-lang-2.1.jar,.,li
+ b/utmj.jar
+Bundle-Version: 0.5.2.20080319-1900
+Bundle-Localization: plugin
+Bundle-Name: Tests Plug-in
+Bundle-Activator: net.sf.groovymonkey.tests.Activator
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: net.sf.groovyMonkey.tests;singleton:=true
+
