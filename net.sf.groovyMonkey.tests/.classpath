@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry path="src" kind="src"/>
-	<classpathentry sourcepath="lib/utmj.zip" path="lib/utmj.jar" exported="true" kind="lib"/>
-	<classpathentry sourcepath="lib/commons-io-1.2-src-ide.zip" path="lib/commons-io-1.2.jar" exported="true" kind="lib"/>
-	<classpathentry sourcepath="lib/commons-lang-2.1-src.zip" path="lib/commons-lang-2.1.jar" exported="true" kind="lib"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-	<classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
-	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="lib/utmj.jar" sourcepath="lib/utmj.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.2.jar" sourcepath="lib/commons-io-1.2-src-ide.zip"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.1.jar" sourcepath="lib/commons-lang-2.1-src.zip"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="var" path="AGITAR_MOCK_OBJECTS5"/>
+	<classpathentry kind="var" path="AGITAR_TEST_LIB"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

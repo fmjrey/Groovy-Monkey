@@ -65,6 +65,12 @@ extends TestCaseAbstract
         assertEquals( getName(), runMonkeyScript( script ) );
         assertTestDOMEquals();
     }
+    public void testIncludeInBundlePython()
+    throws Exception
+    {
+        assertEquals( getName(), runMonkeyScript( script ) );
+        assertTestDOMEquals();
+    }
     public void testIncludeInBundleRuby()
     throws Exception
     {
