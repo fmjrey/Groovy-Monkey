@@ -1,7 +1,8 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Groovy Monkey Help Plug-in
-Bundle-SymbolicName: net.sf.groovyMonkey.help; singleton:=true
-Bundle-Version: 0.5.1
-Bundle-Localization: plugin
 Require-Bundle: org.eclipse.help
+Bundle-Version: 0.5.2.20080319-1900
+Bundle-Localization: plugin
+Bundle-Name: Groovy Monkey Help Plug-in
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: net.sf.groovyMonkey.help; singleton:=true
+
