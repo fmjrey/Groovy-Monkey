@@ -1,0 +1,10 @@
+/*
+ * Menu: testIncludeInBundlePython
+ * Script-Path: /net.sf.groovyMonkey.tests/monkeyTestScripts/IncludeBundleTest/testIncludeInBundlePython.gm
+ * Kudos: James E. Ervin
+ * License: EPL 1.0
+ * LANG: Python
+ * Include-Bundle: net.sf.groovyMonkey.tests
+ */
+dom = net.sf.groovymonkey.tests.TestInclude()
+dom.callDOM( 'testIncludeInBundlePython' )
