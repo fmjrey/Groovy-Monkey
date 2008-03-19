@@ -1,10 +1,9 @@
 Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Tcl Fragment
-Bundle-SymbolicName: net.sf.groovyMonkey.tcl;singleton:=true
-Bundle-Version: 0.5.1
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
+Bundle-ClassPath: jacl.jar,tcljava.jar,.
+Bundle-Version: 0.5.2.20080319-1900
 Bundle-Localization: plugin
-Bundle-ClassPath: jacl.jar,
- tcljava.jar,
- .
+Bundle-Name: Tcl Fragment
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: net.sf.groovyMonkey.tcl;singleton:=true
+
