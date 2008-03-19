@@ -49,8 +49,8 @@ Export-Package: net.sf.groovyMonkey,
  org.apache.commons.lang.time
 Bundle-ClassPath: monkey.jar,
  lib/commons-lang-2.1.jar,
- lib/bsf.jar,
  lib/commons-io-1.2.jar,
- lib/commons-collections-3.2.jar
+ lib/commons-collections-3.2.jar,
+ lib/bsf.jar
 Bundle-Vendor: James E. Ervin
 Eclipse-BuddyPolicy: dependent

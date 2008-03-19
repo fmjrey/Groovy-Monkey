@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import java.util.Map.Entry;
 import net.sf.groovyMonkey.BundleClassLoaderAdapter;
 import net.sf.groovyMonkey.DOMDescriptor;
@@ -73,6 +74,7 @@ implements IMonkeyScript
     {
         toString = MonkeyScript.class.getSimpleName() + "<" + languageName + ", " + scriptFile.getName() + ">";
     }
+    @Override
     public String toString()
     {
         return toString;
@@ -228,7 +230,7 @@ implements IMonkeyScript
             }
             final String script = stripMetadata ? stripMetadata( getContents( scriptFile ) ) : getContents( scriptFile );
             final String scriptName = substringBeforeLast( scriptFile.getName(), "." ) + "." + fileNameExtension;
-            return manager.eval( languageName, scriptName, 1, 1, script );
+            return manager.apply( languageName, scriptName, 1, 1, script, new Vector< Object >(), new Vector< Object >() );
         }
         catch( final CoreException e )
         {
