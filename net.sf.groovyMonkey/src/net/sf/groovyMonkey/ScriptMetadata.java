@@ -381,7 +381,29 @@ public class ScriptMetadata
     }
     public static String stripIllegalChars( final String string )
     {
-        return compile( "[^\\p{Alnum}_-]" ).matcher( string ).replaceAll( "" );
+        if( StringUtils.isBlank( string ) )
+            return "";
+        if( StringUtils.equals( string.trim(), ">" ) )
+            return "_";
+        final boolean prefix = string.trim().startsWith( ">" );
+        final boolean postfix = string.trim().endsWith( ">" );
+        final String processed = StringUtils.removeEnd( StringUtils.removeStart( string.trim(), ">" ), ">" );
+        final StringBuffer buffer = new StringBuffer();
+        if( processed.contains( ">" ) )
+        {
+            for( final String str : StringUtils.stripAll( StringUtils.split( processed, ">" ) ) )
+            {
+                final StringBuffer stripped = new StringBuffer( compile( "[^\\p{Alnum}_-]" ).matcher( str ).replaceAll( "" ) );
+                buffer.append( "__" ).append( "" + stripped );
+            }
+        }
+        else
+            buffer.append( compile( "[^\\p{Alnum}_-]" ).matcher( processed ).replaceAll( "" ) );
+        if( prefix )
+            buffer.insert( 0, "_" );
+        if( postfix )
+            buffer.append( "_" );
+        return "" + buffer;
     }
     public void setJobMode( final String jobMode )
     {
@@ -485,20 +507,39 @@ public class ScriptMetadata
     {
 		return ListUtil.list( doms );
 	}
+	public static String reasonableFileName( final String menuName )
+	{
+	    if( StringUtils.isBlank( menuName ) )
+	        return "script" + FILE_EXTENSION;
+	    final StringBuffer buffer = new StringBuffer();
+        final String[] array = split( menuName, " " );
+        for( final String t : array )
+        {
+            final String token = capitalize( stripIllegalChars( t ) );
+            if( StringUtils.isBlank( token ) )
+                continue;
+            if( token.endsWith( "__" ) )
+            {
+                buffer.append( token );
+                continue;
+            }
+            buffer.append( token ).append( "_" );
+            if( buffer.toString().endsWith( "___" ) )
+                buffer.delete( buffer.length() - 2, buffer.length() - 1 );
+        }
+        if( StringUtils.isBlank( buffer.toString() ) )
+            return "script" + FILE_EXTENSION;
+        while( buffer.toString().endsWith( "_" ) )
+            buffer.deleteCharAt( buffer.length() - 1 );
+        while( buffer.toString().startsWith( "_" ) )
+            buffer.deleteCharAt( 0 );
+        return buffer + FILE_EXTENSION;
+	}
 	private String getReasonableFilename()
     {
         if( file != null )
             return file.getName();
-        if( isNotBlank( getMenuName() ) )
-        {
-            final StringBuffer buffer = new StringBuffer();
-            final String[] array = split( getMenuName(), " " );
-            for( final String token : array )
-                buffer.append( capitalize( stripIllegalChars( token ) ) );
-            if( isNotBlank( buffer.toString() ) )
-                return buffer.toString() + FILE_EXTENSION;
-        }
-        return "script" + FILE_EXTENSION;
+        return reasonableFileName( getMenuName() );
     }
     public boolean containsDOMByPlugin( final String pluginID )
     {
