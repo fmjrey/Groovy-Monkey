@@ -1,5 +1,4 @@
 package net.sf.groovyMonkey.editor.wizard;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPT_SUFFIX;
@@ -7,6 +6,7 @@ import static net.sf.groovyMonkey.RunMonkeyScript.getScriptFactories;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_JOB;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_LANG;
 import static net.sf.groovyMonkey.ScriptMetadata.DEFAULT_MODE;
+import static net.sf.groovyMonkey.ScriptMetadata.reasonableFileName;
 import static org.apache.commons.lang.StringUtils.capitalize;
 import static org.apache.commons.lang.StringUtils.defaultString;
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -22,6 +22,7 @@ import static org.eclipse.swt.SWT.SINGLE;
 import static org.eclipse.swt.layout.GridData.FILL_HORIZONTAL;
 import java.util.Map;
 import java.util.Set;
+import net.sf.groovyMonkey.GroovyMonkeyPlugin;
 import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.lang.IMonkeyScriptFactory;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
@@ -36,10 +37,12 @@ import org.eclipse.jface.dialogs.IDialogPage;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -59,6 +62,7 @@ extends WizardPage
 {
     private Text containerText;
     private Text fileText;
+    private Button overrideFileButton;
     private Text menuText;
     private Text kudosText;
     private Combo langCombo;
@@ -125,7 +129,22 @@ extends WizardPage
                 dialogChanged();
             }
         } );
-        new Label( container, NULL );
+        fileText.setEditable( false );
+        
+        overrideFileButton = new Button( container, SWT.CHECK );
+        overrideFileButton.setText( "Override" );
+        overrideFileButton.setSelection( false );
+        overrideFileButton.addSelectionListener( new SelectionListener()
+        {
+            public void widgetDefaultSelected( final SelectionEvent e )
+            {
+                widgetSelected( e );
+            }
+            public void widgetSelected( final SelectionEvent e )
+            {
+                fileText.setEditable( overrideFileButton.getSelection() );
+            }
+        } );
         
         final Label menuLabel = new Label( container, NULL );
         menuLabel.setText( "&Menu:" );
@@ -136,10 +155,26 @@ extends WizardPage
         {
             public void modifyText( final ModifyEvent e )
             {
+                if( !overrideFileButton.getSelection() )
+                    fileText.setText( reasonableFileName( menuText.getText() ) );
                 dialogChanged();
             }
         } );
         new Label( container, NULL );
+        
+        overrideFileButton.addSelectionListener( new SelectionListener()
+        {
+            public void widgetDefaultSelected( final SelectionEvent e )
+            {
+                widgetSelected( e );
+            }
+            public void widgetSelected( final SelectionEvent e )
+            {
+                if( !overrideFileButton.getSelection() )
+                    fileText.setText( reasonableFileName( menuText.getText() ) );
+                fileText.setEditable( overrideFileButton.getSelection() );
+            }
+        } );
         
         final Label kudosLabel = new Label( container, NULL );
         kudosLabel.setText( "&Kudos:" );
@@ -219,6 +254,7 @@ extends WizardPage
         jobModeCombo.setText( DEFAULT_JOB.toString() );
         
         menuText.setText( "New Groovy Monkey Script" );
+        fileText.setText( reasonableFileName( menuText.getText() ) );
         
         final Set< String > languages = getScriptLanguages().keySet();
         for( final String language : languages )
@@ -229,7 +265,9 @@ extends WizardPage
         
         if( !( selection instanceof IStructuredSelection ) || selection.isEmpty() )
         {
-            fileText.setText( "new_file" + FILE_EXTENSION );
+            final IFolder folder = getMonkeyFolder( getWorkspace().getRoot().getProject( GroovyMonkeyPlugin.SCRIPTS_PROJECT ) );
+            containerText.setText( folder.getFullPath().toString() );
+            fileText.setText( reasonableFileName( menuText.getText() ) );
             return;
         }
         final IStructuredSelection ssel = ( IStructuredSelection )selection;
@@ -242,7 +280,6 @@ extends WizardPage
             final IFolder folder = getMonkeyFolder( project );
             containerText.setText( folder.getFullPath().toString() );
         }
-        fileText.setText( "new_file" + FILE_EXTENSION );
     }
     private IFolder getMonkeyFolder( final IProject project )
     {
