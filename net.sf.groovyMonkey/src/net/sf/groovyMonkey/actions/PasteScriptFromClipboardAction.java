@@ -111,7 +111,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     {
         final Pattern pattern = compile( "\\\\(\n|(\r\n?))" );
         final Matcher match = pattern.matcher( input );
-        final String result = match.replaceAll( "" );
+        final String result = match.replaceAll( "\n" );
         return result;
     }
     private void highlightNewScriptInNavigator( final IFile file )

@@ -35,6 +35,7 @@ import static org.apache.commons.lang.StringUtils.join;
 import static org.apache.commons.lang.StringUtils.removeEnd;
 import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.apache.commons.lang.StringUtils.split;
+import static org.apache.commons.lang.StringUtils.splitPreserveAllTokens;
 import static org.apache.commons.lang.StringUtils.strip;
 import static org.apache.commons.lang.StringUtils.substringAfterLast;
 import static org.apache.commons.lang.StringUtils.substringBeforeLast;
@@ -146,7 +147,7 @@ public class ScriptMetadata
     }
     public static String stripMetadata( final String contents )
     {
-        final String[] lines = split( contents, "\r\n" );
+        final String[] lines = splitPreserveAllTokens( contents, "\r\n" );
         final List< String > code = new ArrayList< String >();
         boolean started = false;
         boolean finished = false;
@@ -734,7 +735,6 @@ public class ScriptMetadata
             buffer.append( getTagText( Tags.Type.LISTENER ) + subscription.getFilter() ).append( "\n" );
 
         buffer.append( " */" ).append( "\n" );
-        buffer.append( "\n" );
         return buffer.toString();
     }
 	public void subscribe()
