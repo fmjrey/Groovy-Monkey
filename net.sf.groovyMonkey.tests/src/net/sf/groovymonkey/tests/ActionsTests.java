@@ -23,7 +23,7 @@ extends TestCase
         final String r1 = collapseEscapedNewlines( s1 );
         assertEquals( s1, r1 );
         final String s2 = "this is a test\\\nand another test\nand a third line\n";
-        final String e2 = "this is a testand another test\nand a third line\n";
+        final String e2 = "this is a test\nand another test\nand a third line\n";
         final String r2 = collapseEscapedNewlines( s2 );
         assertEquals( e2, r2 );
     }

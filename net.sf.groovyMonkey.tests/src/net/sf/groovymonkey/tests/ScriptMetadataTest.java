@@ -24,7 +24,7 @@ extends TestCase
         final ScriptMetadata data = new ScriptMetadata();
         data.setMenuName( "This is a test" );
         final String defaultPath = "/" + SCRIPTS_PROJECT + "/" + MONKEY_DIR + "/";
-        assertEquals( defaultPath + "ThisIsATest" + FILE_EXTENSION, data.scriptPath() );
+        assertEquals( defaultPath + "This_Is_A_Test" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( "ABCD@#$%@$#DEFG" );
         data.setFile( null );
         assertEquals( defaultPath + "ABCDDEFG" + FILE_EXTENSION, data.scriptPath() );
@@ -36,6 +36,6 @@ extends TestCase
         assertEquals( defaultPath + "script" + FILE_EXTENSION, data.scriptPath() );
         data.setMenuName( "Explore > JDT" );
         data.setFile( null );
-        assertEquals( defaultPath + "ExploreJDT" + FILE_EXTENSION, data.scriptPath() );
+        assertEquals( defaultPath + "Explore__JDT" + FILE_EXTENSION, data.scriptPath() );
     }
 }
