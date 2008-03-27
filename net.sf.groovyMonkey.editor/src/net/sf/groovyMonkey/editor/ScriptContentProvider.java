@@ -29,6 +29,7 @@ import net.sf.groovyMonkey.ScriptMetadata;
 import net.sf.groovyMonkey.Subscription;
 import net.sf.groovyMonkey.ScriptMetadata.ExecModes;
 import net.sf.groovyMonkey.ScriptMetadata.JobModes;
+import net.sf.groovyMonkey.util.SetUtil;
 import net.sf.groovyMonkey.util.TreeList;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -544,9 +545,11 @@ implements ITreeContentProvider
                 set.add( child );
         elements.addAll( set );
         elements.addAll( includes );
+        final Set< Object > exportedPackages = SetUtil.treeSet();
         for( final BundleDescriptor bundle : bundles )
             for( final Object child : getChildren( bundle ) )
-                elements.add( child );
+                exportedPackages.add( child );
+        elements.addAll( exportedPackages );
     }
     public void dispose()
     {
