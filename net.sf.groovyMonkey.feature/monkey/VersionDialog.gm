@@ -39,10 +39,7 @@ def pad( str, minsize )
 	return string
 }
 map[ 'newVersion' ] = newVersionString?.trim()
-map[ 'updateSOAFrameworkJars' ] = false
-map[ 'exportInternalSite' ] = false
-map[ 'exportDevSite' ] = false
-map[ 'exportReleaseSite' ] = false
+
 jface.syncExec
 {
 	dialog = jface.shell( text: "Build/Deploy Groovy Monkey", window.getShell() )
@@ -86,50 +83,6 @@ jface.syncExec
 						dialog.close()
 						closed = true
 						cancelled = true
-					} )
-				}
-			}
-			composite()
-			{
-				rowLayout()
-				button( style: 'check', text: 'Update SOAFrameworkJars.zip?' )
-				{
-					onEvent( type: 'Selection', closure:
-					{
-						map[ 'updateSOAFrameworkJars' ] = it.widget.selection
-					} )
-				}
-			}
-			composite()
-			{
-				rowLayout()
-				button( style: 'check', text: 'Export Site to SOA-Internal' )
-				{
-					onEvent( type: 'Selection', closure:
-					{
-						map[ 'exportInternalSite' ] = it.widget.selection
-					} )
-				}
-			}
-			composite()
-			{
-				rowLayout()
-				button( style: 'check', text: 'Export Site to SOA-Dev' )
-				{
-					onEvent( type: 'Selection', closure:
-					{
-						map[ 'exportDevSite' ] = it.widget.selection
-					} )
-				}
-			}
-			composite()
-			{
-				rowLayout()
-				button( style: 'check', text: 'Export Site to SOA-Release' )
-				{
-					onEvent( type: 'Selection', closure:
-					{
-						map[ 'exportReleaseSite' ] = it.widget.selection
 					} )
 				}
 			}

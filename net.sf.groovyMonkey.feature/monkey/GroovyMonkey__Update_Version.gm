@@ -93,7 +93,7 @@ if( monitor.canceled )
 
 out.println "oldVersion: ${oldVersion}"
 def map = runnerDOM.runScript( "${metadata.file().project.name}/monkey/VersionDialog.gm", [ oldVersion : "${oldVersion}" ] )
-if( monitor.canceled )
+if( monitor.canceled || map.isEmpty() )
 	return
 
 def version = map.'newVersion'
