@@ -225,7 +225,6 @@ extends ClassLoader
             return url;
         return super.getResource( resName );
     }
-    @SuppressWarnings("unchecked")
     @Override
     protected Enumeration< URL > findResources( final String name ) 
     throws IOException
