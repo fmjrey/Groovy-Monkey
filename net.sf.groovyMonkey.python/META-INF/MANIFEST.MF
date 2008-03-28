@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
 Bundle-ClassPath: .,jython.jar
-Bundle-Version: 0.5.2.20080319-1900
-Bundle-Localization: plugin
+Bundle-Version: 0.5.2.20080328-1600
 Bundle-Name: Python Fragment
+Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.python;singleton:=true
 
