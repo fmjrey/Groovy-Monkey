@@ -6,10 +6,10 @@ Bundle-Vendor: James E. Ervin
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/commons-io-1.2.jar,lib/commons-lang-2.1.jar,.,li
  b/utmj.jar
-Bundle-Version: 0.5.2.20080319-1900
-Bundle-Localization: plugin
+Bundle-Version: 0.5.2.20080328-1600
 Bundle-Name: Tests Plug-in
-Bundle-Activator: net.sf.groovymonkey.tests.Activator
+Bundle-Localization: plugin
 Bundle-ManifestVersion: 2
+Bundle-Activator: net.sf.groovymonkey.tests.Activator
 Bundle-SymbolicName: net.sf.groovyMonkey.tests;singleton:=true
 
