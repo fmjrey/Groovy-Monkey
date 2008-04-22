@@ -290,6 +290,7 @@ public class RunMonkeyScript
                         final String message,
                         final Throwable exception )
     {
+	    GroovyMonkeyPlugin.logException( title + ":" + message, exception );
         if( throwError )
             throw new RuntimeException( title + ". " + message, exception );
         Utilities.error( title, message, exception );
