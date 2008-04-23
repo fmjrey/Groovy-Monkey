@@ -163,6 +163,16 @@ implements IWorkbenchWindowActionDelegate
                 delegate.run( action );
             }
         } );
+        menuManager.add( new Action( "Pull scripts from URL" )
+        {
+            @Override
+            public void run()
+            {
+                final IWorkbenchWindowActionDelegate delegate = new PasteScriptsFromURL();
+                delegate.init( _window );
+                delegate.run( action );
+            }
+        } );
         if( sorted.size() == 0 )
             menuManager.add( new Action( "Examples" )
             {
