@@ -1,15 +1,15 @@
 Manifest-Version: 1.0
+Export-Package: net.sf.groovyMonkey.dom.bundler,net.sf.groovyMonkey.do
+ m.project
 Require-Bundle: org.eclipse.jdt.core,org.eclipse.jdt.ui,org.eclipse.ui
  .views,org.eclipse.jface.text,org.eclipse.ui.workbench.texteditor,org
  .eclipse.ui.editors,org.eclipse.pde.core,org.eclipse.pde.ui,org.eclip
  se.ui
-Export-Package: net.sf.groovyMonkey.dom.bundler,net.sf.groovyMonkey.do
- m.project
 Bundle-Vendor: James E. Ervin
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.4.0"
-Bundle-Version: 0.5.2.20080328-1600
-Bundle-Name: Editor Fragment
+Bundle-Version: 0.5.2.20080423-1900
 Bundle-Localization: plugin
+Bundle-Name: Editor Fragment
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.editor;singleton:=true
 
