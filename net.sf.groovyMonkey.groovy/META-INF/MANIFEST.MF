@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
-Require-Bundle: org.eclipse.ui.forms,org.codehaus.groovy;visibility:=r
- eexport
 Export-Package: net.sf.groovyMonkey.groovy,org.apache.commons.logging,
  org.apache.commons.logging.impl
+Require-Bundle: org.eclipse.ui.forms,org.codehaus.groovy;visibility:=r
+ eexport
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.4.0"
 Bundle-ClassPath: .,lib/commons-logging-1.0.3.jar
-Bundle-Version: 0.5.2.20080328-1600
-Bundle-Name: Groovy Fragment
+Bundle-Version: 0.5.2.20080423-1900
 Bundle-Localization: plugin
+Bundle-Name: Groovy Fragment
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.groovy;singleton:=true
 
