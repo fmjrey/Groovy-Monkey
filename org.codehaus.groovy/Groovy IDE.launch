@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<booleanAttribute key="append.args" value="true"/>
+<booleanAttribute key="askclear" value="false"/>
+<booleanAttribute key="automaticAdd" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<stringAttribute key="checked" value="org.codehaus.groovy.eclipse.ui"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="clearws" value="true"/>
+<booleanAttribute key="clearwslog" value="true"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/Groovy IDE"/>
+<booleanAttribute key="default" value="false"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="location" value="${workspace_loc}/../runtime-New_configuration"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
+<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
+<listEntry value="org.eclipse.debug.ui.launchGroup.profile"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DATA_COLLECTOR" value="org.eclipse.tptp.trace.jvmti.jvmtiMechanism:org.eclipse.tptp.analysisType.jvmti.heap"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_FILE" value=""/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_MONITOR" value="DefaultMonitor"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_DESTINATION_PROJECT" value="ProfileProject"/>
+<booleanAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILE_TO_FILE" value="false"/>
+<stringAttribute key="org.eclipse.hyades.trace.ui.ATTR_PROFILING_SET" value="tptp-dummy-profiling-set-Groovy IDE"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consolelog"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_AFTERCALL" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_BEFORECALL" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_CATCH" value="true"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_ENTRY" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_EXECUNIT" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_EXIT" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.CBE_STATUS_STATICINIT" value="false"/>
+<stringAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.SELECTED_CBE_OUTPUT" value="console"/>
+<stringAttribute key="org.eclipse.tptp.monitoring.instrumentation.ui.SELECTED_CBE_SCENARIO" value="method"/>
+<stringAttribute key="org.eclipse.tptp.platform.instrumentation.ui.CBE_ACTIVE_INSTRUMENT_FILTER_SET" value="org.eclipse.tptp.platform.instrumentation.ui.Eclipse PDE1201905403906"/>
+<stringAttribute key="org.eclipse.tptp.platform.instrumentation.ui.CBE_INSTRUMENT_FILTER_SETS_KEY_Groovy IDE" value="&lt;filters&gt;&lt;filter id = 'org.eclipse.tptp.platform.instrumentation.ui.filterSet.default' key = 'DEF_SETNM' name = 'Default'&gt;&lt;contents&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.sun*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'COM.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'java*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'org*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'sun*'/&gt;&lt;/contents&gt;&lt;/filter&gt;&lt;filter id = 'org.eclipse.tptp.platform.instrumentation.ui.Eclipse PDE1201905403906' name = 'Eclipse PDE'&gt;&lt;contents&gt;&lt;content text = '*' method = '*' visibility = 'INCLUDE' package = 'org.codehaus*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.tivoli*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.sun*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'COM.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'db2j*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'java*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'org*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'sun*'/&gt;&lt;/contents&gt;&lt;/filter&gt;&lt;filter id = 'org.eclipse.tptp.platform.instrumentation..ui.filterSet.webspherej2ee' key = 'J2EE_FILTER' name = 'WebSphere J2EE'&gt;&lt;contents&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.tivoli*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.sun*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'COM.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'db2j*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'java*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'org*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'sun*'/&gt;&lt;/contents&gt;&lt;/filter&gt;&lt;filter id = 'org.eclipse.tptp.platform.instrumentation..ui.filterSet.websphere' key = 'WEB_SPHERE_STD_FILTER' name = 'WebSphere Studio'&gt;&lt;contents&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'com.sun*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'COM.ibm*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'java*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'org.eclipse*'/&gt;&lt;content text = '*' method = '*' visibility = 'EXCLUDE' package = 'sun*'/&gt;&lt;/contents&gt;&lt;/filter&gt;&lt;/filters&gt;"/>
+<stringAttribute key="org.eclipse.tptp.platform.instrumentation.ui.CURRENT_INSTRUMENT_POINT" value="org.eclipse.tptp.monitoring.instrumentation.cbeMethodInstrumentPoint"/>
+<booleanAttribute key="org.eclipse.tptp.platform.instrumentation.ui.ENABLE_CBE_INSTRUMENT_FILTER_SET" value="true"/>
+<listAttribute key="org.eclipse.tptp.platform.instrumentation.ui.SELECTED_INSTRUMENT_FILES">
+<listEntry value="D:\development\workspaces\groovy-ide\ProfileProject\CbeProbe.probescript"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.tptp.platform.jvmti.client.ATTR_EXEC_AUTO_POLLING" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.platform.jvmti.client.ATTR_EXEC_CPU_TIME" value="false"/>
+<booleanAttribute key="org.eclipse.tptp.platform.jvmti.client.ATTR_EXEC_FLOW" value="true"/>
+<booleanAttribute key="org.eclipse.tptp.platform.jvmti.client.ATTR_EXEC_MANUAL_POLLING" value="false"/>
+<intAttribute key="org.eclipse.tptp.platform.jvmti.client.ATTR_EXEC_POLLING_TIME" value="60"/>
+<stringAttribute key="pde.version" value="3.3"/>
+<stringAttribute key="product" value="org.eclipse.sdk.ide"/>
+<stringAttribute key="selectedPlugin" value="org.codehaus.groovy.eclipse.ui"/>
+<stringAttribute key="selected_target_plugins" value="com.ibm.icu,javax.servlet,javax.servlet,javax.servlet,org.apache.ant,org.apache.commons.logging,org.apache.commons.logging,org.apache.commons.logging,org.apache.commons.logging,org.apache.commons.logging,org.apache.lucene,org.apache.lucene.analysis,org.eclipse.ant.core,org.eclipse.compare,org.eclipse.core.commands,org.eclipse.core.contenttype,org.eclipse.core.databinding,org.eclipse.core.expressions,org.eclipse.core.filebuffers,org.eclipse.core.filesystem,org.eclipse.core.filesystem.win32.x86,org.eclipse.core.jobs,org.eclipse.core.net,org.eclipse.core.resources,org.eclipse.core.resources.compatibility,org.eclipse.core.resources.win32,org.eclipse.core.runtime,org.eclipse.core.runtime.compatibility,org.eclipse.core.runtime.compatibility.auth,org.eclipse.core.runtime.compatibility.registry,org.eclipse.core.variables,org.eclipse.debug.core,org.eclipse.debug.ui,org.eclipse.equinox.app,org.eclipse.equinox.app,org.eclipse.equinox.common,org.eclipse.equinox.common,org.eclipse.equinox.http.jetty,org.eclipse.equinox.http.jetty,org.eclipse.equinox.http.servlet,org.eclipse.equinox.http.servlet,org.eclipse.equinox.preferences,org.eclipse.equinox.preferences,org.eclipse.equinox.registry,org.eclipse.equinox.registry,org.eclipse.help,org.eclipse.help.base,org.eclipse.help.ui,org.eclipse.jdt.compiler.apt,org.eclipse.jdt.compiler.tool,org.eclipse.jdt.core,org.eclipse.jdt.core.manipulation,org.eclipse.jdt.debug,org.eclipse.jdt.debug.ui,org.eclipse.jdt.junit,org.eclipse.jdt.junit.runtime,org.eclipse.jdt.junit4.runtime,org.eclipse.jdt.launching,org.eclipse.jdt.ui,org.eclipse.jface,org.eclipse.jface.databinding,org.eclipse.jface.text,org.eclipse.ltk.core.refactoring,org.eclipse.ltk.ui.refactoring,org.eclipse.osgi,org.eclipse.osgi,org.eclipse.osgi.services,org.eclipse.osgi.services,org.eclipse.sdk,org.eclipse.search,org.eclipse.swt,org.eclipse.swt.win32.win32.x86,org.eclipse.team.core,org.eclipse.team.ui,org.eclipse.text,org.eclipse.ui,org.eclipse.ui.cheatsheets,org.eclipse.ui.console,org.eclipse.ui.editors,org.eclipse.ui.externaltools,org.eclipse.ui.forms,org.eclipse.ui.ide,org.eclipse.ui.ide.application,org.eclipse.ui.intro,org.eclipse.ui.navigator,org.eclipse.ui.navigator.resources,org.eclipse.ui.views,org.eclipse.ui.views.properties.tabbed,org.eclipse.ui.win32,org.eclipse.ui.workbench,org.eclipse.ui.workbench.texteditor,org.eclipse.update.configurator,org.eclipse.update.core,org.eclipse.update.core.win32,org.eclipse.update.ui,org.junit,org.junit4,org.maven.ide.eclipse,org.mortbay.jetty,org.mortbay.jetty,org.testng.eclipse"/>
+<stringAttribute key="selected_workspace_plugins" value="org.codehaus.groovy.eclipse.ui,org.codehaus.groovy.eclipse.cstviewer,org.codehaus.groovy.eclipse.codeassist,org.codehaus.groovy,org.codehaus.groovy.eclipse.tests,org.codehaus.groovy.eclipse.astviews,org.codehaus.groovy.eclipse,org.codehaus.groovy.eclipse.core.test,org.codehaus.groovy.eclipse.testng,org.codehaus.groovy.eclipse.codebrowsing,org.codehaus.groovy.eclipse.codeassist.completion,org.codehaus.groovy.eclipse.junit,org.codehaus.groovy.eclipse.core.help,org.codehaus.groovy.eclipse.pde"/>
+<stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
+<booleanAttribute key="tracing" value="true"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<booleanAttribute key="useProduct" value="true"/>
+<booleanAttribute key="usefeatures" value="false"/>
+</launchConfiguration>
