@@ -3,9 +3,8 @@
    <description url="http://groovy-monkey.sourceforge.net/update/">
       Groovy Monkey scripting tool for Eclipse
    </description>
-   <feature url="features/net.sf.groovyMonkey_0.5.2.20080423-1900.jar" id="net.sf.groovyMonkey" version="0.5.2.20080423-1900">
+   <feature url="features/net.sf.groovyMonkey_0.5.2.20080423-2000.jar" id="net.sf.groovyMonkey" version="0.5.2.20080423-2000">
       <category name="Groovy Monkey"/>
    </feature>
-   <archive path="plugins/org.codehaus.groovy_1.5.5.200804232230.jar" url="http://dist.groovy.codehaus.org/distributions/updateDev/plugins/org.codehaus.groovy_1.5.5.200804232230.jar"/>
    <category-def name="Groovy Monkey" label="Groovy Monkey"/>
 </site>
