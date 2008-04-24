@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Require-Bundle: net.sf.groovyMonkey,org.eclipse.debug.core,org.eclipse
  .core.runtime,org.eclipse.debug.ui,org.eclipse.ui,org.eclipse.ui.cons
  ole
-Bundle-Version: 0.5.2.20080423-1900
+Bundle-Version: 0.5.2.20080423-2000
 Bundle-Localization: plugin
 Bundle-Name: DOM Plugins for Groovy Monkey.
 Bundle-ManifestVersion: 2
