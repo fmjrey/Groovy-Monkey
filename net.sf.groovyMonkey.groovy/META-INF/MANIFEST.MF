@@ -5,7 +5,7 @@ Require-Bundle: org.eclipse.ui.forms,org.codehaus.groovy;visibility:=r
  eexport
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.4.0"
 Bundle-ClassPath: .,lib/commons-logging-1.0.3.jar
-Bundle-Version: 0.5.2.20080423-1900
+Bundle-Version: 0.5.2.20080423-2000
 Bundle-Localization: plugin
 Bundle-Name: Groovy Fragment
 Bundle-ManifestVersion: 2
