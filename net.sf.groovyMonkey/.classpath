@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-lang-2.1.jar" sourcepath="lib/commons-lang-2.1-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-1.2.jar" sourcepath="lib/commons-io-1.2-src-ide.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-collections-3.2.jar" sourcepath="lib/commons-collections-3.2-src.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/bsf.jar" sourcepath="lib/bsf-src-2.4.0.zip"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
