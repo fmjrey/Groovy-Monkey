@@ -167,7 +167,6 @@ extends BuilderSupport
      *      java.lang.Object)
      */
     @Override
-    @SuppressWarnings("unchecked")
     protected Object createNode( final Object name,
                                  final Object parent )
     {
