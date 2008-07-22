@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry path="src" kind="src"/>
-	<classpathentry sourcepath="jacl132.zip" path="jacl.jar" exported="true" kind="lib"/>
-	<classpathentry sourcepath="jacl132.zip" path="tcljava.jar" exported="true" kind="lib"/>
-	<classpathentry path="org.eclipse.jdt.launching.JRE_CONTAINER" kind="con"/>
-	<classpathentry path="org.eclipse.pde.core.requiredPlugins" kind="con"/>
-	<classpathentry path="bin" kind="output"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="jacl.jar" sourcepath="jacl132.zip"/>
+	<classpathentry exported="true" kind="lib" path="tcljava.jar" sourcepath="jacl132.zip"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
