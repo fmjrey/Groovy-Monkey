@@ -53,6 +53,7 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.update.search.UpdateSearchRequest.createDefaultSiteSearchCategory;
 import static org.eclipse.update.ui.UpdateManagerUI.openInstaller;
 import static org.osgi.framework.Bundle.UNINSTALLED;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -302,31 +303,7 @@ public class ScriptMetadata
     {
         if( script == null || !script.exists() || metadata == null )
             return;
-        try
-        {
-            if( !force && metadata.toHeader().equals( getScriptMetadata( script ).toHeader() ) )
-            {
-                new WorkspaceJob( "Refreshing markers for script: " + script.getName() )
-                {
-                    @Override
-                    public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
-                    {
-                        setMarkers( script );
-                        return Status.OK_STATUS;
-                    }
-                }.schedule();
-                return;
-            }
-        }
-        catch( final CoreException e )
-        {
-            throw new RuntimeException( e );
-        }
-        catch( final IOException e )
-        {
-            throw new RuntimeException( e );
-        }
-        new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
+        final WorkspaceJob job = new WorkspaceJob( "Refreshing metadata for script: " + script.getName() )
         {
             @Override
             public IStatus runInWorkspace( final IProgressMonitor monitor ) throws CoreException
@@ -347,7 +324,9 @@ public class ScriptMetadata
                 }
                 return OK_STATUS;
             }
-        }.schedule();
+        };
+        job.setRule( script );
+        job.schedule();
 }
     public static void setMarkers( final IFile script )
     throws CoreException
