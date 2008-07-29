@@ -2,8 +2,9 @@ package net.sf.groovymonkey.tests;
 import static net.sf.groovymonkey.tests.Activator.bundle;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.lang.StringUtils.removeStart;
 import static org.eclipse.core.resources.IncrementalProjectBuilder.FULL_BUILD;
+import static org.eclipse.core.runtime.FileLocator.getBundleFile;
+
 import java.io.File;
 import java.io.InputStream;
 import junit.framework.TestCase;
@@ -40,7 +41,7 @@ extends TestCase
          super.setUp();
          monkeyProject = new TestMonkeyProject( "TestMonkeyProject" );
          javaProject = new TestJavaProject( "TestJavaProject" );
-         bundleLocation = new File( removeStart( bundle().getLocation(), "update@" ) ).getCanonicalPath();
+         bundleLocation = getBundleFile( bundle() ).getCanonicalPath();
     }
     protected void setUpJavaProject() 
     throws Exception
