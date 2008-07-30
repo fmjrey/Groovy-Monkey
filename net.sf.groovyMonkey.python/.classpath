@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="jython-complete.jar" sourcepath="jython_installer-2.5a1.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="lib" path="jython.jar" sourcepath="jython_installer-2.2.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/workspace/org.eclipse.eclipseMonkey.python/jython_Release_2_2alpha1.jar!/Doc/javadoc"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
