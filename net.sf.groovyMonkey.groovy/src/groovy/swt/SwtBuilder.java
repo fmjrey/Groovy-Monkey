@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Decorations;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.DirectoryDialog;
@@ -212,6 +213,7 @@ extends BuilderSupport
         registerBeanFactory( "scrolledComposite", ScrolledComposite.class, SWT.H_SCROLL | SWT.V_SCROLL );
         registerBeanFactory( "coolBar", CoolBar.class, SWT.VERTICAL );
         registerBeanFactory( "coolItem", CoolItem.class );
+        registerBeanFactory( "dateTime", DateTime.class );
         registerBeanFactory( "decorations", Decorations.class );
         registerFactory( "font", new Fontfactory() );
         registerBeanFactory( "group", Group.class );
