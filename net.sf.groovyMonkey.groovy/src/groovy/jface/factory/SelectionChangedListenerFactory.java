@@ -9,9 +9,7 @@ import groovy.swt.ClosureSupport;
 import groovy.swt.InvalidParentException;
 import groovy.swt.factory.AbstractSwtFactory;
 import groovy.swt.factory.SwtFactory;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -33,6 +31,7 @@ public class SelectionChangedListenerFactory extends AbstractSwtFactory
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *           java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 

@@ -2,9 +2,7 @@ package groovy.jface.factory;
 
 import groovy.swt.factory.SwtFactory;
 import groovy.swt.factory.WidgetFactory;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -24,6 +22,7 @@ public class ContributionManagerFactory extends WidgetFactory implements SwtFact
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
 
         Object bean = createWidget(parent);

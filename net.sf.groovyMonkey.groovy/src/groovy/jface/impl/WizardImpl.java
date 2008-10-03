@@ -6,7 +6,6 @@ package groovy.jface.impl;
 
 import groovy.lang.Closure;
 import groovy.swt.ClosureSupport;
-
 import org.eclipse.jface.wizard.Wizard;
 
 /**
@@ -27,6 +26,7 @@ public class WizardImpl extends Wizard implements ClosureSupport{
      * 
      * @see org.eclipse.jface.wizard.IWizard#performCancel()
      */
+    @Override
     public boolean performCancel() {
         System.out.println("performCancel ...");
         return true;
@@ -37,6 +37,7 @@ public class WizardImpl extends Wizard implements ClosureSupport{
      * 
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
+    @Override
     public boolean performFinish() {
         System.out.println("performFinish ...");
         return true;

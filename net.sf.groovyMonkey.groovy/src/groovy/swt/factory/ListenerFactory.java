@@ -10,9 +10,7 @@ import groovy.swt.impl.ListenerImpl;
 import groovy.swt.impl.LocationListenerImpl;
 import groovy.swt.impl.ProgressListenerImpl;
 import groovy.swt.impl.StatusTextListenerImpl;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
@@ -32,7 +30,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
  */
 public class ListenerFactory extends AbstractSwtFactory implements SwtFactory {
 
-    private Class<?> beanClass;
+    private final Class<?> beanClass;
 
     /**
      * @param class1
@@ -45,6 +43,7 @@ public class ListenerFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
         final String type = (String) properties.remove("type");

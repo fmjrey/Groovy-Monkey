@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.eclipse.swt.graphics.RGB;
 
 /**
@@ -15,7 +14,7 @@ import org.eclipse.swt.graphics.RGB;
  * @version $Revision$
  */
 public class ColorConverter {
-    private Logger log = Logger.getLogger(getClass().getName());
+    private final Logger log = Logger.getLogger(getClass().getName());
     private static final ColorConverter instance = new ColorConverter();
     private static String usageText = "Color value should be in the form of '#xxxxxx' or 'x,y,z'";
 
@@ -70,7 +69,8 @@ public class ColorConverter {
     /**
      * Parse a String
      */
-    public RGB parse(String value) {
+    public RGB parse(String val) {
+        String value = val;
         if (value.length() <= 1) {
             throw new IllegalArgumentException(usageText);
         }
@@ -108,8 +108,7 @@ public class ColorConverter {
         return answer;
     }
 
-    protected int parseNumber(String text) {
-        text = text.trim();
-        return Integer.parseInt(text);
+    protected int parseNumber(String txt) {
+        return Integer.parseInt(txt.trim());
     }
 }

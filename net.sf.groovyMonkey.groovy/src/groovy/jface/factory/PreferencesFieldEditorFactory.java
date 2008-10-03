@@ -5,9 +5,7 @@ import groovy.lang.MissingPropertyException;
 import groovy.swt.InvalidParentException;
 import groovy.swt.factory.AbstractSwtFactory;
 import groovy.swt.factory.SwtFactory;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.PreferencePage;
@@ -19,12 +17,13 @@ import org.eclipse.jface.preference.PreferencePage;
 public class PreferencesFieldEditorFactory extends AbstractSwtFactory implements
         SwtFactory {
 
-    private Class<?> beanClass;
+    private final Class<?> beanClass;
 
     public PreferencesFieldEditorFactory(Class<?> beanClass) {
         this.beanClass = beanClass;
     }
 
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 

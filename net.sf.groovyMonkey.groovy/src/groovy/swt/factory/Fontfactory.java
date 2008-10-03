@@ -7,9 +7,7 @@ package groovy.swt.factory;
 import groovy.swt.InvalidParentException;
 import groovy.swt.SwtUtils;
 import groovy.swt.UnKnownStyleException;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -26,6 +24,7 @@ public class Fontfactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
 
         Object parentWidget = SwtUtils.getParentWidget(parent, properties);

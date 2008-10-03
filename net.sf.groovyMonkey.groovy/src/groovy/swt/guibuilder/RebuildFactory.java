@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class RebuildFactory extends AbstractSwtFactory implements SwtFactory {
 
-    private ApplicationGuiBuilder guiBuilder;
+    private final ApplicationGuiBuilder guiBuilder;
 
     /**
      * @param builder
@@ -35,8 +35,10 @@ public class RebuildFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
-    public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
+    @Override
+    public Object newInstance(Map<String,Object> properties, Object prent) throws GroovyException {
         // get parent
+        Object parent = prent;
         if( properties.containsKey("parent") ) {
             parent = properties.remove("parent");
         }

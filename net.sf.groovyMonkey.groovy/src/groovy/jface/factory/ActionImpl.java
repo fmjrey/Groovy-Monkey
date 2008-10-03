@@ -19,6 +19,7 @@ public class ActionImpl extends Action implements ClosureSupport {
 
     private Event event;
 
+    @Override
     public void runWithEvent(Event event) {
         if (closure == null) {
             throw new NullPointerException("No closure has been configured for this Listener");

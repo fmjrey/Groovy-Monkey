@@ -40,6 +40,7 @@ public class ViewerFactory extends WidgetFactory implements SwtFactory {
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public Object newInstance(Map properties, Object parent) throws GroovyException {
         Object bean;

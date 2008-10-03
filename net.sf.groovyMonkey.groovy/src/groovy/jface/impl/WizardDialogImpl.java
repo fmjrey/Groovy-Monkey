@@ -6,7 +6,6 @@ package groovy.jface.impl;
 
 import groovy.lang.Closure;
 import groovy.swt.ClosureSupport;
-
 import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
@@ -19,17 +18,19 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class WizardDialogImpl extends WizardDialog implements ClosureSupport {
     private Closure closure;
-    private Shell parentShell;
+    private final Shell parentShell;
 
     public WizardDialogImpl(Shell parentShell, IWizard newWizard) {
         super(parentShell, newWizard);
         this.parentShell = parentShell;
     }
 
+    @Override
     public IWizard getWizard() {
         return super.getWizard();
     }
 
+    @Override
     public Shell getParentShell() {
         return parentShell;
     }

@@ -6,11 +6,9 @@ package groovy.swt.factory;
 
 import groovy.swt.InvalidChildException;
 import groovy.swt.SwtUtils;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
@@ -46,6 +44,7 @@ public class WidgetFactory extends AbstractSwtFactory implements SwtFactory {
     /*
      * @see groovy.swt.impl.Factory#newInstance(java.util.Map, java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
         String styleProperty = (String) properties.remove("style");
         if (styleProperty != null) {

@@ -6,10 +6,8 @@ package groovy.swt.factory;
 
 import groovy.lang.MissingPropertyException;
 import groovy.swt.InvalidParentException;
-
 import java.io.File;
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.graphics.Image;
@@ -30,6 +28,7 @@ public class ImageFactory extends AbstractSwtFactory implements SwtFactory {
     /*
      * @see groovy.swt.impl.Factory#newInstance(java.util.Map, java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent) throws GroovyException {
         String src = (String) properties.remove("src");
         if (src == null) {

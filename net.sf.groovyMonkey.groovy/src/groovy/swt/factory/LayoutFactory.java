@@ -5,9 +5,7 @@
 package groovy.swt.factory;
 
 import groovy.swt.SwtUtils;
-
 import java.util.Map;
-
 import org.codehaus.groovy.GroovyException;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
@@ -19,7 +17,7 @@ import org.eclipse.swt.widgets.Widget;
  */
 public class LayoutFactory extends AbstractSwtFactory implements SwtFactory {
 
-    private Class<?> beanClass;
+    private final Class<?> beanClass;
 
     /**
      * @param beanClass
@@ -32,6 +30,7 @@ public class LayoutFactory extends AbstractSwtFactory implements SwtFactory {
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     public Object newInstance(Map<String,Object> properties, Object parent)
             throws GroovyException {
 

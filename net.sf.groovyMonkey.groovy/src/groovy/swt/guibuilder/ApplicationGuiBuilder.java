@@ -6,7 +6,6 @@ package groovy.swt.guibuilder;
 
 import groovy.jface.JFaceBuilder;
 import groovy.util.GroovyScriptEngine;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -25,7 +24,7 @@ public class ApplicationGuiBuilder extends JFaceBuilder {
     public static final Logger log = Logger.getLogger( ApplicationGuiBuilder.class.getName());
 
     /** the caching script engine */
-    private GroovyScriptEngine scriptEngine;
+    private final GroovyScriptEngine scriptEngine;
 
     /**
      * tha constructor
@@ -40,6 +39,7 @@ public class ApplicationGuiBuilder extends JFaceBuilder {
     /*
      * @see groovy.swt.SwtBuilder#registerWidgets()
      */
+    @Override
     protected void registerWidgets() {
         super.registerWidgets();
         registerFactory("rebuild", new RebuildFactory(this));

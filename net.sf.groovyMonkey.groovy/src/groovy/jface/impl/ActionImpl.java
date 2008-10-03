@@ -17,6 +17,7 @@ public class ActionImpl extends Action implements ClosureSupport {
     private Closure closure;
     private Event event;
 
+    @Override
     public void runWithEvent(Event event) {
         if (closure == null) {
             throw new NullPointerException(

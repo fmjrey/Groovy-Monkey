@@ -28,6 +28,7 @@ public class DoubleClickListenerFactory extends AbstractSwtFactory implements Sw
      * @see groovy.swt.factory.AbstractSwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     public Object newInstance(Map< String, Object > properties, Object parent) throws GroovyException {
         if (parent instanceof StructuredViewer) {
             StructuredViewer viewer = (StructuredViewer) parent;

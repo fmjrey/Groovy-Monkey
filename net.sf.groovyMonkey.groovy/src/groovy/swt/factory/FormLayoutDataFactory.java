@@ -23,6 +23,7 @@ public class FormLayoutDataFactory extends AbstractSwtFactory implements
      * @see groovy.swt.impl.SwtFactory#newInstance(java.util.Map,
      *      java.lang.Object)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public Object newInstance(Map properties, Object parent)
             throws GroovyException {

@@ -65,9 +65,7 @@ public class SwtUtils
         int answer = 0;
         if( text != null )
         {
-            if( toUpperCase )
-                text = text.toUpperCase();
-            final StringTokenizer enumeration = new StringTokenizer( text, "," );
+            final StringTokenizer enumeration = new StringTokenizer( toUpperCase ? text.toUpperCase() : text, "," );
             while( enumeration.hasMoreTokens() )
             {
                 final String token = enumeration.nextToken().trim();

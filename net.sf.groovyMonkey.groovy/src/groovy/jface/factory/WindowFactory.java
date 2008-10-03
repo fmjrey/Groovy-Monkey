@@ -34,9 +34,10 @@ implements SwtFactory
      */
     @SuppressWarnings("unchecked")
     @Override
-    public Object newInstance( final Map properties, Object parent ) 
+    public Object newInstance( final Map properties, Object prent ) 
     throws GroovyException
     {
+        Object parent = prent;
         if( parent == null )
             parent = new Shell();
         if( !( parent instanceof Shell ) )
