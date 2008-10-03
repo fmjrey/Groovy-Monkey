@@ -21,7 +21,6 @@ import groovy.jface.impl.ApplicationWindowImpl;
 import groovy.lang.Closure;
 import groovy.swt.SwtBuilder;
 import groovy.swt.factory.ImageFactory;
-
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
@@ -40,6 +39,7 @@ import org.eclipse.swt.widgets.Display;
  * @author <a href="mailto:ckl@dacelo.nl">Christiaan ten Klooster </a>
  * @version $Revision$
  */
+@SuppressWarnings("deprecation")
 public class JFaceBuilder extends SwtBuilder {
 
     @Override
