@@ -20,6 +20,7 @@ import org.eclipse.team.internal.ccvs.core.resources.RemoteFolder;
 import org.eclipse.team.internal.ccvs.ui.operations.CheckoutIntoOperation;
 import org.eclipse.team.internal.ccvs.ui.operations.DisconnectOperation;
 
+@SuppressWarnings("restriction")
 public class CVSDOM
 {
     public ICVSRepositoryLocation getKnownRepository( final String locationString )
