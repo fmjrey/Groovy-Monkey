@@ -34,7 +34,8 @@ public class ApplicationWindowImpl extends ApplicationWindow {
 	 * 
 	 * @see org.eclipse.jface.window.Window#getContents()
 	 */
-	public Control getContents() {
+	@Override
+    public Control getContents() {
 		return super.getContents();
 	}
 
@@ -43,7 +44,8 @@ public class ApplicationWindowImpl extends ApplicationWindow {
 	 * 
 	 * @see org.eclipse.jface.window.ApplicationWindow#getStatusLineManager()
 	 */
-	public StatusLineManager getStatusLineManager() {
+	@Override
+    public StatusLineManager getStatusLineManager() {
 		return super.getStatusLineManager();
 	}
 }
