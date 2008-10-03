@@ -26,11 +26,13 @@ extends Dialog
         super( parentShell );
         this.script = script;
     }
+    @Override
     protected void configureShell( final Shell newShell )
     {
         super.configureShell( newShell );
         newShell.setText( "Save changes and continue?" );
     }
+    @Override
     protected Control createDialogArea( final Composite parent )
     {
         final Composite composite = new Composite( parent, NONE );
