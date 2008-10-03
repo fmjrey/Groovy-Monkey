@@ -40,7 +40,6 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
 
     public PublishScript() {}
 
-    @SuppressWarnings("unchecked")
     protected List< IFile > getScripts()
     {
     	final List< IFile > scripts = array();

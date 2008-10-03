@@ -153,6 +153,16 @@ implements IWorkbenchWindowActionDelegate
         final IWorkbenchWindow _window = window;
         if( sorted.size() != 0 )
             menuManager.add( new Separator() );
+        menuManager.add( new Action( "Create New Script" )
+        {
+            @Override
+            public void run()
+            {
+                final IWorkbenchWindowActionDelegate delegate = new NewGroovyMonkeyScriptAction();
+                delegate.init( _window );
+                delegate.run( action );
+            }
+        } );
         menuManager.add( new Action( "Paste New Script" )
         {
             @Override

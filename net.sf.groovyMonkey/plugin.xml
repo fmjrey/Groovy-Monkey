@@ -136,4 +136,16 @@
          point="org.eclipse.core.runtime.preferences">
       <initializer class="net.sf.groovyMonkey.preferences.PreferenceInitializer"/>
    </extension>
+   <extension
+       point="org.eclipse.ui.newWizards">
+    <category
+          id="net.sf.groovyMonkey"
+          name="Groovy Monkey"/>
+    <wizard
+          category="net.sf.groovyMonkey"
+          class="net.sf.groovyMonkey.wizard.NewScriptWizard"
+          icon="icons/monkey-new.gif"
+          id="net.sf.groovyMonkey.editor.NewScript"
+          name="New Groovy Monkey Script"/>
+ </extension>
 </plugin>
