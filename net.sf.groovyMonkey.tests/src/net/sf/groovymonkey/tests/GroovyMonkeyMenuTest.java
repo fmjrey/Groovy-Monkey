@@ -8,6 +8,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.internal.WorkbenchWindow;
 
+@SuppressWarnings("restriction")
 public class GroovyMonkeyMenuTest 
 extends TestCaseAbstract
 {
