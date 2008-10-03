@@ -26,6 +26,8 @@ import static org.eclipse.core.runtime.IStatus.WARNING;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
 import static org.eclipse.swt.widgets.Display.getCurrent;
 import static org.eclipse.swt.widgets.Display.getDefault;
+import static org.eclipse.ui.IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID;
+import static org.eclipse.ui.IEditorRegistry.SYSTEM_INPLACE_EDITOR_ID;
 import static org.eclipse.ui.PlatformUI.getWorkbench;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -409,12 +411,27 @@ public class Utilities
             return;
         activePage().closeEditor( editorPart, true );
     }
+    public static IEditorDescriptor getDefaultEditor( final IFile file )
+    {
+        if( file == null )
+            return null;
+        IEditorDescriptor descriptor = getWorkbench().getEditorRegistry().getDefaultEditor( file.getName() );
+        if( descriptor != null )
+            return descriptor;
+        descriptor = getWorkbench().getEditorRegistry().getDefaultEditor( "foo.txt" );
+        if( descriptor != null )
+            return descriptor;
+        descriptor = getWorkbench().getEditorRegistry().findEditor( SYSTEM_INPLACE_EDITOR_ID );
+        if( descriptor != null )
+            return descriptor;
+        return getWorkbench().getEditorRegistry().findEditor( SYSTEM_EXTERNAL_EDITOR_ID );
+    }
     public static void openEditor( final IFile file )
     throws PartInitException
     {
         if( file == null )
             return;
-        final IEditorDescriptor descriptor = getWorkbench().getEditorRegistry().getDefaultEditor( file.getName() );
+        final IEditorDescriptor descriptor = getDefaultEditor( file );
         activePage().openEditor( new FileEditorInput( file ), descriptor.getId() );
     }
     public static void createFolder( final IFolder folder )
