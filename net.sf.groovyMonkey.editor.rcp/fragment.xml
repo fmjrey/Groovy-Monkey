@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<fragment>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+         <objectContribution
+            adaptable="false"
+            id="net.sf.groovymonkey.gmFileContextMenu"
+            nameFilter="*.gm"
+            objectClass="org.eclipse.core.resources.IFile">
+            	<action
+               		class="net.sf.groovyMonkey.editor.actions.AddDOM"
+	                enablesFor="1"
+     	            icon="icons/feature_obj.gif"
+          	        id="net.sf.groovymonkey.actions.AddDOM"
+               		label="Add DOM To Script"
+               		menubarPath="group.editor"
+               		tooltip="Add existing DOM to Monkey Script"/>
+               	<action
+               		class="net.sf.groovyMonkey.editor.actions.AddBundle"
+	                enablesFor="1"
+     	            icon="icons/plugin_obj.gif"
+          	        id="net.sf.groovymonkey.actions.AddBundle"
+               		label="Add Bundle To Script"
+               		menubarPath="group.editor"
+               		tooltip="Add existing Bundle to Monkey Script Classpath"/>
+               	<action
+               		class="net.sf.groovyMonkey.editor.actions.AddInclude"
+	                enablesFor="1"
+     	            icon="icons/fldr_obj.gif"
+          	        id="net.sf.groovymonkey.actions.AddInclude"
+               		label="Add Include To Script"
+               		menubarPath="group.editor"
+               		tooltip="Add existing Jars/Folders in workspace to Monkey Script Classpath"/>
+         		<action
+               		class="net.sf.groovyMonkey.editor.actions.RunScript"
+               		enablesFor="1"
+               		icon="icons/run_exc.gif"
+               		id="net.sf.groovyMonkey.actions.RunScript"
+               		label="Run Script"
+               		menubarPath="group.editor"
+               		tooltip="Run Groovy Monkey Script"/>
+         </objectContribution>
+   </extension>
+	<extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="net.sf.groovyMonkey.editor.ScriptEditor"
+            contributorClass="org.eclipse.ui.texteditor.BasicTextEditorActionContributor"
+            default="true"
+            extensions="gm"
+            filenames="*.gm"
+            icon="icons/monkey.gif"
+            id="net.sf.groovymonkey.editor.ScriptEditorRCP"
+            name="Monkey Script Editor RCP"/>
+   </extension>
+ <extension
+       point="org.eclipse.ui.views">
+    <category
+          id="net.sf.groovyMonkey.editor"
+          name="Groovy Monkey"/>
+    <view
+          category="net.sf.groovyMonkey.editor"
+          class="net.sf.groovyMonkey.editor.views.DOMView"
+          icon="icons/monkey.gif"
+          id="net.sf.groovyMonkey.editor.views.DOMView"
+          name="Installed DOMs"/>
+ </extension>
+ <extension
+       point="org.eclipse.ui.ide.markerResolution">
+    <markerResolutionGenerator
+          class="net.sf.groovyMonkey.editor.contentAssist.MarkerResolutionGenerator"
+          markerType="org.eclipse.core.resources.problemmarker">
+       <attribute
+             name="net.sf.groovyMonkey"
+             value="marker"/>
+    </markerResolutionGenerator>
+ </extension>
+</fragment>
