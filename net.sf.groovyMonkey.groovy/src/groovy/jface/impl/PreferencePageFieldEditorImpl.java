@@ -8,7 +8,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.widgets.Composite;
@@ -21,11 +20,11 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
 
     public static class FieldEditorCreator {
 
-        private Class<?> beanClass;
+        private final Class<?> beanClass;
 
-        private String propertyName;
+        private final String propertyName;
 
-        private String title;
+        private final String title;
 
         public FieldEditorCreator(Class<?> beanClass, String propertyName,
                 String title) {
@@ -54,7 +53,7 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
         }
     }
 
-    private List< FieldEditorCreator > creatorFieldsfields = new ArrayList< FieldEditorCreator >();
+    private final List< FieldEditorCreator > creatorFieldsfields = new ArrayList< FieldEditorCreator >();
 
     public PreferencePageFieldEditorImpl(String title) {
         super(title, FieldEditorPreferencePage.GRID);
@@ -66,6 +65,7 @@ public class PreferencePageFieldEditorImpl extends FieldEditorPreferencePage {
                 title));
     }
 
+    @Override
     protected void createFieldEditors() {
         Iterator<?> i = creatorFieldsfields.iterator();
         while (i.hasNext()) {
