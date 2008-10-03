@@ -1,10 +1,8 @@
 package net.sf.groovyMonkey;
 import static org.apache.commons.lang.exception.ExceptionUtils.getFullStackTrace;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -56,7 +54,7 @@ extends IconAndMessageDialog
    /**
     * The title of the dialog.
     */
-   private String title;
+   private final String title;
 
    /**
     * The SWT list control that displays the error details.
@@ -133,7 +131,8 @@ extends IconAndMessageDialog
     * of the error details area. Note that the Details button will only be
     * visible if the error being displayed specifies child details.
     */
-   protected void buttonPressed(int id) {
+   @Override
+protected void buttonPressed(int id) {
        if (id == IDialogConstants.DETAILS_ID) {
            // was the details button pressed?
            toggleDetailsArea();
@@ -145,7 +144,8 @@ extends IconAndMessageDialog
    /*
     * (non-Javadoc) Method declared in Window.
     */
-   protected void configureShell(Shell shell) {
+   @Override
+protected void configureShell(Shell shell) {
        super.configureShell(shell);
        shell.setText(title);
    }
@@ -153,7 +153,8 @@ extends IconAndMessageDialog
    /*
     * (non-Javadoc) Method declared on Dialog.
     */
-   protected void createButtonsForButtonBar(Composite parent) {
+   @Override
+protected void createButtonsForButtonBar(Composite parent) {
        // create OK and Details buttons
        createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
                true);
@@ -179,7 +180,8 @@ extends IconAndMessageDialog
     * override <code>createCustomArea</code> to add contents below the
     * message.
     */
-   protected Control createDialogArea(Composite parent) {
+   @Override
+protected Control createDialogArea(Composite parent) {
        createMessageArea(parent);
        // create a composite with standard margins and spacing
        Composite composite = new Composite(parent, SWT.NONE);
@@ -200,7 +202,8 @@ extends IconAndMessageDialog
    /*
     * @see IconAndMessageDialog#createDialogAndButtonArea(Composite)
     */
-   protected void createDialogAndButtonArea(Composite parent) {
+   @Override
+protected void createDialogAndButtonArea(Composite parent) {
        super.createDialogAndButtonArea(parent);
        if (this.dialogArea instanceof Composite) {
            //Create a label if there are no children to force a smaller layout
@@ -215,7 +218,8 @@ extends IconAndMessageDialog
     *  (non-Javadoc)
     * @see org.eclipse.jface.dialogs.IconAndMessageDialog#getImage()
     */
-   protected Image getImage() {
+   @Override
+protected Image getImage() {
        if (status != null) {
            if (status.getSeverity() == IStatus.WARNING) {
                 return getWarningImage();
@@ -280,7 +284,8 @@ extends IconAndMessageDialog
     * children, the error dialog will only be displayed if there is at least
     * one child status matching the mask.
     */
-   public int open() {
+   @Override
+public int open() {
        if (!AUTOMATED_MODE && shouldDisplay(status, displayMask)) {
            return super.open();
        }
@@ -371,8 +376,8 @@ extends IconAndMessageDialog
     * just its children
     */
    private void populateList(List listToPopulate, IStatus buildingStatus,
-           int nesting, boolean includeStatus) {
-
+           int nsting, boolean includeStatus) {
+       int nesting = nsting;
        if (!buildingStatus.matches(displayMask)) {
            return;
        }
@@ -544,7 +549,8 @@ extends IconAndMessageDialog
     *
     * @see org.eclipse.jface.window.Window#close()
     */
-   public boolean close() {
+   @Override
+public boolean close() {
        if (clipboard != null) {
             clipboard.dispose();
         }
