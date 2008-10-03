@@ -6,7 +6,6 @@ package groovy.jface.impl;
 
 import groovy.lang.Closure;
 import groovy.swt.ClosureSupport;
-
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.swt.widgets.Shell;
@@ -24,6 +23,7 @@ public class PreferenceDialogImpl extends PreferenceDialog implements
         super(shell, pm);
     }
 
+    @Override
     protected void handleSave() {
         super.handleSave();
         closure.call();
