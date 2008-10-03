@@ -144,6 +144,7 @@ extends TestProject
         addToRawClassPath( JavaCore.newLibraryEntry( new Path( fullPath ), null, null, true ) );
         return this;
     }
+    @SuppressWarnings("deprecation")
     private void waitForIndexer() 
     throws JavaModelException
     {
