@@ -6,4 +6,5 @@ Bundle-Localization: plugin
 Bundle-Name: Tcl Fragment
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.tcl;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 

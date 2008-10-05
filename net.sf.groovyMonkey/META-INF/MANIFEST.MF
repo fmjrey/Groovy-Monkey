@@ -24,10 +24,11 @@ Require-Bundle: org.eclipse.core.runtime,org.eclipse.ui,org.eclipse.ui
  .ide,org.eclipse.core.resources,org.eclipse.update.core,org.eclipse.u
  pdate.ui,org.apache.ant
 Bundle-Vendor: James E. Ervin
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-Version: 0.5.2.20080423-2000
 Eclipse-BuddyPolicy: dependent
 Bundle-ManifestVersion: 2
 Bundle-Activator: net.sf.groovyMonkey.GroovyMonkeyPlugin
 Bundle-SymbolicName: net.sf.groovyMonkey;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 
