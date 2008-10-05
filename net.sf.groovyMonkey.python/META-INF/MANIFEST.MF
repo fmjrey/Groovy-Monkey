@@ -7,4 +7,5 @@ Bundle-Localization: plugin
 Bundle-Name: Python Fragment
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.python;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 
