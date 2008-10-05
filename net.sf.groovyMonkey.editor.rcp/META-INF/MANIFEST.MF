@@ -12,4 +12,5 @@ Bundle-Localization: plugin
 Bundle-Name: Editor Fragment for RCP Apps
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.editor.rcp;singleton:=true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 
