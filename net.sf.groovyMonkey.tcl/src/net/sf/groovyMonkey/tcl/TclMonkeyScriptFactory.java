@@ -17,14 +17,14 @@ implements IMonkeyScriptFactory
     {
         super();
     }
-    @Override
+    //@Override
     protected void init()
     {
         this.languageName = NAME;
         this.fileExtension = EXTENSION;
         this.scriptEngine = SCRIPT_ENGINE_CLASS;
     }
-    @Override
+    //@Override
     protected IMonkeyScript script( final ScriptMetadata metadata )
     {
         return new MonkeyScript( languageName, fileExtension, metadata.getFile(), true );

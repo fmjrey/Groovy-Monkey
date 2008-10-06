@@ -1,7 +1,11 @@
 Manifest-Version: 1.0
-Require-Bundle: net.sf.groovyMonkey,org.eclipse.core.runtime,org.eclip
- se.core.resources,org.eclipse.ui,net.sf.groovyMonkey.dom,org.eclipse.
- jdt.core,org.eclipse.jdt.launching,org.junit
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui,
+ net.sf.groovyMonkey.dom,
+ org.eclipse.jdt.core,
+ org.eclipse.jdt.launching,
+ org.junit
 Bundle-Vendor: James E. Ervin
 Eclipse-LazyStart: true
 Bundle-ClassPath: lib/commons-io-1.2.jar,lib/commons-lang-2.1.jar,.,li
@@ -14,3 +18,18 @@ Bundle-ManifestVersion: 2
 Bundle-SymbolicName: net.sf.groovyMonkey.tests;singleton:=true
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Package: net.sf.groovyMonkey,
+ net.sf.groovyMonkey.actions,
+ net.sf.groovyMonkey.dom,
+ net.sf.groovyMonkey.dom.bundle,
+ net.sf.groovyMonkey.dom.bundler,
+ net.sf.groovyMonkey.dom.project,
+ net.sf.groovyMonkey.dom.resources,
+ net.sf.groovyMonkey.dom.runner,
+ net.sf.groovyMonkey.dom.window,
+ net.sf.groovyMonkey.dom.workspace,
+ net.sf.groovyMonkey.groovy,
+ net.sf.groovyMonkey.lang,
+ net.sf.groovyMonkey.preferences,
+ net.sf.groovyMonkey.util,
+ net.sf.groovyMonkey.wizard

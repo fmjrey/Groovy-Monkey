@@ -11,6 +11,8 @@
  *******************************************************************************/
 package net.sf.groovyMonkey;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.addScript;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logError;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.logException;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.scriptStore;
 import static net.sf.groovyMonkey.ScriptMetadata.getScriptMetadata;
 import static net.sf.groovyMonkey.UpdateMonkeyActionsResourceChangeListener.createTheMonkeyMenu;
@@ -275,6 +277,7 @@ public class RunMonkeyScript
                 catch( final CoreException e )
                 {
                     // Ignoring bad extensions
+                    logError( "Error loading language: " + languageName, e );
                     continue;
                 }
             }
@@ -290,7 +293,7 @@ public class RunMonkeyScript
                         final String message,
                         final Throwable exception )
     {
-	    GroovyMonkeyPlugin.logException( title + ":" + message, exception );
+	    logException( title + ":" + message, exception );
         if( throwError )
             throw new RuntimeException( title + ". " + message, exception );
         Utilities.error( title, message, exception );
