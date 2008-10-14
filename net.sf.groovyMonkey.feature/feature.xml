@@ -2,7 +2,7 @@
 <feature
       id="net.sf.groovyMonkey"
       label="Groovy Monkey"
-      version="0.5.2.20080423-2000"
+      version="0.6.0.20080423-2000"
       provider-name="James E. Ervin">
 
    <copyright>
@@ -161,6 +161,6 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="1.5.5"/>
+         version="0.0.0"/>
 
 </feature>
