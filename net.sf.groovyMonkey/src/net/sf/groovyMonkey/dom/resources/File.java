@@ -31,7 +31,7 @@ public class File
         try
         {
             input = file.getContents();
-            final List lines = readLines( new BufferedInputStream( input ) );
+            final List< ? > lines = readLines( new BufferedInputStream( input ) );
             int lineNumber = 0;
             final List< Line > result = new ArrayList< Line >();
             for( Object line : lines )
