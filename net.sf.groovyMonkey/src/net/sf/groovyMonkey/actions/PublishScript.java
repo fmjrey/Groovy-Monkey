@@ -46,7 +46,7 @@ implements IWorkbenchWindowActionDelegate, IObjectActionDelegate
     	if( !( selection instanceof IStructuredSelection ) )
     		return scripts;
     	final IStructuredSelection sel = ( IStructuredSelection )selection;
-        final List selectedObjects = sel.toList();
+        final List< ? > selectedObjects = sel.toList();
         for( final Object object : selectedObjects )
 			if( object instanceof IFile )
 				scripts.add( ( IFile )object );
