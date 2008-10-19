@@ -9,6 +9,7 @@ import org.apache.commons.collections.comparators.ComparableComparator;
 public class TreeList< T extends Comparable< T > > 
 extends LinkedList< T >
 {
+    @SuppressWarnings("unchecked")
     private static class ComparableSerializableComparator
     extends ComparableComparator
     implements SerializableComparator
