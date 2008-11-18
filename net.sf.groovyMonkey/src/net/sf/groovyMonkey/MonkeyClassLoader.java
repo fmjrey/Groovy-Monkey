@@ -207,7 +207,7 @@ extends ClassLoader
         {
             if( loader == null )
                 continue;
-            URL url = ( URL )invoke( loader, "findResource", name );
+            final URL url = ( URL )invoke( loader, "findResource", name );
             if( url != null )
             {
                 resources.put( name, url );
@@ -235,7 +235,7 @@ extends ClassLoader
             if( loader == null )
                 continue;
             final Enumeration< URL > enumeration = ( Enumeration< URL > )invoke( loader, "findResources", name );
-            while( enumeration.hasMoreElements() )
+            while( enumeration != null && enumeration.hasMoreElements() )
             {
                 final URL element = enumeration.nextElement();
                 if( !resourceMap.containsKey( element.getPath() ) )
@@ -243,7 +243,7 @@ extends ClassLoader
             }
         }
         final Enumeration< URL > enumeration = super.findResources( name );
-        while( enumeration.hasMoreElements() )
+        while( enumeration != null && enumeration.hasMoreElements() )
         {
             final URL element = enumeration.nextElement();
             if( !resourceMap.containsKey( element.getPath() ) )
