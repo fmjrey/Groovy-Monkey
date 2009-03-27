@@ -10,19 +10,22 @@
  *     Ward Cunningham - initial implementation
  *******************************************************************************/
 package net.sf.groovyMonkey.actions;
-import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.FILE_EXTENSION_WILDCARD;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.MONKEY_DIR;
+import static net.sf.groovyMonkey.GroovyMonkeyPlugin.SCRIPTS_PROJECT;
 import static net.sf.groovyMonkey.GroovyMonkeyPlugin.getDefault;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.jface.dialogs.MessageDialog.openInformation;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -35,18 +38,18 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.osgi.framework.Bundle;
 
-public class CreateGroovyMonkeyExamplesAction 
-implements IWorkbenchWindowActionDelegate 
+public class CreateGroovyMonkeyExamplesAction
+implements IWorkbenchWindowActionDelegate
 {
 	private IWorkbenchWindow window;
 
 	public CreateGroovyMonkeyExamplesAction() {}
 
-	public void run( final IAction action ) 
+	public void run( final IAction action )
     {
 		final IWorkspace workspace = getWorkspace();
 		final IProject project = workspace.getRoot().getProject( SCRIPTS_PROJECT );
-		try 
+		try
         {
             final List< URL > examples = getExampleScripts( getDefault().getBundle() );
 			if( !project.exists() )
@@ -56,7 +59,7 @@ implements IWorkbenchWindowActionDelegate
 			String errors = "";
 			for( final URL example : examples )
             {
-                try 
+                try
                 {
 					final String filePath = example.getFile();
 					final String[] words = filePath.split( "/" );
@@ -68,26 +71,27 @@ implements IWorkbenchWindowActionDelegate
                     try
                     {
                         final IFile file = folder.getFile( fileName );
-                        file.create( input, false, null );
+                        final String contents = StringUtils.replace( IOUtils.toString( input ), "\r\n", "\n" );
+                        file.create( new ByteArrayInputStream( contents.getBytes() ), false, null );
                     }
                     finally
                     {
                         closeQuietly( input );
                     }
-				} 
-                catch( final CoreException x ) 
+				}
+                catch( final CoreException x )
                 {
 					errors += x.toString() + "\n";
-				} 
-                catch( final IOException x ) 
+				}
+                catch( final IOException x )
                 {
 					errors += x.toString() + "\n";
 				}
             }
 			if( errors.length() > 0 )
                 openInformation( window.getShell(), "Groovy Monkey", "Errors creating the Examples project: " + errors );
-		} 
-        catch( final CoreException x ) 
+		}
+        catch( final CoreException x )
         {
 			openInformation( window.getShell(), "Groovy Monkey", "Unable to create the Examples project due to " + x );
 		}
@@ -100,18 +104,18 @@ implements IWorkbenchWindowActionDelegate
         return list;
     }
     @SuppressWarnings("unchecked")
-    private void findEntries( final Bundle bundle, 
+    private void findEntries( final Bundle bundle,
                               final List< URL > list,
                               final String directory,
                               final String namePattern )
     {
-        final Enumeration<URL> enumeration = ( Enumeration<URL> )bundle.findEntries( directory, namePattern, true );
+        final Enumeration<URL> enumeration = bundle.findEntries( directory, namePattern, true );
         if( enumeration == null )
             return;
         while( enumeration.hasMoreElements() )
-            list.add( ( URL )enumeration.nextElement() );
+            list.add( enumeration.nextElement() );
     }
-	public void selectionChanged( final IAction action, 
+	public void selectionChanged( final IAction action,
                                   final ISelection selection )
     {
     }
