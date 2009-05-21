@@ -14,7 +14,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.pde.core.IModel;
 import org.eclipse.pde.internal.core.exports.FeatureExportInfo;
-import org.eclipse.pde.internal.ui.build.PluginExportJob;
+import org.eclipse.pde.internal.core.exports.PluginExportOperation;
 import org.eclipse.ui.progress.IProgressService;
 
 @SuppressWarnings("restriction")
@@ -33,7 +33,7 @@ public class Bundler
     {
         return deployDirPath;
     }
-    public Bundler createDeployDir() 
+    public Bundler createDeployDir()
     throws IOException
     {
         deployDir = new File( deployDirPath );
@@ -43,19 +43,19 @@ public class Bundler
         {
             Thread.sleep( 1000 );
         }
-        catch( final InterruptedException e ) 
+        catch( final InterruptedException e )
         {
             Thread.currentThread().interrupt();
         }
         deployDir.mkdir();
         return this;
     }
-    public Bundler buildPluginJar( final Project project ) 
+    public Bundler buildPluginJar( final Project project )
     throws InterruptedException, InvocationTargetException
     {
         return buildPluginJar( project.getEclipseObject() );
     }
-    public Bundler buildPluginJar( final IProject project ) 
+    public Bundler buildPluginJar( final IProject project )
     throws InvocationTargetException, InterruptedException
     {
         Validate.notNull( project );
@@ -70,14 +70,14 @@ public class Bundler
         info.zipFileName = null;
         info.items = new Object[]{ model };
         info.signingInfo = null;
-        final PluginExportJob job = new PluginExportJob( info );
+        final PluginExportOperation job = new PluginExportOperation( info, "Exporting plugin: " + project.getName() );
         job.setUser( true );
         job.schedule();
         job.setProperty( ICON_PROPERTY, DESC_PLUGIN_OBJ );
         final IProgressService progressService = getWorkbench().getProgressService();
         progressService.busyCursorWhile( new IRunnableWithProgress()
         {
-            public void run( final IProgressMonitor monitor ) 
+            public void run( final IProgressMonitor monitor )
             throws InterruptedException
             {
                 job.join();

@@ -100,7 +100,7 @@
          id="net.sf.groovyMonkey"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.0.20080423-2000"
          unpack="false"/>
 
    <plugin
@@ -129,7 +129,7 @@
          id="net.sf.groovyMonkey.groovy"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.0.20080423-2000"
          fragment="true"
          unpack="false"/>
 
@@ -161,6 +161,6 @@
          id="org.codehaus.groovy"
          download-size="0"
          install-size="0"
-         version="0.0.0"/>
+         version="1.6.1.qualifier"/>
 
 </feature>
