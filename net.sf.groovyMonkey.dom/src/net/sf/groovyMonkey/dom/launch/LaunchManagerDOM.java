@@ -34,7 +34,7 @@ public class LaunchManagerDOM
     {
         return window().getShell();
     }
-    public void error( final String title, 
+    public void error( final String title,
                        final String message )
     {
         new UIJob( "Warning: " + title )
@@ -48,7 +48,7 @@ public class LaunchManagerDOM
 
         }.schedule();
     }
-    public void warning( final String title, 
+    public void warning( final String title,
                          final String message )
     {
         new UIJob( "Warning: " + title )
@@ -59,14 +59,20 @@ public class LaunchManagerDOM
                 MessageDialog.openWarning( shell(), title, message);
                 return Status.OK_STATUS;
             }
-        
+
         }.schedule();
     }
-    public LaunchManagerDOM launch( final String name,
-                                    final List< String > configurationNames ) 
+    public Job launch( final String name,
+    				   final List< String> configurationNames )
+    {
+    	return launchWithMode( name, ILaunchManager.RUN_MODE, configurationNames );
+    }
+    public Job launchWithMode( final String name,
+    			    		   final String mode,
+    						   final List< String > configurationNames )
     {
         if( configurationNames == null || configurationNames.isEmpty() )
-            return this;
+            return null;
         final List< ILaunchConfiguration > configurations = getLaunchConfigurations( configurationNames );
         final Job job = new Job( "" + name )
         {
@@ -82,7 +88,7 @@ public class LaunchManagerDOM
                     try
                     {
                         monitor.subTask( configuration.getName() + " " + complete( finished, configurations ) );
-                        final ILaunch launch = DebugUITools.buildAndLaunch( configuration, ILaunchManager.RUN_MODE, monitor );
+                        final ILaunch launch = DebugUITools.buildAndLaunch( configuration, mode, monitor );
                         while( true )
                         {
                             try
@@ -101,8 +107,8 @@ public class LaunchManagerDOM
                     }
                     catch( final CoreException e )
                     {
-                        error( "Error launching: " + configuration.getName(), 
-                                inProgress + ". " + e.getMessage() );                        
+                        error( "Error launching: " + configuration.getName(),
+                                inProgress + ". " + e.getMessage() );
                         return new Status( IStatus.ERROR, "net.sourceforge.groovyMonkey.launch", -1, "Error launching: " + configuration.getName()  + inProgress + ". " + e.getMessage(), e );
                     }
                     finished.add( configuration.getName() );
@@ -111,15 +117,15 @@ public class LaunchManagerDOM
                 monitor.done();
                 return Status.OK_STATUS;
             }
-            private String complete( final List< String > finished, 
+            private String complete( final List< String > finished,
                                      final List< ILaunchConfiguration > total )
             {
                 return "( " + finished.size() + " / " + total.size() + " )";
             }
         };
-        job.setUser( true );
+        job.setUser( false );
         job.schedule();
-        return this;
+        return job;
     }
     private List< ILaunchConfiguration > getLaunchConfigurations( final List< String > configurationNames )
     {
@@ -132,7 +138,7 @@ public class LaunchManagerDOM
         catch( final CoreException e )
         {
             throw new RuntimeException( "Error could not get the set of launch configurations from Eclipse: " + e.getMessage(), e );
-        }    
+        }
         for( final String configName : configurationNames )
         {
             boolean found = false;
@@ -150,9 +156,15 @@ public class LaunchManagerDOM
         }
         return list;
     }
-    public LaunchManagerDOM launch( final String name,
-                                    final String... configurations ) 
+    public Job launchWithMode( final String name,
+    						   final String mode,
+    						   final String... configurations )
     {
-        return launch( name, Arrays.asList( configurations ) );
+        return launchWithMode( name, mode, Arrays.asList( configurations ) );
+    }
+    public Job launch( final String name,
+            		   final String... configurations )
+    {
+    	return launch( name, Arrays.asList( configurations ) );
     }
 }
