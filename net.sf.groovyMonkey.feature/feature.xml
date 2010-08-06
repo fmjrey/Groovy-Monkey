@@ -2,7 +2,7 @@
 <feature
       id="net.sf.groovyMonkey"
       label="Groovy Monkey"
-      version="0.6.0.20080423-2000"
+      version="0.6.1"
       provider-name="James E. Ervin">
 
    <copyright>
@@ -100,28 +100,28 @@
          id="net.sf.groovyMonkey"
          download-size="0"
          install-size="0"
-         version="0.6.0.20080423-2000"
+         version="0.6.1"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.help"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.dom"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.beanshell"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          fragment="true"
          unpack="false"/>
 
@@ -129,7 +129,7 @@
          id="net.sf.groovyMonkey.groovy"
          download-size="0"
          install-size="0"
-         version="0.6.0.20080423-2000"
+         version="0.6.1"
          fragment="true"
          unpack="false"/>
 
@@ -137,7 +137,7 @@
          id="net.sf.groovyMonkey.python"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          fragment="true"
          unpack="false"/>
 
@@ -145,7 +145,7 @@
          id="net.sf.groovyMonkey.ruby"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          fragment="true"
          unpack="false"/>
 
@@ -153,14 +153,8 @@
          id="net.sf.groovyMonkey.editor"
          download-size="0"
          install-size="0"
-         version="0.5.2.20080423-2000"
+         version="0.6.1"
          fragment="true"
          unpack="false"/>
-
-   <plugin
-         id="org.codehaus.groovy"
-         download-size="0"
-         install-size="0"
-         version="1.6.1.qualifier"/>
 
 </feature>

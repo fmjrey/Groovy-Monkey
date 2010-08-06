@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.2.0"
 Bundle-ClassPath: lib/bsh-2.0b4.jar,.
-Bundle-Version: 0.5.2.20080423-2000
+Bundle-Version: 0.6.1
 Bundle-Localization: plugin
 Bundle-Name: Beanshell Fragment
 Bundle-ManifestVersion: 2

@@ -1,4 +1,4 @@
-def clearCmd = "ssh jervin@shell.sourceforge.net /home/users/j/je/jervin/clearUpdate.sh"
+def clearCmd = "ssh jervin@shell.sf.net /home/users/j/je/jervin/clearUpdate.sh"
 println "clearCmd: ${clearCmd}"
 def clearProcess = clearCmd.execute()
 println '  exitCode: ' + clearProcess.waitFor()
@@ -14,9 +14,9 @@ new File( '.' ).eachFile
 	println 'path: ' + path
 	def scp
 	if( !file.isDirectory() )
-		scp = 'scp -p'
+		scp = "scp -p"
 	else
-	    scp = 'scp -r -p'
+	    scp = "scp -r -p"
 	def execString = "${scp} ${path} jervin@shell.sourceforge.net:/home/groups/g/gr/groovy-monkey/htdocs/update/${path}"
 	println "${execString}"
 	def process = execString.execute()
