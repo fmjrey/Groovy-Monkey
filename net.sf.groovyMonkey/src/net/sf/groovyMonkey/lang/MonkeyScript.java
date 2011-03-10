@@ -36,6 +36,7 @@ import org.apache.bsf.BSFException;
 import org.apache.bsf.BSFManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.osgi.framework.Bundle;
 
 public class MonkeyScript
@@ -153,18 +154,15 @@ implements IMonkeyScript
         final List< URL > includes = new ArrayList< URL >();
         for( final String include : metadata.getIncludes() )
         {
-            final String uri = workspaceURI() + "/" + removeStart( include, "/" );
+            final IFile ifile = getWorkspace().getRoot().getFile(new Path(include));
             try
             {
-                final File file = new File( new URI( uri ) );
-                final URL url = file.isDirectory() ? new URL( addSlash( uri ) ): new URL( uri );
+                final URI uri = ifile.getRawLocationURI();
+                final File file = new File( uri );
+                final URL url = file.isDirectory() ? new URL( addSlash( uri.toString() ) ): uri.toURL();
                 includes.add( url );
             }
             catch( final MalformedURLException e )
-            {
-                throw new RuntimeException( e );
-            }
-            catch( final URISyntaxException e )
             {
                 throw new RuntimeException( e );
             }
