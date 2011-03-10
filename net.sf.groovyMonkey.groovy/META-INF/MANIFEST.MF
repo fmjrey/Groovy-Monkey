@@ -7,7 +7,7 @@ Bundle-ClassPath: .,
  lib/commons-logging-1.0.3.jar,
  lib/groovy-all-1.7.3.jar,
  lib/ivy-2.1.0.jar
-Bundle-Version: 0.6.1
+Bundle-Version: 0.6.1.qualifier
 Bundle-Localization: plugin
 Bundle-Name: Groovy Fragment
 Bundle-ManifestVersion: 2

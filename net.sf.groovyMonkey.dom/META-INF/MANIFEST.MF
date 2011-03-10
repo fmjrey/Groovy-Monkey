@@ -4,7 +4,7 @@ Require-Bundle: org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.ui,
  org.eclipse.ui.console
-Bundle-Version: 0.6.1
+Bundle-Version: 0.6.1.qualifier
 Bundle-Localization: plugin
 Bundle-Name: DOM Plugins for Groovy Monkey.
 Bundle-ManifestVersion: 2
