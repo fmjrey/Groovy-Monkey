@@ -2,7 +2,7 @@
 <feature
       id="net.sf.groovyMonkey"
       label="Groovy Monkey"
-      version="0.6.1"
+      version="0.6.1.qualifier"
       provider-name="James E. Ervin">
 
    <copyright>
