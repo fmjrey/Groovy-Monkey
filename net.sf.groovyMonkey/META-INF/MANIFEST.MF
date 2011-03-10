@@ -55,7 +55,7 @@ Require-Bundle: org.eclipse.core.runtime,org.eclipse.ui,org.eclipse.ui
  pdate.ui,org.apache.ant
 Bundle-Vendor: James E. Ervin
 Bundle-ActivationPolicy: lazy
-Bundle-Version: 0.6.1
+Bundle-Version: 0.6.1.qualifier
 Eclipse-BuddyPolicy: dependent
 Bundle-ManifestVersion: 2
 Bundle-Activator: net.sf.groovyMonkey.GroovyMonkeyPlugin

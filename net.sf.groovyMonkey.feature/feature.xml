@@ -100,28 +100,28 @@
          id="net.sf.groovyMonkey"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.help"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.dom"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          unpack="false"/>
 
    <plugin
          id="net.sf.groovyMonkey.beanshell"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          fragment="true"
          unpack="false"/>
 
@@ -129,7 +129,7 @@
          id="net.sf.groovyMonkey.groovy"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          fragment="true"
          unpack="false"/>
 
@@ -137,7 +137,7 @@
          id="net.sf.groovyMonkey.python"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          fragment="true"
          unpack="false"/>
 
@@ -145,7 +145,7 @@
          id="net.sf.groovyMonkey.ruby"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          fragment="true"
          unpack="false"/>
 
@@ -153,7 +153,7 @@
          id="net.sf.groovyMonkey.editor"
          download-size="0"
          install-size="0"
-         version="0.6.1"
+         version="0.6.1.qualifier"
          fragment="true"
          unpack="false"/>
 
