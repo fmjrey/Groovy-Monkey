@@ -33,7 +33,9 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
@@ -104,10 +106,24 @@ implements IRegistryChangeListener
         viewer.setInput( getViewSite() );
         makeActions();
         hookContextMenu();
+        hookSelectionListener();
         hookDoubleClickAction();
         contributeToActionBars();
         getExtensionRegistry().addRegistryChangeListener( this );
     }
+	private void hookSelectionListener()
+	{
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) 
+			{
+				if(event.getSelection().isEmpty()) return; 
+				if(event.getSelection() instanceof DOMDescriptor) 
+				{
+				}
+			}
+		});
+		
+	}
     private void hookContextMenu()
     {
         final MenuManager menuMgr = new MenuManager( "#PopupMenu" );
