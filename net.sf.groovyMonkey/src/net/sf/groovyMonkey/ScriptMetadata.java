@@ -154,12 +154,12 @@ public class ScriptMetadata
         boolean finished = false;
         for( final String line : lines )
         {
-            if( strip( line ).startsWith( "/*" ) )
+            if( !finished && strip( line ).startsWith( "/*" ) )
             {
                 started = true;
                 continue;
             }
-            if( strip( line ).endsWith( "*/" ) )
+            if( !finished && strip( line ).endsWith( "*/" ) )
             {
                 finished = true;
                 continue;
