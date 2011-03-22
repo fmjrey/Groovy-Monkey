@@ -37,5 +37,5 @@ Having each change/feature in its own unique branch makes it easier for the orig
 Such branches are usually called "topic branches", as described [here](https://github.com/dchelimsky/rspec/wiki/Topic-Branches) and [here](http://stackoverflow.com/questions/284514/what-is-a-git-topic-branch).
 You may also want to create your own "master" branch in which you can merge all your branches and other commits from elsewhere you may need for yourself.
 To signal your changes you can create issues or pull requests in the original project and link to the corresponding branch in your fork.
-When the original projects commits new changes, you need to bring these changes into your fork by rebasing your branches.
+When the original projects commits new changes, you need to bring these changes into your fork by rebasing your topic branches. Other branches should be merging with the changes upstream.
 Once the topic branch has been merged into the original project, you probably want to delete it.
