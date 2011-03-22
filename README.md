@@ -6,7 +6,8 @@ cloned by fmjrey
 This project is a clone of the original project at [http://sourceforge.net/projects/groovy-monkey/](http://sourceforge.net/projects/groovy-monkey/), home at [http://groovy.codehaus.org/Groovy+Monkey](http://groovy.codehaus.org/Groovy+Monkey).
 Its purpose is not to fork development of the original project but simply to make it easier to share some changes that hopefully will be merged back into the original.
 
-*REBASE WARNING* The only branches that will not be rebased are the main branches listed below. If you are cloning this repository you are strongly advised to create your own branches based on these. Other branches like topic branches may be rebased over time in order to keep track with upstream changes.
+*REBASE WARNING*
+The only branches that will not be rebased are the main branches listed below. If you are cloning this repository you are strongly advised to create your own branches based on these. Other branches like topic branches may be rebased over time in order to keep track with upstream changes.
 
 Main Branches
 -------------
