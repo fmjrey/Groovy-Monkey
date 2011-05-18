@@ -4,9 +4,9 @@ Export-Package: net.sf.groovyMonkey.groovy,org.apache.commons.logging,
 Require-Bundle: org.eclipse.ui.forms
 Fragment-Host: net.sf.groovyMonkey;bundle-version="0.4.0"
 Bundle-ClassPath: .,
- lib/commons-logging-1.0.3.jar,
- lib/groovy-all-1.7.8.jar,
- lib/ivy-2.1.0.jar
+ lib/commons-logging-1.1.1.jar,
+ lib/groovy-all-1.8.0.jar,
+ lib/ivy-2.2.0.jar
 Bundle-Version: 0.6.1
 Bundle-Localization: plugin
 Bundle-Name: Groovy Fragment
