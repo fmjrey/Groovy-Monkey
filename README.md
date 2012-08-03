@@ -22,7 +22,8 @@ Topic Branches
 * [issue-3221121-editor-removes-certain-lines](/fmjrey/Groovy-Monkey/tree/issue-3221121-editor-removes-certain-lines) -- Fix for [issue 3221121](http://sourceforge.net/support/tracker.php?aid=3221121): editor removes certain lines when updating metadata.
 * [version-qualifier](/fmjrey/Groovy-Monkey/tree/version-qualifier) -- added version qualifier on each plugin and feature version (e.g. 0.6.1.qualifier)
 * [workspace-limitation-removed](/fmjrey/Groovy-Monkey/tree/workspace-limitation-removed) -- Include: metadata can now point to a project outside the workspace directory
-* [upgrade-groovy*](/fmjrey/Groovy-Monkey/tree/upgrade-groovy) -- Branch for upgrades to included groovy.
+* [upgrade-groovy](/fmjrey/Groovy-Monkey/tree/upgrade-groovy) -- Branch for upgrades to embedded groovy 1.x.
+* [upgrade-groovy2](/fmjrey/Groovy-Monkey/tree/upgrade-groovy2) -- Branch for upgrades to embedded groovy 2.x.
 
 Structure
 ---------
